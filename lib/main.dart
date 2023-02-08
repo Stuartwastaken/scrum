@@ -44,10 +44,23 @@ class _RegisterState extends State<Register> {
       body: Row(
         children: [
           //Column 1
-          Column(),
+          Column(
+            children: [
+              //title
+              Text(
+                "SCRUM",
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontSize: 45,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text("Back"),
+              ),
+            ],
+          ),
           //Column 2
-          Column(),
-          //Column 3
           Column(
             children: [
               const Text("Sign Up"),
