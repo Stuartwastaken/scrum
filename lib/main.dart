@@ -39,136 +39,77 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
-    // ignore: dead_code
     return Scaffold(
-      body: Row(
-        children: [
-          //Column 1
-          Column(
-            children: [
-              //title
-              Text(
-                "SCRUM",
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  fontSize: 45,
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text("Back"),
-              ),
-            ],
-          ),
-          //Column 2
-          Column(
-            children: [
-              const Text("Sign Up"),
-              Container(
-                width: 500,
-                height: 500,
-                color: Colors.purple,
-                //Form
-                child: Column(
+      body: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //title & button column
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //title
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    //sign up text
-                    Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        const Text(
-                          "Register",
-                          selectionColor: Colors.white,
-                          style: TextStyle(
-                            fontSize: 40,
-                          ),
-                        ),
-                      ],
-                    ),
-                    //username field
-                    Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        Expanded(
-                          child: const TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Email",
-                              hintText: "Enter your email",
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    //password field
-                    Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        Expanded(
-                          child: const TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Password",
-                              hintText: "Enter your password",
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    //register button
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          child: const Text("Sign Up"),
-                          onPressed: () {},
-                        )
-                      ],
-                    ),
-                    //divider
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(left: 10.0, right: 20.0),
-                            child: Divider(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Text("OR"),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(left: 10.0, right: 20.0),
-                            child: Divider(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    //already have account
-                    Row(
-                      children: [
-                        const Text("Alreay have an account? "),
-                        GestureDetector(
-                          onTap: () {},
-                          child: const Text(
-                            "Log in",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "TITLE",
+                      style: TextStyle(
+                        fontFamily: "Primary Family",
+                        fontSize: 46,
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ],
+                //back button
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(24, 10, 24, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 45,
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            IconData(0xe093,
+                                fontFamily: 'MaterialIcons',
+                                matchTextDirection: true),
+                            color: Colors.black,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          label: Text(
+                            "Back",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: "Primary Family",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            //column 2
+            Column(),
+          ],
+        ),
       ),
     );
   }
