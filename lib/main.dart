@@ -106,8 +106,43 @@ class _RegisterState extends State<Register> {
                 ),
               ],
             ),
-            //column 2
-            Column(),
+            //form column
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //white background
+                  Align(
+                    alignment: AlignmentDirectional(-0.25, 0),
+                    child: Material(
+                      color: Colors.transparent,
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Container(
+                        width: 475,
+                        height: 625,
+                        constraints: BoxConstraints(
+                          maxHeight: double.infinity,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          shape: BoxShape.rectangle,
+                          border: Border.all(
+                            color: Color(0xFF3C3939),
+                          ),
+                        ),
+                        child: Column(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
