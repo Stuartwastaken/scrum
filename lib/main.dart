@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'text-field.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +38,20 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  late final TextEditingController username;
+  late final TextEditingController email;
+  late final TextEditingController password;
+  late final TextEditingController confirmPassword;
+
+  @override
+  void initState() {
+    username = TextEditingController();
+    email = TextEditingController();
+    password = TextEditingController();
+    confirmPassword = TextEditingController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +60,7 @@ class _RegisterState extends State<Register> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //title & button column
+            //column 1
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +121,7 @@ class _RegisterState extends State<Register> {
                 ),
               ],
             ),
-            //form column
+            //column 2
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -136,7 +151,151 @@ class _RegisterState extends State<Register> {
                             color: Color(0xFF3C3939),
                           ),
                         ),
-                        child: Column(),
+                        //form column
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //reigster text
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 20, 24, 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0, 0),
+                                      child: Text(
+                                        "Register with your email",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          color: Colors.black,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //username field
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 20, 24, 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: customTextField(
+                                      controller: username,
+                                      obscure: false,
+                                      label: "Username",
+                                      borderColor: Color(0xFF4A4646),
+                                      errorBorderColor: Color(0xFFFF0000),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //email field
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 20, 24, 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: customTextField(
+                                      controller: email,
+                                      obscure: false,
+                                      label: "Email",
+                                      borderColor: Color(0xFF4A4646),
+                                      errorBorderColor: Color(0xFFFF0000),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //password field
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 20, 24, 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: customTextField(
+                                      controller: password,
+                                      obscure: true,
+                                      label: "Password",
+                                      borderColor: Color(0xFF4A4646),
+                                      errorBorderColor: Color(0xFFFF0000),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //confirm field
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 20, 24, 20),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: customTextField(
+                                      controller: confirmPassword,
+                                      obscure: true,
+                                      label: "Confirm Password",
+                                      borderColor: Color(0xFF4A4646),
+                                      errorBorderColor: Color(0xFFFF0000),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //submit button
+                            //or divider
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        left: 10.0, right: 20.0),
+                                    child: Divider(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text("or"),
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        left: 10.0, right: 20.0),
+                                    child: Divider(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            //login with google
+                            //login with microsoft
+                          ],
+                        ),
                       ),
                     ),
                   ),
