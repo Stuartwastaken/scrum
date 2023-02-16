@@ -155,6 +155,7 @@ class _RegisterState extends State<Register> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             //reigster text
                             Padding(
@@ -268,6 +269,46 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             //submit button
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 10, 24, 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Card(
+                                      elevation: 8,
+                                      child: SizedBox(
+                                        height: 40,
+                                        child: TextButton(
+                                          onPressed: () {},
+                                          child: Text(
+                                            "Sign Up",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty
+                                                    .resolveWith<Color>(
+                                                        (Set<MaterialState>
+                                                            states) {
+                                              if (states.contains(
+                                                  MaterialState.hovered))
+                                                return Color(0xFF106b03);
+                                              return Color(0xFF26890c);
+                                            }),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             //or divider
                             Row(
                               children: [
