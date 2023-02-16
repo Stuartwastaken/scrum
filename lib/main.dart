@@ -52,6 +52,19 @@ class _RegisterState extends State<Register> {
     super.initState();
   }
 
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed, // Any states you want to affect here
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      // if any of the input states are found in our list
+      return Colors.blue;
+    }
+    return Colors.red; // default color
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,12 +110,23 @@ class _RegisterState extends State<Register> {
                                 matchTextDirection: true),
                             color: Colors.black,
                           ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            elevation: 8,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                          style: ButtonStyle(
+                            //primary: Colors.white,
+                            elevation:
+                                MaterialStateProperty.resolveWith<double>(
+                                    (states) {
+                              return 4.0; // Set elevation to 4.0 by default
+                            }),
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                    (states) {
+                              if (states.contains(MaterialState.hovered)) {
+                                return Colors
+                                    .grey; // Set background color to black when hovered
+                              }
+                              return Colors
+                                  .white; // Set background color to orange by default
+                            }),
                           ),
                           label: Text(
                             "Back",
@@ -130,7 +154,7 @@ class _RegisterState extends State<Register> {
                 children: [
                   //white background
                   Align(
-                    alignment: AlignmentDirectional(-0.25, 0),
+                    alignment: AlignmentDirectional(-0.165, 0),
                     child: Material(
                       color: Colors.transparent,
                       elevation: 8,
@@ -310,31 +334,40 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             //or divider
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: 10.0, right: 20.0),
-                                    child: Divider(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Text("or"),
-                                Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: 10.0, right: 20.0),
-                                    child: Divider(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                             //login with google
                             //login with microsoft
+                            //already have an account
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24, 10, 24, 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Already have an account? ",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Text(
+                                        'Log in',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
