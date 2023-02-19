@@ -211,12 +211,18 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20, 20, 20, 20),
-                                        child: Text('Return to Log In',
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
+                                        child: MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: GestureDetector(
+                                            onTap: () {},
+                                            child: Text(
+                                              'Return to log in',
+                                              style: TextStyle(
                                                 color: Colors.blue,
-                                                decoration:
-                                                    TextDecoration.underline)),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
