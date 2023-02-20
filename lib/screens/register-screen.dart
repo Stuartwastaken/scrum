@@ -40,6 +40,12 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("../../assets/images/shapes-background.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,7 +61,7 @@ class _RegisterState extends State<Register> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "TITLE",
+                      "SCRUM",
                       style: TextStyle(
                         fontFamily: "Primary Family",
                         fontSize: 46,
@@ -331,7 +337,6 @@ class _RegisterState extends State<Register> {
                                         'Log in',
                                         style: TextStyle(
                                           color: Colors.blue,
-                                          decoration: TextDecoration.underline,
                                         ),
                                       ),
                                     ),
