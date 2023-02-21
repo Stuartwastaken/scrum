@@ -1,41 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-          scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255)),
-      home: const MyHomePage(title: 'Game Pin Screen'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class gamePinScreen extends StatefulWidget {
+  const gamePinScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<gamePinScreen> createState() => gamePinScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+class gamePinScreenState extends State<gamePinScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
