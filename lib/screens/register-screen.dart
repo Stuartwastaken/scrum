@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/text-field.dart';
+import '../routes.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -80,7 +81,9 @@ class _RegisterState extends State<Register> {
                       SizedBox(
                         height: 45,
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.popAndPushNamed(context, "/");
+                          },
                           icon: Icon(
                             IconData(0xe093,
                                 fontFamily: 'MaterialIcons',
@@ -332,7 +335,10 @@ class _RegisterState extends State<Register> {
                                   MouseRegion(
                                     cursor: SystemMouseCursors.click,
                                     child: GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.popAndPushNamed(
+                                            context, "/login");
+                                      },
                                       child: Text(
                                         'Log in',
                                         style: TextStyle(
