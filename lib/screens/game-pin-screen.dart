@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class gamePinScreen extends StatefulWidget {
-  const gamePinScreen({super.key, required this.title});
-
-  final String title;
+  const gamePinScreen({super.key});
 
   @override
   State<gamePinScreen> createState() => gamePinScreenState();
