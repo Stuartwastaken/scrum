@@ -8,31 +8,47 @@ This repository contains the working components of our application. The reposito
 
 ## How to Use
 
-**Step 1**
+**Step 1:**
 It is recommended to use Visual Studio Code as your code editor, which can be downloaded [here](https://code.visualstudio.com/download). 
 
-**Step 2**
+**Step 2:**
 _Install or upgrade to the latest version of Flutter. Follow these installation [guides.](https://docs.flutter.dev/get-started/install)_
 
-**Step 3**
-_Install the latest Firebase CLI. Folllow these installation[guides.](https://firebase.google.com/docs/cli#setup_update_cli)_
+**Step 3:**
+_Install the latest Firebase CLI. Folllow these installation [guides.](https://firebase.google.com/docs/cli#setup_update_cli)_
 
-**Step 4**
+**Step 4:**
 Download or clone this repo by using the link below:
 ```
-https://gitlab.com/team-one9490505/scrum.git`
+https://gitlab.com/team-one9490505/scrum.git
 ```
 
-**Step 5**
+**Step 5:**
 Go to project root and execute the following command in console to get the required dependencies:
 ```
 flutter pub get 
 ```
-**Step 6**
+**Step 6:**
 Execute the following command in console to execute the application:
 ```
 flutter run -d chrome
 ```
+
+## Front End Diagram
+
+A mapping of the front-end pages is shown below. Arrows pointing from one page to another signify the ability to be accessbile from the respective page.
+![Front End Diagram](assets/images/front-end-diagram.png)
+
+## Backend Diagrams
+
+A mapping of the three back-end diagrams are shown below. These diagrams represent how our group plans to organize our back-end data.
+
+ **The left diagram** demonstrates how we plan to store the authenticated users. Firebase's Authentication.
+
+**The middle diagram** demonstrates how we plan to store user data (profile information, saved quizzes, etc.). Firebase's Firestore. 
+
+**The right diagram** demonstrates how we plan to store the in-game quizzes/SCRUM battles using a JSON tree. Firbase's Real-Time database. 
+![Back End Diagram](assets/images/back-end-diagram.png)
 
 ## Folder Structure
 
@@ -42,10 +58,12 @@ lib/
 |- screens/
 |- widgets/
 |- main.dart
+|- routes.dart
 ```
 Now, lets dive into the lib folder which has the main code for the application.
 ```
 1- screens - Directory containing the viewable screens are defined in this directory with-in their respective files. 
 2- widgets — Directory containing the common widgets for your applications. For example, Button, TextField etc.
 3- main.dart - This is the starting point of the application. All the application level configurations are defined in this file i.e, theme, routes, title, orientation etc.
+4- routes.dart - This contains all of the named routes for the application. The routes. 
 ```
