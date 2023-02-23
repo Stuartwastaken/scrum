@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
+import 'package:scrum/screens/login-screen.dart';
 import '../widgets/text-field.dart';
 import '../routes.dart';
 
@@ -82,7 +84,16 @@ class _RegisterState extends State<Register> {
                         height: 45,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            Navigator.popAndPushNamed(context, "/");
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                transitionDuration: Duration
+                                    .zero, // Set transition duration to zero to remove animation
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        gamePinScreen(),
+                              ),
+                            );
                           },
                           icon: Icon(
                             IconData(0xe093,
@@ -336,8 +347,16 @@ class _RegisterState extends State<Register> {
                                     cursor: SystemMouseCursors.click,
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.popAndPushNamed(
-                                            context, "/login");
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            transitionDuration: Duration
+                                                .zero, // Set transition duration to zero to remove animation
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                LoginScreen(),
+                                          ),
+                                        );
                                       },
                                       child: Text(
                                         'Log in',
