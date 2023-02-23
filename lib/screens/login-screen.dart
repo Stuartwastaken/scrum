@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/forgot-password-screen.dart';
+import 'package:scrum/screens/register-screen.dart';
+import "../routes.dart";
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -179,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                               child: TextButton(
                                 onPressed: () {
-                                  print('Login Button Pressed');
+                                  print('Login Button Pressed: need to connect to Authorization Page (Home page after logging in).');
                                 },
                                 child: Text(
                                   'Log In',
@@ -276,7 +279,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      print('Forgot Password');
+                                      Navigator.popAndPushNamed(context, "/forgot-password");
                                     },
                                     child: Text(
                                       'Reset Password',
@@ -304,18 +307,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                       'Don\'t have an account?',
                                     ),
                                     TextButton(
-                                        onPressed: () {
-                                          print('Clicked Sign up button');
-                                        },
-                                        child: Text(
-                                          'Sign Up',
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 15,
-                                            color: Color.fromARGB(
-                                                255, 147, 119, 221),
-                                          ),
-                                        )
+                                      onPressed: () {
+                                        Navigator.popAndPushNamed(context, "/register");
+                                      },
+                                      child: Text(
+                                        'Sign Up',
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 15,
+                                          color: Color.fromARGB(255, 147, 119, 221),
+                                        ),
+                                      )
                                     )
                                   ],
                                 ),
@@ -332,7 +334,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-    );
-    ;
+    );;
   }
 }
