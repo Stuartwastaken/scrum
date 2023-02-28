@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
+import 'package:scrum/screens/login-screen.dart';
 import '../widgets/text-field.dart';
+import '../routes.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -80,7 +83,18 @@ class _RegisterState extends State<Register> {
                       SizedBox(
                         height: 45,
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                transitionDuration: Duration
+                                    .zero, // Set transition duration to zero to remove animation
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        gamePinScreen(),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             IconData(0xe093,
                                 fontFamily: 'MaterialIcons',
@@ -332,7 +346,18 @@ class _RegisterState extends State<Register> {
                                   MouseRegion(
                                     cursor: SystemMouseCursors.click,
                                     child: GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            transitionDuration: Duration
+                                                .zero, // Set transition duration to zero to remove animation
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                LoginScreen(),
+                                          ),
+                                        );
+                                      },
                                       child: Text(
                                         'Log in',
                                         style: TextStyle(

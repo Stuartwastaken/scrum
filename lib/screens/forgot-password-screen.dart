@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/login-screen.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
 
 class ForgotPasswordWidget extends StatefulWidget {
   const ForgotPasswordWidget({Key? key}) : super(key: key);
@@ -54,14 +55,64 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                         child: Text('Title')),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          ElevatedButton(onPressed: null, child: Text('Back'))
+                          SizedBox(
+                            height: 45,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                    transitionDuration: Duration
+                                        .zero, // Set transition duration to zero to remove animation
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        gamePinScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                IconData(0xe093,
+                                    fontFamily: 'MaterialIcons',
+                                    matchTextDirection: true),
+                                color: Colors.black,
+                              ),
+                              style: ButtonStyle(
+                                //primary: Colors.white,
+                                elevation:
+                                    MaterialStateProperty.resolveWith<double>(
+                                        (states) {
+                                  return 4.0; // Set elevation to 4.0 by default
+                                }),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                        (states) {
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return Colors
+                                        .grey; // Set background color to black when hovered
+                                  }
+                                  return Colors
+                                      .white; // Set background color to orange by default
+                                }),
+                              ),
+                              label: Text(
+                                "Back",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "Primary Family",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -75,9 +126,10 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                       Align(
                         alignment: AlignmentDirectional(0, 0),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 200),
+                          padding:
+                              EdgeInsetsDirectional.fromSTEB(0, 0, 150, 200),
                           child: Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
+                            width: MediaQuery.of(context).size.width * 0.375,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               boxShadow: [
@@ -107,25 +159,12 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                           'Reset Your Password',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16),
+                                              fontFamily: 'Poppins',
+                                              fontSize: 20),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          10, 5, 10, 5),
-                                      child: Text(
-                                        'Email',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
                                 ),
                                 Row(
                                   mainAxisSize: MainAxisSize.max,
@@ -199,7 +238,9 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                         10, 10, 10, 10),
                                     child: ElevatedButton(
                                         onPressed: null,
-                                        child: Text("Send reset link"))),
+                                        child: Text("Send reset link",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins')))),
                                 Divider(thickness: 1),
                                 Row(
                                   mainAxisSize: MainAxisSize.max,
@@ -214,12 +255,24 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                         child: MouseRegion(
                                           cursor: SystemMouseCursors.click,
                                           child: GestureDetector(
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                PageRouteBuilder(
+                                                  transitionDuration: Duration
+                                                      .zero, // Set transition duration to zero to remove animation
+                                                  pageBuilder: (context,
+                                                          animation,
+                                                          secondaryAnimation) =>
+                                                      LoginScreen(),
+                                                ),
+                                              );
+                                            },
                                             child: Text(
                                               'Return to log in',
                                               style: TextStyle(
-                                                color: Colors.blue,
-                                              ),
+                                                  color: Colors.blue,
+                                                  fontFamily: 'Poppins'),
                                             ),
                                           ),
                                         ),
