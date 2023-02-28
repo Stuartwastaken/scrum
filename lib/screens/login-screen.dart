@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/forgot-password-screen.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/screens/register-screen.dart';
-import "../routes.dart";
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -182,7 +182,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                   EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                               child: TextButton(
                                 onPressed: () {
-                                  print('Login Button Pressed: need to connect to Authorization Page (Home page after logging in).');
+                                  print('Login Button Pressed.');
+                                  if (true) {
+                                    // ^ check that both Username and Password are not empty
+                                    if (true) {
+                                      // ^ check that inputs correspond to an established user in firebase
+                                      if (false) {
+                                        // ^ combination of username and password do not exist in firebase
+                                        // tell user to try again
+                                      }
+                                      if (true) {
+                                        // ^ username and password exist in firebase
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            transitionDuration: Duration.zero,
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                gamePinScreen(),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
                                 },
                                 child: Text(
                                   'Log In',
@@ -279,7 +301,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.popAndPushNamed(context, "/forgot-password");
+                                      Navigator.pushReplacement(
+                                        context,
+                                        PageRouteBuilder(
+                                          transitionDuration: Duration.zero,
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              ForgotPasswordWidget(),
+                                        ),
+                                      );
                                     },
                                     child: Text(
                                       'Reset Password',
@@ -307,18 +337,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                       'Don\'t have an account?',
                                     ),
                                     TextButton(
-                                      onPressed: () {
-                                        Navigator.popAndPushNamed(context, "/register");
-                                      },
-                                      child: Text(
-                                        'Sign Up',
-                                        style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontSize: 15,
-                                          color: Color.fromARGB(255, 147, 119, 221),
-                                        ),
-                                      )
-                                    )
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            PageRouteBuilder(
+                                              transitionDuration: Duration.zero,
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  Register(),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Sign Up',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 15,
+                                            color: Color.fromARGB(
+                                                255, 147, 119, 221),
+                                          ),
+                                        ))
                                   ],
                                 ),
                               ],
@@ -334,6 +372,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-    );;
+    );
+    ;
   }
 }
