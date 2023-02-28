@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/forgot-password-screen.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
+import 'package:scrum/screens/register-screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -179,7 +182,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                   EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                               child: TextButton(
                                 onPressed: () {
-                                  print('Login Button Pressed');
+                                  print('Login Button Pressed.');
+                                  if (true) {
+                                    // ^ check that both Username and Password are not empty
+                                    if (true) {
+                                      // ^ check that inputs correspond to an established user in firebase
+                                      if (false) {
+                                        // ^ combination of username and password do not exist in firebase
+                                        // tell user to try again
+                                      }
+                                      if (true) {
+                                        // ^ username and password exist in firebase
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            transitionDuration: Duration.zero,
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                gamePinScreen(),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
                                 },
                                 child: Text(
                                   'Log In',
@@ -276,7 +301,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      print('Forgot Password');
+                                      Navigator.pushReplacement(
+                                        context,
+                                        PageRouteBuilder(
+                                          transitionDuration: Duration.zero,
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              ForgotPasswordWidget(),
+                                        ),
+                                      );
                                     },
                                     child: Text(
                                       'Reset Password',
@@ -305,7 +338,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     TextButton(
                                         onPressed: () {
-                                          print('Clicked Sign up button');
+                                          Navigator.pushReplacement(
+                                            context,
+                                            PageRouteBuilder(
+                                              transitionDuration: Duration.zero,
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  Register(),
+                                            ),
+                                          );
                                         },
                                         child: Text(
                                           'Sign Up',
@@ -315,8 +356,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             color: Color.fromARGB(
                                                 255, 147, 119, 221),
                                           ),
-                                        )
-                                    )
+                                        ))
                                   ],
                                 ),
                               ],
