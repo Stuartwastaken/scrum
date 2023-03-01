@@ -264,6 +264,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
+                                                    return "Error: Please enter an email";
                                                   } else if (!emailExists) {
                                                     return "Error: Email does not exist";
                                                   } else {
@@ -291,9 +292,12 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                                   type: CoolAlertType.success,
                                                   text:
                                                       "Reset link sent! Returning to Login",
-                                                  autoCloseDuration:
-                                                      Duration(seconds: 5));
-                                              Navigator.push(
+                                                  autoCloseDuration: null,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .5);
+                                              await Navigator.push(
                                                 context,
                                                 PageRouteBuilder(
                                                   transitionDuration:
