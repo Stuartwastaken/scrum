@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 
 class ForgotPasswordWidget extends StatefulWidget {
   const ForgotPasswordWidget({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
   final _unfocusNode = FocusNode();
   late final GlobalKey<FormFieldState> textFormFieldKey;
   late final TextEditingController emailController;
+  bool emailExists = false;
 
   @override
   void initState() {
@@ -30,13 +34,21 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
     super.dispose();
   }
 
-  Future<bool> emailInUse(String emailAddress) async {
-    final list =
-        await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailAddress);
-    if (list.isEmpty) {
-      return Future<bool>.value(false);
+  Future<void> checkEmailInUse(String emailAddress) async {
+    if (emailAddress.isNotEmpty) {
+      await FirebaseFirestore.instance
+          .collection("User")
+          .where("email", isEqualTo: emailAddress)
+          .get()
+          .then((value) {
+        setState(() {
+          emailExists = value.size > 0;
+        });
+      });
     } else {
-      return Future<bool>.value(true);
+      setState(() {
+        emailExists = true;
+      });
     }
   }
 
@@ -252,14 +264,11 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
-                                                    return "Error: Email field is empty";
+                                                  } else if (!emailExists) {
+                                                    return "Error: Email does not exist";
+                                                  } else {
+                                                    return null;
                                                   }
-                                                  if (emailInUse(value) ==
-                                                      Future<bool>.value(
-                                                          false)) {
-                                                    return "This email is not associated with an account";
-                                                  }
-                                                  return null;
                                                 },
                                               ),
                                             ),
@@ -272,12 +281,30 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           10, 10, 10, 10),
                                       child: ElevatedButton(
-                                          onPressed: () {
+                                          onPressed: () async {
+                                            await checkEmailInUse(
+                                                emailController.text);
                                             if (textFormFieldKey.currentState!
                                                 .validate()) {
-                                              // Send reset link
+                                              await CoolAlert.show(
+                                                  context: context,
+                                                  type: CoolAlertType.success,
+                                                  text:
+                                                      "Reset link sent! Returning to Login",
+                                                  autoCloseDuration:
+                                                      Duration(seconds: 5));
+                                              Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  transitionDuration:
+                                                      Duration.zero,
+                                                  pageBuilder: (context,
+                                                          animation,
+                                                          secondaryAnimation) =>
+                                                      LoginScreen(),
+                                                ),
+                                              );
                                             }
-                                            ;
                                           },
                                           child: Text("Send reset link"))),
                                   Divider(thickness: 1),
