@@ -54,6 +54,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                           'BillyBobJoe',
                           textAlign: TextAlign.center,
                           style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
                             color: Colors.black,
                             fontSize: 40,
@@ -113,6 +114,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                         child: AutoSizeText(
                           'Scrum Master',
                           style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
                             color: Colors.black,
                             fontSize: 40,
@@ -180,6 +182,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                         child: AutoSizeText(
                           'MillyBobbyBrown',
                           style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
                             color: Colors.black,
                             fontSize: 40,
