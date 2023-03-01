@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     projectId: 'scrum-14df0',
     databaseURL: 'https://scrum-14df0-default-rtdb.firebaseio.com',
     storageBucket: 'scrum-14df0.appspot.com',
-    androidClientId: '1010621765619-flgc59ttmtd9akiu2fdkhv904suklsg2.apps.googleusercontent.com',
-    iosClientId: '1010621765619-cpg9blh4i80s63hs4sd3hjjkni11cjef.apps.googleusercontent.com',
+    androidClientId:
+        '1010621765619-flgc59ttmtd9akiu2fdkhv904suklsg2.apps.googleusercontent.com',
+    iosClientId:
+        '1010621765619-cpg9blh4i80s63hs4sd3hjjkni11cjef.apps.googleusercontent.com',
     iosBundleId: 'com.example.scrum',
   );
 
@@ -82,8 +84,10 @@ class DefaultFirebaseOptions {
     projectId: 'scrum-14df0',
     databaseURL: 'https://scrum-14df0-default-rtdb.firebaseio.com',
     storageBucket: 'scrum-14df0.appspot.com',
-    androidClientId: '1010621765619-flgc59ttmtd9akiu2fdkhv904suklsg2.apps.googleusercontent.com',
-    iosClientId: '1010621765619-cpg9blh4i80s63hs4sd3hjjkni11cjef.apps.googleusercontent.com',
+    androidClientId:
+        '1010621765619-flgc59ttmtd9akiu2fdkhv904suklsg2.apps.googleusercontent.com',
+    iosClientId:
+        '1010621765619-cpg9blh4i80s63hs4sd3hjjkni11cjef.apps.googleusercontent.com',
     iosBundleId: 'com.example.scrum',
   );
 }
