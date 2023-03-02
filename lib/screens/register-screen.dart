@@ -91,7 +91,7 @@ class _RegisterState extends State<Register> {
                                     .zero, // Set transition duration to zero to remove animation
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        gamePinScreen(),
+                                        GamePinScreen(),
                               ),
                             );
                           },
