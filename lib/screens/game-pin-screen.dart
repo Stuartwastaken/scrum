@@ -3,14 +3,14 @@ import 'package:scrum/screens/login-screen.dart';
 import '../routes.dart';
 import 'register-screen.dart';
 
-class gamePinScreen extends StatefulWidget {
-  const gamePinScreen({super.key});
+class GamePinScreen extends StatefulWidget {
+  const GamePinScreen({super.key});
 
   @override
-  State<gamePinScreen> createState() => gamePinScreenState();
+  State<GamePinScreen> createState() => GamePinScreenState();
 }
 
-class gamePinScreenState extends State<gamePinScreen> {
+class GamePinScreenState extends State<GamePinScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

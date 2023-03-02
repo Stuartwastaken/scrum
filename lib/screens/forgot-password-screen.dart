@@ -101,7 +101,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                         .zero, // Set transition duration to zero to remove animation
                                     pageBuilder: (context, animation,
                                             secondaryAnimation) =>
-                                        gamePinScreen(),
+                                        GamePinScreen(),
                                   ),
                                 );
                               },
