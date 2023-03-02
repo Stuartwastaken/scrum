@@ -103,26 +103,22 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                             child: Padding(
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(5, 0, 0, 5),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 400,
-                                    height: 300,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF45A3E5),
-                                      borderRadius: BorderRadius.circular(30),
-                                      shape: BoxShape.rectangle,
-                                      border: Border.all(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.waves_sharp,
-                                      color: Colors.white,
-                                      size: 120,
-                                    ),
+                              child: Container(
+                                width: 400,
+                                height: 300,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF45A3E5),
+                                  borderRadius: BorderRadius.circular(30),
+                                  shape: BoxShape.rectangle,
+                                  border: Border.all(
+                                    color: Colors.black,
                                   ),
-                                ],
+                                ),
+                                child: Icon(
+                                  Icons.waves_sharp,
+                                  color: Colors.white,
+                                  size: 120,
+                                ),
                               ),
                             ),
                           ),
