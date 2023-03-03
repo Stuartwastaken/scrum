@@ -18,9 +18,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          //background image
           Container(
-            //width: 1445,
-            //height: 903.8,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("../../assets/images/shapes-background.jpg"),
@@ -81,12 +80,11 @@ class _PodiumScreenState extends State<PodiumScreen> {
                               height: 120,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://cdn0.iconfinder.com/data/icons/sport-balls/512/silver_medal.png',
-                                fit: BoxFit.fitHeight,
-                              ),
+                                image: DecorationImage(
+                                  image: AssetImage("../../assets/images/silver-medal.png"),
+                                  fit: BoxFit.fitHeight,
+                                )
+                              )
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
@@ -148,12 +146,11 @@ class _PodiumScreenState extends State<PodiumScreen> {
                               height: 120,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://cdn0.iconfinder.com/data/icons/sport-balls/512/gold_medal.png',
-                                fit: BoxFit.cover,
-                              ),
+                                image: DecorationImage(
+                                  image: AssetImage("../../assets/images/gold-medal.png"),
+                                  fit: BoxFit.fitHeight,
+                                )
+                              )
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
@@ -216,11 +213,10 @@ class _PodiumScreenState extends State<PodiumScreen> {
                               height: 120,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://cdn0.iconfinder.com/data/icons/sport-balls/512/bronze_medal.png',
-                                fit: BoxFit.cover,
+                                image: DecorationImage(
+                                  image: AssetImage("../../assets/images/bronze-medal.png"),
+                                  fit: BoxFit.fitHeight,
+                                ),
                               ),
                             ),
                             Padding(
@@ -244,28 +240,28 @@ class _PodiumScreenState extends State<PodiumScreen> {
             ),
           ),
           Align(
-                alignment: AlignmentDirectional(0.9, -0.9),
-                child: IconButton(
-                  iconSize: 60,
-                  color: Color(0xFF8E50EE),
-                  icon: Icon(
-                    Icons.home_rounded,
-                    color: Color(0xFF8E50EE),
-                    size: 75,
-                  ),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      PageRouteBuilder(
-                        transitionDuration: Duration.zero,
-                        pageBuilder: (context, animation,
-                          secondaryAnimation) =>
-                            gamePinScreen(),
-                      ),
-                    );
-                  },
-                ),
+            alignment: AlignmentDirectional(0.95, -0.95),
+            child: IconButton(
+              iconSize: 60,
+              color: Color(0xFF8E50EE),
+              icon: Icon(
+                Icons.home_rounded,
+                color: Color(0xFF8E50EE),
+                size: 75,
               ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    transitionDuration: Duration.zero,
+                    pageBuilder: (context, animation,
+                      secondaryAnimation) =>
+                        gamePinScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
