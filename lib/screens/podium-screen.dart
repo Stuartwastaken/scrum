@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
@@ -9,10 +10,16 @@ class PodiumScreen extends StatefulWidget {
   State<PodiumScreen> createState() => _PodiumScreenState();
 }
 
+void getUsersAndScores(String lobbyID) {
+  Query databaseRef = FirebaseDatabase.instance.ref().child(lobbyID);
+  print(databaseRef); //doesn't do what I want. just prints "instance of 'database reference'." will fix when we meet TUE 3/2
+}
+
 class _PodiumScreenState extends State<PodiumScreen> {
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
+    getUsersAndScores('998765');
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.white,
