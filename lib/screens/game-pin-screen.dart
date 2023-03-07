@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import '../routes.dart';
 import 'register-screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class GamePinScreen extends StatefulWidget {
   const GamePinScreen({super.key});
@@ -11,6 +13,18 @@ class GamePinScreen extends StatefulWidget {
 }
 
 class GamePinScreenState extends State<GamePinScreen> {
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  final nicknameController = TextEditingController();
+  final pinController = TextEditingController();
+
+  String getNickname() {
+    return nicknameController.text;
+  }
+
+  String getPin() {
+    return pinController.text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,17 +136,65 @@ class GamePinScreenState extends State<GamePinScreen> {
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 12.0, bottom: 12.0, left: 40.0, right: 40.0),
-                          child: keyTextField(),
+                          child: TextField(
+                              controller: pinController,
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: "SegoeUI",
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 16.0),
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 0, 0,
+                                            0)), // Set border color to a darker shade of grey
+                                  ),
+                                  hintText: 'Game PIN',
+                                  labelStyle: new TextStyle(
+                                      color: const Color(0xFF424242)))),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 4.0, bottom: 12.0, left: 40.0, right: 40.0),
-                          child: userTextField(),
+                          child: TextField(
+                            controller: nicknameController,
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Nickname',
+                                labelStyle: new TextStyle(
+                                    color: const Color(0xFF424242))),
+                          ),
                         ),
                         Padding(
                           padding:
                               const EdgeInsets.only(top: 4.0, bottom: 12.0),
-                          child: enterButton(),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              writeUserToTree(getNickname(), getPin());
+                              Navigator.popAndPushNamed(context, "/");
+                            },
+                            child: Text(
+                              "Enter",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color.fromARGB(255, 5, 70, 175),
+                              onPrimary: Colors.white,
+                              shadowColor: Colors.grey,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7.0)),
+                              minimumSize: Size(330, 50),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -147,65 +209,14 @@ class GamePinScreenState extends State<GamePinScreen> {
   }
 }
 
-class enterButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.popAndPushNamed(context, "/");
-      },
-      child: Text(
-        "Enter",
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-        ),
-      ),
-      style: ElevatedButton.styleFrom(
-        primary: Color.fromARGB(255, 5, 70, 175),
-        onPrimary: Colors.white,
-        shadowColor: Colors.grey,
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-        minimumSize: Size(330, 50),
-      ),
-    );
-  }
-}
+Future<void> writeUserToTree(String nickname, String gamePin) async {
+  final databaseRef = FirebaseDatabase.instance.reference();
+  final gamePinRef = databaseRef.child(gamePin);
+  String? hash = gamePinRef.push().key;
 
-class keyTextField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-        style: new TextStyle(
-            fontWeight: FontWeight.w400,
-            fontFamily: "SegoeUI",
-            fontStyle: FontStyle.normal,
-            fontSize: 16.0),
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Color.fromARGB(255, 0, 0,
-                      0)), // Set border color to a darker shade of grey
-            ),
-            hintText: 'Game PIN',
-            labelStyle: new TextStyle(color: const Color(0xFF424242))));
-  }
-}
-
-class userTextField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      style: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        color: Colors.black,
-      ),
-      decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Nickname',
-          labelStyle: new TextStyle(color: const Color(0xFF424242))),
-    );
-  }
+  await gamePinRef.child(hash!).set({
+    'nickname': nickname,
+    'score': 0,
+    'isPlaying': true,
+  });
 }
