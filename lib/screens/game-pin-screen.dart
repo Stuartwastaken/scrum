@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
@@ -19,6 +20,10 @@ class GamePinScreenState extends State<GamePinScreen> {
 
   String getNickname() {
     return nicknameController.text;
+  }
+
+  bool isNicknameEmpty(TextEditingController nicknameController) {
+    return nicknameController.text.isEmpty;
   }
 
   String getPin() {
@@ -174,9 +179,48 @@ class GamePinScreenState extends State<GamePinScreen> {
                           padding:
                               const EdgeInsets.only(top: 4.0, bottom: 12.0),
                           child: ElevatedButton(
-                            onPressed: () {
-                              writeUserToTree(getNickname(), getPin());
-                              Navigator.popAndPushNamed(context, "/");
+                            onPressed: () async {
+                              bool gamePinExists =
+                                  false; //await checkGamePinExists(getPin());
+
+                              if (gamePinExists &
+                                  !isNicknameEmpty(nicknameController)) {
+                                writeUserToTree(getNickname(), getPin());
+                              } else if (isNicknameEmpty(nicknameController)) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Please enter a nickname"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Game pin is not valid"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             },
                             child: Text(
                               "Enter",
@@ -219,4 +263,20 @@ Future<void> writeUserToTree(String nickname, String gamePin) async {
     'score': 0,
     'isPlaying': true,
   });
+}
+
+Future<bool> checkGamePinExists(String gamePin) async {
+  final databaseRef = FirebaseDatabase.instance.reference();
+
+  bool exists = false;
+  await databaseRef.once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic>? values =
+            snapshot.value as Map<dynamic, dynamic>?;
+        if (values == null) {
+          exists = false;
+          return;
+        }
+        exists = values.containsKey(gamePin);
+      } as FutureOr Function(DatabaseEvent value));
+  return exists;
 }
