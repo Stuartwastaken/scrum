@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +12,44 @@ class PodiumScreen extends StatefulWidget {
   State<PodiumScreen> createState() => _PodiumScreenState();
 }
 
-void getUsersAndScores(String lobbyID) {
-  Query databaseRef = FirebaseDatabase.instance.ref().child(lobbyID);
-  print(databaseRef); //doesn't do what I want. just prints "instance of 'database reference'." will fix when we meet TUE 3/2
+Future<Map<String, dynamic>> getUsersAndScores(String lobbyID) async {
+  final databaseRef = FirebaseDatabase.instance.ref();
+  Map<String, dynamic> usersInLobby = {};
+  await databaseRef.child(lobbyID).once().then((DatabaseEvent snapshot) {
+    Map<dynamic, dynamic> lobbyData = snapshot.snapshot.value as Map;
+    if (lobbyData != null) {
+      lobbyData.forEach((uid, userData) {
+        String nickname = userData['nickname'];
+        int score = userData['score'];
+        usersInLobby[uid] = {
+          'nickname': nickname,
+          'score': score
+        };
+      });
+    }
+  });
+  return usersInLobby;
+}
+
+Map<String, dynamic> sort(Map<String, dynamic> usersAndScores){
+  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
+  usersList.sort((a,b) => b.value['score'].compareTo(a.value['score']));
+  usersAndScores = Map.fromEntries(usersList);
+  return usersAndScores;
 }
 
 class _PodiumScreenState extends State<PodiumScreen> {
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
-    getUsersAndScores('998765');
+    Map<String, dynamic> usersAndScores_sorted = {};
+    List<MapEntry<String, dynamic>> sortedEntries = [];
+    getUsersAndScores('998765').then((Map<String, dynamic> usersAndScores) {  //hardcoded lobbyID. Will need to be changed where lobbyID is passed as parameter to constructor.
+      usersAndScores_sorted = sort(usersAndScores);
+      sortedEntries = usersAndScores_sorted.entries.toList();
+      return Future.value(sortedEntries);
+    });
+    print(sortedEntries);
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.white,
@@ -56,8 +86,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                        child: AutoSizeText(
-                          'BillyBobJoe',
+                        child: AutoSizeText( "Second Name",
+                          //sortedEntries[1].value['nickname'],
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -95,8 +125,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                              child: Text(
-                                'Score: 420',
+                              child: Text( "20",
+                                //sortedEntries[1].value['score'],
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -116,8 +146,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                        child: AutoSizeText(
-                          'Scrum Master',
+                        child: AutoSizeText( "First Name",
+                          //sortedEntries[0].value['nickname'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
@@ -161,8 +191,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                              child: Text(
-                                'Score : 42069',
+                              child: Text( "30",
+                                //sortedEntries[0].value['score'],
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -183,8 +213,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                        child: AutoSizeText(
-                          'MillyBobbyBrown',
+                        child: AutoSizeText( "Third Name",
+                          //sortedEntries[2].value['nickname'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
@@ -228,8 +258,8 @@ class _PodiumScreenState extends State<PodiumScreen> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                              child: Text(
-                                'Score: 69',
+                              child: Text( "10",
+                                //sortedEntries[2].value['score'],
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   color: Colors.white,
