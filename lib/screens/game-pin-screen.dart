@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import '../routes.dart';
@@ -28,6 +27,28 @@ class GamePinScreenState extends State<GamePinScreen> {
 
   String getPin() {
     return pinController.text;
+  }
+
+  bool isPinEmpty(TextEditingController nicknameController) {
+    return pinController.text.isEmpty;
+  }
+
+  Future<void> writeUserToTree(String nickname, String gamePin) async {
+    final databaseRef = FirebaseDatabase.instance.reference();
+    final gamePinRef = databaseRef.child(gamePin);
+    String? hash = gamePinRef.push().key;
+
+    await gamePinRef.child(hash!).set({
+      'nickname': nickname,
+      'score': 0,
+    });
+  }
+
+  Future<bool> checkPinExists(String pinID) async {
+    final databaseRef = FirebaseDatabase.instance.reference();
+    var snapshot = await databaseRef.child(pinID).once();
+
+    return snapshot.snapshot.exists;
   }
 
   @override
@@ -181,11 +202,12 @@ class GamePinScreenState extends State<GamePinScreen> {
                           child: ElevatedButton(
                             onPressed: () async {
                               bool gamePinExists =
-                                  false; //await checkGamePinExists(getPin());
+                                  await checkPinExists(getPin());
 
                               if (gamePinExists &
                                   !isNicknameEmpty(nicknameController)) {
                                 writeUserToTree(getNickname(), getPin());
+                                print("The user should be written!");
                               } else if (isNicknameEmpty(nicknameController)) {
                                 showDialog(
                                   context: context,
@@ -203,7 +225,26 @@ class GamePinScreenState extends State<GamePinScreen> {
                                     );
                                   },
                                 );
-                              } else {
+                              } else if (isPinEmpty(pinController) &
+                                  isNicknameEmpty(nicknameController)) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                          "Please enter a game pin and nickname"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else if (!gamePinExists) {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -251,32 +292,4 @@ class GamePinScreenState extends State<GamePinScreen> {
       ),
     );
   }
-}
-
-Future<void> writeUserToTree(String nickname, String gamePin) async {
-  final databaseRef = FirebaseDatabase.instance.reference();
-  final gamePinRef = databaseRef.child(gamePin);
-  String? hash = gamePinRef.push().key;
-
-  await gamePinRef.child(hash!).set({
-    'nickname': nickname,
-    'score': 0,
-    'isPlaying': true,
-  });
-}
-
-Future<bool> checkGamePinExists(String gamePin) async {
-  final databaseRef = FirebaseDatabase.instance.reference();
-
-  bool exists = false;
-  await databaseRef.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic>? values =
-            snapshot.value as Map<dynamic, dynamic>?;
-        if (values == null) {
-          exists = false;
-          return;
-        }
-        exists = values.containsKey(gamePin);
-      } as FutureOr Function(DatabaseEvent value));
-  return exists;
 }
