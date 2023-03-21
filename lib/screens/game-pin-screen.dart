@@ -208,12 +208,14 @@ class GamePinScreenState extends State<GamePinScreen> {
                                   !isNicknameEmpty(nicknameController)) {
                                 writeUserToTree(getNickname(), getPin());
                                 print("The user should be written!");
-                              } else if (isNicknameEmpty(nicknameController)) {
+                              } else if (isPinEmpty(pinController) &
+                                  isNicknameEmpty(nicknameController)) {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text("Please enter a nickname"),
+                                      title: Text(
+                                          "Please enter a game pin and nickname"),
                                       actions: [
                                         TextButton(
                                           child: Text("OK"),
@@ -225,14 +227,29 @@ class GamePinScreenState extends State<GamePinScreen> {
                                     );
                                   },
                                 );
-                              } else if (isPinEmpty(pinController) &
-                                  isNicknameEmpty(nicknameController)) {
+                              } else if (isPinEmpty(pinController)) {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text(
-                                          "Please enter a game pin and nickname"),
+                                      title: Text("Please enter a gamepin"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else if (isNicknameEmpty(nicknameController)) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Please enter a nickname"),
                                       actions: [
                                         TextButton(
                                           child: Text("OK"),
