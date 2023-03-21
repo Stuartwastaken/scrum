@@ -18,11 +18,13 @@ Future<Map<String, dynamic>> getUsersAndScores(String lobbyID) async {
     Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
     if (lobbyData != null) {
       lobbyData.forEach((uid, userData) {
-        String nickname = userData['nickname'];
-        int score = userData['score'];
-        usersInLobby[uid] = {
-          'nickname': nickname,
-          'score': score
+        if (uid != 'time') {
+          String nickname = userData['nickname'];
+          int score = userData['score'];
+          usersInLobby[uid] = {
+            'nickname': nickname,
+            'score': score
+          };
         };
       });
     }
