@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +14,8 @@ class PodiumScreen extends StatefulWidget {
 Future<Map<String, dynamic>> getUsersAndScores(String lobbyID) async {
   final databaseRef = FirebaseDatabase.instance.ref();
   Map<String, dynamic> usersInLobby = {};
-  await databaseRef.child(lobbyID).once().then((DatabaseEvent snapshot) {
-    Map<dynamic, dynamic> lobbyData = snapshot.snapshot.value as Map;
+  await databaseRef.child(lobbyID).once().then((DatabaseEvent event) {
+    Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
     if (lobbyData != null) {
       lobbyData.forEach((uid, userData) {
         String nickname = userData['nickname'];
@@ -39,17 +38,21 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores){
 }
 
 class _PodiumScreenState extends State<PodiumScreen> {
+  //global variables
+  Map<String, dynamic> usersAndScores_sorted = {};
+  List<MapEntry<String, dynamic>> sortedEntries = [];
+
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
-    Map<String, dynamic> usersAndScores_sorted = {};
-    List<MapEntry<String, dynamic>> sortedEntries = [];
+
     getUsersAndScores('998765').then((Map<String, dynamic> usersAndScores) {  //hardcoded lobbyID. Will need to be changed where lobbyID is passed as parameter to constructor.
       usersAndScores_sorted = sort(usersAndScores);
       sortedEntries = usersAndScores_sorted.entries.toList();
+      print(sortedEntries);     //populated
       return Future.value(sortedEntries);
     });
-    print(sortedEntries);
+    print(sortedEntries);       //not populated
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.white,
