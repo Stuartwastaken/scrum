@@ -29,7 +29,7 @@ class GamePinScreenState extends State<GamePinScreen> {
     return pinController.text;
   }
 
-  bool isPinEmpty(TextEditingController nicknameController) {
+  bool isPinEmpty(TextEditingController pinController) {
     return pinController.text.isEmpty;
   }
 
@@ -201,14 +201,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                               const EdgeInsets.only(top: 4.0, bottom: 12.0),
                           child: ElevatedButton(
                             onPressed: () async {
-                              bool gamePinExists =
-                                  await checkPinExists(getPin());
-
-                              if (gamePinExists &
-                                  !isNicknameEmpty(nicknameController)) {
-                                writeUserToTree(getNickname(), getPin());
-                                print("The user should be written!");
-                              } else if (isPinEmpty(pinController) &
+                              if (isPinEmpty(pinController) &
                                   isNicknameEmpty(nicknameController)) {
                                 showDialog(
                                   context: context,
@@ -261,7 +254,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                     );
                                   },
                                 );
-                              } else if (!gamePinExists) {
+                              } else if (!await checkPinExists(getPin())) {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -278,6 +271,10 @@ class GamePinScreenState extends State<GamePinScreen> {
                                     );
                                   },
                                 );
+                              } else if (await checkPinExists(getPin()) &
+                                  !isNicknameEmpty(nicknameController)) {
+                                writeUserToTree(getNickname(), getPin());
+                                print("The user should be written!");
                               }
                             },
                             child: Text(
