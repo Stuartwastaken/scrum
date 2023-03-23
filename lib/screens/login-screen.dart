@@ -7,12 +7,12 @@ import 'forgot-password-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:scrum/utils/validator.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _emailTextController = TextEditingController();
@@ -399,7 +399,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             pageBuilder: (context,
                                                                     animation,
                                                                     secondaryAnimation) =>
-                                                                RegisterPage(),
+                                                                RegisterScreen(),
                                                           ),
                                                         );
                                                       },

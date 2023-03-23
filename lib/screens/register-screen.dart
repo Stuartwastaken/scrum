@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login-screen.dart';
+import 'package:scrum/screens/login-screen.dart';
 import 'game-pin-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,12 +7,12 @@ import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:scrum/utils/validator.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _registerFormKey = GlobalKey<FormState>();
 
   final _nameTextController = TextEditingController();
@@ -499,7 +499,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                       pageBuilder: (context,
                                                               animation,
                                                               secondaryAnimation) =>
-                                                          LoginPage(),
+                                                          LoginScreen(),
                                                     ),
                                                   );
                                                 },
