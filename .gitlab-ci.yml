@@ -20,9 +20,7 @@ stages:
 
 test:
   stage: test
-  image: "cirrusci/flutter:1.22.5"
-  before_script:
-    - $env:PATH += ";$env:HOME\.pub-cache\bin"
+  image: cirrusci/flutter:stable
   script:
 <<<<<<< HEAD
     - echo "testing application"
