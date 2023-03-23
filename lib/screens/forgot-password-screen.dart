@@ -305,7 +305,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                                   pageBuilder: (context,
                                                           animation,
                                                           secondaryAnimation) =>
-                                                      LoginScreen(),
+                                                      LoginPage(),
                                                 ),
                                               );
                                             }
@@ -336,7 +336,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                                     pageBuilder: (context,
                                                             animation,
                                                             secondaryAnimation) =>
-                                                        LoginScreen(),
+                                                        LoginPage(),
                                                   ),
                                                 );
                                               },

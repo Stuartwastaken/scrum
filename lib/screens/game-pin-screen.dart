@@ -36,7 +36,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) =>
-                            LoginScreen(),
+                            LoginPage(),
                         transitionDuration: Duration.zero,
                         reverseTransitionDuration: Duration.zero,
                       ),
@@ -68,7 +68,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) =>
-                            Register(),
+                            RegisterPage(),
                         transitionDuration: Duration.zero,
                         reverseTransitionDuration: Duration.zero,
                       ),
