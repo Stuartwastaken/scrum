@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 stages:
   - analyze_and_test
 
@@ -12,23 +13,21 @@ analyze_and_test:
 =======
 image: cirrusci/flutter:stable
 
+=======
+>>>>>>> d2294fd (Update Pipeline 2)
 stages:
-  - build
   - test
-
-
-
-build:
-  stage: build
-  script:
-    - echo "building application"
-    - flutter --version
-    - flutter pub get
-    - flutter build web --release
 
 test:
   stage: test
+  image: "cirrusci/flutter:1.22.5"
+  before_script:
+    - export PATH="$PATH:$HOME/.pub-cache/bin"
   script:
+<<<<<<< HEAD
     - echo "testing application"
 >>>>>>> a685b34 (Updated Pipeline)
     - flutter test
+=======
+    - flutter test
+>>>>>>> d2294fd (Update Pipeline 2)
