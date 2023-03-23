@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/screens/register-screen.dart';
+import 'forgot-password-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:scrum/utils/validator.dart';
 
@@ -344,7 +345,19 @@ class _LoginPageState extends State<LoginPage> {
                                                   'Forgot Password?',
                                                 ),
                                                 TextButton(
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        PageRouteBuilder(
+                                                          transitionDuration:
+                                                              Duration.zero,
+                                                          pageBuilder: (context,
+                                                                  animation,
+                                                                  secondaryAnimation) =>
+                                                              ForgotPasswordWidget(),
+                                                        ),
+                                                      );
+                                                    },
                                                     child: Text(
                                                       'Reset Password',
                                                       style: TextStyle(
@@ -376,7 +389,20 @@ class _LoginPageState extends State<LoginPage> {
                                                       'Don\'t have an account?',
                                                     ),
                                                     TextButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          PageRouteBuilder(
+                                                            transitionDuration:
+                                                                Duration.zero,
+                                                            pageBuilder: (context,
+                                                                    animation,
+                                                                    secondaryAnimation) =>
+                                                                RegisterPage(),
+                                                          ),
+                                                        );
+                                                      },
                                                       child: Text(
                                                         'Sign Up',
                                                         style: TextStyle(

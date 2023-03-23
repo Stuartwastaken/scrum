@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'login-screen.dart';
+import 'game-pin-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
@@ -73,7 +74,18 @@ class _RegisterPageState extends State<RegisterPage> {
                         SizedBox(
                           height: 45,
                           child: ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration: Duration
+                                      .zero, // Set transition duration to zero to remove animation
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      GamePinScreen(),
+                                ),
+                              );
+                            },
                             icon: Icon(
                               IconData(0xe093,
                                   fontFamily: 'MaterialIcons',
@@ -338,11 +350,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                               ),
                               Divider(
-                                thickness: 5,
-                                indent: 55,
-                                endIndent: 55,
-                                color: Color.fromARGB(255, 241, 197, 255),
-                              ),
+                                  thickness: 5,
+                                  indent: 55,
+                                  endIndent: 55,
+                                  color: Colors.black),
+
                               Align(
                                 alignment: AlignmentDirectional(0, 0),
                                 child: Padding(
@@ -404,57 +416,42 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24, 10, 24, 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Forgot Password?',
+                                      "Already have an account? ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                    TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          'Reset Password',
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 15,
-                                            color: Color.fromARGB(
-                                                255, 147, 119, 221),
-                                          ),
-                                        ))
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Don\'t have an account?',
-                                        ),
-                                        TextButton(
-                                          onPressed: () {},
-                                          child: Text(
-                                            'Sign Up',
-                                            style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 15,
-                                              color: Color.fromARGB(
-                                                  255, 147, 119, 221),
+                                    MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            PageRouteBuilder(
+                                              transitionDuration: Duration
+                                                  .zero, // Set transition duration to zero to remove animation
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  LoginPage(),
                                             ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Log in',
+                                          style: TextStyle(
+                                            color: Colors.blue,
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
