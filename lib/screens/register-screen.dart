@@ -32,121 +32,442 @@ class _RegisterPageState extends State<RegisterPage> {
         _focusPassword.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Register'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Form(
-                  key: _registerFormKey,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: _nameTextController,
-                        focusNode: _focusName,
-                        validator: (value) => Validator.validateName(
-                          name: value,
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("../../assets/images/shapes-background.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //column 1
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //title
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "SCRUM",
+                        style: TextStyle(
+                          fontFamily: "Primary Family",
+                          fontSize: 46,
                         ),
-                        decoration: InputDecoration(
-                          hintText: "Name",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                      ),
+                    ],
+                  ),
+                  //back button
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(24, 10, 24, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 45,
+                          child: ElevatedButton.icon(
+                            onPressed: () {},
+                            icon: Icon(
+                              IconData(0xe093,
+                                  fontFamily: 'MaterialIcons',
+                                  matchTextDirection: true),
+                              color: Colors.black,
+                            ),
+                            style: ButtonStyle(
+                              //primary: Colors.white,
+                              elevation:
+                                  MaterialStateProperty.resolveWith<double>(
+                                      (states) {
+                                return 4.0; // Set elevation to 4.0 by default
+                              }),
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                      (states) {
+                                if (states.contains(MaterialState.hovered)) {
+                                  return Colors
+                                      .grey; // Set background color to black when hovered
+                                }
+                                return Colors
+                                    .white; // Set background color to orange by default
+                              }),
+                            ),
+                            label: Text(
+                              "Back",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Primary Family",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 16.0),
-                      TextFormField(
-                        controller: _emailTextController,
-                        focusNode: _focusEmail,
-                        validator: (value) => Validator.validateEmail(
-                          email: value,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              //column 2
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    //white background
+                    Align(
+                      alignment: AlignmentDirectional(-0.165, 0),
+                      child: Material(
+                        color: Colors.transparent,
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        decoration: InputDecoration(
-                          hintText: "Email",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
+                        child: Container(
+                          width: 475,
+                          height: 625,
+                          constraints: BoxConstraints(
+                            maxHeight: double.infinity,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Color(0xFF3C3939),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      TextFormField(
-                        controller: _passwordTextController,
-                        focusNode: _focusPassword,
-                        obscureText: true,
-                        validator: (value) => Validator.validatePassword(
-                          password: value,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          errorBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            borderSide: BorderSide(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 32.0),
-                      _isProcessing
-                          ? CircularProgressIndicator()
-                          : Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      setState(() {
-                                        _isProcessing = true;
-                                      });
+                          //form column
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              //reigster text
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24, 20, 24, 20),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Align(
+                                        alignment: AlignmentDirectional(0, 0),
+                                        child: Text(
+                                          "Register with your email",
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            color: Colors.black,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
 
-                                      if (_registerFormKey.currentState!
-                                          .validate()) {
-                                        User? user = await FireAuth
-                                            .registerUsingEmailPassword(
-                                          name: _nameTextController.text,
-                                          email: _emailTextController.text,
-                                          password:
-                                              _passwordTextController.text,
-                                        );
-
-                                        setState(() {
-                                          _isProcessing = false;
-                                        });
-
-                                        if (user != null) {
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProfilePage(user: user),
+                              Form(
+                                key: _registerFormKey,
+                                child: Column(
+                                  children: <Widget>[
+                                    //username field
+                                    Container(
+                                      width: 390,
+                                      height: 61.6,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 10, 0, 0),
+                                        child: TextFormField(
+                                          controller: _nameTextController,
+                                          focusNode: _focusName,
+                                          validator: (value) =>
+                                              Validator.validateName(
+                                            name: value,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Name",
+                                            errorBorder: UnderlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6.0),
+                                              borderSide: BorderSide(
+                                                color: Colors.red,
+                                              ),
                                             ),
-                                            ModalRoute.withName('/'),
-                                          );
-                                        }
-                                      }
-                                    },
-                                    child: Text(
-                                      'Sign up',
-                                      style: TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    //email field
+                                    Container(
+                                      width: 390,
+                                      height: 61.6,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 10, 0, 0),
+                                        child: TextFormField(
+                                          controller: _emailTextController,
+                                          focusNode: _focusEmail,
+                                          validator: (value) =>
+                                              Validator.validateEmail(
+                                            email: value,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Email",
+                                            errorBorder: UnderlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6.0),
+                                              borderSide: BorderSide(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    //password field
+                                    Container(
+                                      width: 390,
+                                      height: 61.6,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 10, 0, 0),
+                                        child: TextFormField(
+                                          controller: _passwordTextController,
+                                          focusNode: _focusPassword,
+                                          obscureText: true,
+                                          validator: (value) =>
+                                              Validator.validatePassword(
+                                            password: value,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Password",
+                                            errorBorder: UnderlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6.0),
+                                              borderSide: BorderSide(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    //login button
+                                    SizedBox(height: 24.0),
+                                    _isProcessing
+                                        ? CircularProgressIndicator()
+                                        : Row(
+                                            children: [
+                                              Expanded(
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      _isProcessing = true;
+                                                    });
+
+                                                    if (_registerFormKey
+                                                        .currentState!
+                                                        .validate()) {
+                                                      User? user = await FireAuth
+                                                          .registerUsingEmailPassword(
+                                                        name:
+                                                            _nameTextController
+                                                                .text,
+                                                        email:
+                                                            _emailTextController
+                                                                .text,
+                                                        password:
+                                                            _passwordTextController
+                                                                .text,
+                                                      );
+
+                                                      setState(() {
+                                                        _isProcessing = false;
+                                                      });
+
+                                                      if (user != null) {
+                                                        Navigator.of(context)
+                                                            .pushAndRemoveUntil(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProfilePage(
+                                                                    user: user),
+                                                          ),
+                                                          ModalRoute.withName(
+                                                              '/'),
+                                                        );
+                                                      }
+                                                    }
+                                                  },
+                                                  child: Text(
+                                                    'Sign up',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                              ),
+                              Divider(
+                                thickness: 5,
+                                indent: 55,
+                                endIndent: 55,
+                                color: Color.fromARGB(255, 241, 197, 255),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(0, 0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 0),
+                                  child: Container(
+                                    width: 351,
+                                    height: 44,
+                                    child: Stack(
+                                      children: [
+                                        Align(
+                                          alignment: AlignmentDirectional(0, 0),
+                                        ),
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(-0.83, 0),
+                                          child: Container(
+                                            width: 22,
+                                            height: 22,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(0, 0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 0),
+                                  child: Container(
+                                    width: 351,
+                                    height: 20,
+                                    child: Stack(
+                                      children: [
+                                        Align(
+                                          alignment: AlignmentDirectional(0, 0),
+                                        ),
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(-0.83, 0),
+                                          child: Container(
+                                            width: 22,
+                                            height: 22,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Forgot Password?',
+                                    ),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Reset Password',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 15,
+                                            color: Color.fromARGB(
+                                                255, 147, 119, 221),
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Don\'t have an account?',
+                                        ),
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: Text(
+                                            'Sign Up',
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 15,
+                                              color: Color.fromARGB(
+                                                  255, 147, 119, 221),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
