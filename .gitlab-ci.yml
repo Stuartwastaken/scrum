@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 stages:
   - analyze_and_test
 
@@ -8,4 +9,26 @@ before_script:
 analyze_and_test:
   stage: analyze_and_test
   script:
+=======
+image: cirrusci/flutter:stable
+
+stages:
+  - build
+  - test
+
+
+
+build:
+  stage: build
+  script:
+    - echo "building application"
+    - flutter --version
+    - flutter pub get
+    - flutter build web --release
+
+test:
+  stage: test
+  script:
+    - echo "testing application"
+>>>>>>> a685b34 (Updated Pipeline)
     - flutter test
