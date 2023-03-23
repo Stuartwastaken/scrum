@@ -1,8 +1,7 @@
-stages:
-  - test
-
 test:
   stage: test
-  image: cirrusci/flutter:stable
+  image: "cirrusci/flutter:1.22.5"
+  before_script:
+    - export PATH="$PATH:$HOME/.pub-cache/bin"
   script:
     - flutter test
