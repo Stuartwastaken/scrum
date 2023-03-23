@@ -22,7 +22,7 @@ test:
   stage: test
   image: "cirrusci/flutter:1.22.5"
   before_script:
-    - export PATH="$PATH:$HOME/.pub-cache/bin"
+    - export PATH="$env:PATH;$env:HOME\.pub-cache\bin"
   script:
 <<<<<<< HEAD
     - echo "testing application"
