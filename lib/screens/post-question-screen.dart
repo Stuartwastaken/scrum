@@ -66,7 +66,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                         width: MediaQuery.of(context).size.width * 0.5,
                         height: MediaQuery.of(context).size.height * 0.2,
                         decoration: BoxDecoration(
-                          color: widget.isCorrect == true
+                          color: widget.isCorrect
                               ? Color(0xFF26890C)
                               : Color(0xFFE21B3C),
                           boxShadow: [
