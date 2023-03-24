@@ -1,7 +1,3 @@
-cache:
-  paths:
-    - .pub-cache/global_packages
-
 stages:
   - analyze_and_test
 
