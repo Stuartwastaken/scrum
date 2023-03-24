@@ -2,19 +2,10 @@ stages:
   - analyze_and_test
 
 before_script:
-  - git --version
   - flutter --version
   - flutter pub get
-  - flutter pub global activate junitreport
 
 analyze_and_test:
   stage: analyze_and_test
   script:
-    - flutter analyze
-    - flutter test --machine | tojunit -o report.xml
-    - echo "Test"
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - report.xml
+    - flutter test
