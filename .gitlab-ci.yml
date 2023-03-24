@@ -1,23 +1,34 @@
-cache:
-  paths:
-    - .pub-cache/global_packages
-
-stages:
-  - analyze_and_test
-
-before_script:
-  - set PATH="$PATH":"$HOME/.flutter-sdk/.pub-cache/bin"
-  - flutter pub get
-  - flutter pub global activate junitreport
-
-analyze_and_test:
-  stage: analyze_and_test
+code_quality:
+  stage: test
+  image: "cirrusci/flutter:1.22.5"
+  before_script:
+    - pub global activate dart_code_metrics
+    - export PATH="$PATH:$HOME/.pub-cache/bin"
   script:
-    - flutter analyze
-    - flutter test --machine | tojunit -o report.xml
-    - echo "Test"
+    - metrics lib -r codeclimate  > gl-code-quality-report.json
   artifacts:
-    when: always
     reports:
-      junit:
-        - report.xml
+      codequality: gl-code-quality-report.json
+
+test:
+  stage: test
+  image: "cirrusci/flutter:1.22.5"
+  before_script:
+    - pub global activate junitreport
+    - export PATH="$PATH:$HOME/.pub-cache/bin"
+  script:
+    - flutter test --machine --coverage | tojunit -o report.xml
+    - lcov --summary coverage/lcov.info
+    - genhtml coverage/lcov.info --output=coverage
+  coverage: '/lines\.*: \d+\.\d+\%/'
+  artifacts:
+    name: coverage
+    paths:
+      - $CI_PROJECT_DIR/coverage
+    reports:
+      junit: report.xml
+
+deploy:
+  stage: deploy
+  script: echo "Define your deployment script!"
+  environment: production
