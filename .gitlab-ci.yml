@@ -2,7 +2,6 @@ stages:
   - analyze_and_test
 
 before_script:
-  - git --version
   - pwd
   - flutter --version
   - flutter pub get
