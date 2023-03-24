@@ -15,6 +15,7 @@ analyze_and_test:
   script:
     - flutter analyze
     - flutter test --machine | tojunit -o report.xml
+    - echo "Test"
   artifacts:
     when: always
     reports:
