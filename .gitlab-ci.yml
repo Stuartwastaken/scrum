@@ -6,7 +6,7 @@ stages:
   - analyze_and_test
 
 before_script:
-  - export PATH="$PATH":"$HOME/.flutter-sdk/.pub-cache/bin"
+  - set PATH="$PATH":"$HOME/.flutter-sdk/.pub-cache/bin"
   - flutter pub get
   - flutter pub global activate junitreport
 
