@@ -8,45 +8,47 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  final List<String> entries = <String>['1', '2', '3', '4'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.all(8),
-        children: <Widget>[
-          Container(
-            height: 50,
-            color: Colors.amber[600],
-            child: Row(
-              children: [
-                Text("Title 1"),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    IconData(0xf67a, fontFamily: 'MaterialIcons'),
-                    color: Colors.blue,
+      body: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: entries.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              height: 50,
+              color: Colors.amber[600],
+              child: Row(
+                children: [
+                  Text("Title ${entries[index]}"),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      IconData(0xf67a, fontFamily: 'MaterialIcons'),
+                      color: Colors.blue,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    IconData(0xf3e9, fontFamily: 'MaterialIcons'),
-                    color: Colors.red,
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      IconData(0xf3e9, fontFamily: 'MaterialIcons'),
+                      color: Colors.red,
+                    ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Delete"),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Play"),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Delete"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Play"),
+                  ),
+                ],
+              ),
+            );
+          }),
     );
   }
 }
