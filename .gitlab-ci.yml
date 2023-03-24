@@ -3,14 +3,14 @@ cache:
     - .pub-cache/global_packages
 
 stages:
-  - test1
+  - analyze_and_test
 
 before_script:
   - set PATH="$PATH":"$HOME/.flutter-sdk/.pub-cache/bin"
   - flutter pub get
   - flutter pub global activate junitreport
 
-test1:
+analyze_and_test:
   stage: analyze_and_test
   script:
     - flutter analyze
