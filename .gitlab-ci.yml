@@ -4,6 +4,7 @@ build-job:
     - echo "Hello, $GITLAB_USER_LOGIN!"
 
 test-job1:
+  image: cirrusci/flutter
   stage: test
   script:
     - flutter test
