@@ -19,9 +19,12 @@ class ViewProfileScreen extends StatefulWidget {
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   final FirebaseAuth _auth = FirebaseAuth.instance;
 >>>>>>> 9433ad4 (Preliminary screen for viewing profile)
+=======
+>>>>>>> cf023f3 (Removed unused variable)
   String? _username;
   String? _email;
 
