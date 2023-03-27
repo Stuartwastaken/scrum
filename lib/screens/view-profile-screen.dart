@@ -10,7 +10,6 @@ class ViewProfileScreen extends StatefulWidget {
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _username;
   String? _email;
 
