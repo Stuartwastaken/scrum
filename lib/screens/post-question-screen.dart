@@ -31,7 +31,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor:
-          widget.isCorrect == true ? Color(0xFF66BF39) : Color(0xFFFF3355),
+          widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
