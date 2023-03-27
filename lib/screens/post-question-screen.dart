@@ -93,7 +93,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                       child: Text(
-                        'You\'re in 2nd place\n20 points behind Jake',
+                        'You\'re in 2nd place\n10 points behind Jake',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Poppins',
