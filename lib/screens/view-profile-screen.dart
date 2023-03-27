@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'edit-profile-screen.dart';
 =======
 import 'package:firebase_core/firebase_core.dart';
 >>>>>>> 9433ad4 (Preliminary screen for viewing profile)
+=======
+>>>>>>> b50c583 (Added edit-profile-screen)
 
 class ViewProfileScreen extends StatefulWidget {
   final User user;
