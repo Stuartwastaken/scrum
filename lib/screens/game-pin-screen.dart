@@ -45,7 +45,7 @@ class GamePinScreenState extends State<GamePinScreen> {
   }
 
   Future<bool> checkPinExists(String pinID) async {
-    final databaseRef = FirebaseDatabase.instance.reference();
+    final databaseRef = FirebaseDatabase.instance.ref();
     var snapshot = await databaseRef.child(pinID).once();
 
     return snapshot.snapshot.exists;
