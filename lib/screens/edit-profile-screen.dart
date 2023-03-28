@@ -245,7 +245,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChangePasswordScreen(),
+                    builder: (context) => ChangePasswordScreen(
+                      user: _currentUser,
+                    ),
                   ),
                 );
               },
