@@ -18,7 +18,7 @@ Future<Map<String, dynamic>> getUsersAndScores(String lobbyID) async {
     Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
     if (lobbyData != null) {
       lobbyData.forEach((uid, userData) {
-        if (uid != 'time') {
+        if (uid.toString().substring(0,3) == 'uid') {
           String nickname = userData['nickname'];
           int score = userData['score'];
           usersInLobby[uid] = {
@@ -104,8 +104,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                        child: AutoSizeText( //"Second Name",
-                          sortedEntries[1].value['nickname'],
+                        child: AutoSizeText( (sortedEntries.length >= 2)? sortedEntries[1].value['nickname'].toString(): ' ',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -143,8 +142,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                              child: Text( //"20",
-                                sortedEntries[1].value['score'].toString(),
+                              child: Text( (sortedEntries.length >= 2)? sortedEntries[1].value['score'].toString(): ' ',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -164,8 +162,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                        child: AutoSizeText( //"First Name",
-                          sortedEntries[0].value['nickname'],
+                        child: AutoSizeText( (sortedEntries.length >= 1)? sortedEntries[0].value['nickname'].toString(): ' ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
@@ -209,8 +206,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                              child: Text( //"30",
-                                sortedEntries[0].value['score'].toString(),
+                              child: Text( (sortedEntries.length >= 1)? sortedEntries[0].value['score'].toString(): ' ',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -231,8 +227,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     children: [
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                        child: AutoSizeText( //"Third Name",
-                          sortedEntries[2].value['nickname'],
+                        child: AutoSizeText( (sortedEntries.length >= 3)? sortedEntries[2].value['nickname'].toString(): ' ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Poppins',
@@ -276,8 +271,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                              child: Text( //"10",
-                                sortedEntries[2].value['score'].toString(),
+                              child: Text( (sortedEntries.length >= 3)? sortedEntries[2].value['score'].toString(): ' ',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   color: Colors.white,
@@ -311,7 +305,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     transitionDuration: Duration.zero,
                     pageBuilder: (context, animation,
                       secondaryAnimation) =>
-                        gamePinScreen(),
+                        GamePinScreen(),
                   ),
                 );
               },
