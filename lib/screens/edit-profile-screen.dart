@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1716638 (Added screen to change password)
 import 'change-password-screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
+<<<<<<< HEAD
 =======
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
 
 >>>>>>> b50c583 (Added edit-profile-screen)
+=======
+>>>>>>> 1716638 (Added screen to change password)
   const EditProfileScreen({required this.user});
 
   @override
@@ -18,6 +24,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+<<<<<<< HEAD
 <<<<<<< HEAD
   late TextEditingController _nameController;
   late TextEditingController _emailController;
@@ -81,12 +88,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+=======
+>>>>>>> 1716638 (Added screen to change password)
   String? _username;
   String? _email;
 
+  late User _currentUser;
+
   @override
   void initState() {
+    _currentUser = widget.user;
+    _username = _currentUser.displayName;
+    _email = _currentUser.email;
     super.initState();
+<<<<<<< HEAD
     _usernameController.text = widget.user.displayName ?? '';
     _emailController.text = widget.user.email ?? '';
   }
@@ -118,6 +133,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
 >>>>>>> b50c583 (Added edit-profile-screen)
+=======
+>>>>>>> 1716638 (Added screen to change password)
   }
 
   @override
@@ -126,6 +143,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
+<<<<<<< HEAD
       body: Padding(
         padding: const EdgeInsets.all(16.0),
 <<<<<<< HEAD
@@ -207,6 +225,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ],
           ),
 >>>>>>> b50c583 (Added edit-profile-screen)
+=======
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Username: $_username',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Email: $_email',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangePasswordScreen(),
+                  ),
+                );
+              },
+              child: Text(
+                'Change Password',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ],
+>>>>>>> 1716638 (Added screen to change password)
         ),
       ),
     );
