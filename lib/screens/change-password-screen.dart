@@ -10,8 +10,14 @@ class ChangePasswordScreen extends StatefulWidget {
 import 'edit-profile-screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
+<<<<<<< HEAD
   const ChangePasswordScreen({Key? key}) : super(key: key);
 >>>>>>> 1716638 (Added screen to change password)
+=======
+  final User user;
+
+  const ChangePasswordScreen({Key? key, required this.user}) : super(key: key);
+>>>>>>> d7972a0 (Edited ChangePasswordScreen to require a user to be passed)
 
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
