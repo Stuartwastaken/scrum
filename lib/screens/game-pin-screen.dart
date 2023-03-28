@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/login-screen.dart';
+import '../routes.dart';
+import 'register-screen.dart';
 
-class gamePinScreen extends StatefulWidget {
-  const gamePinScreen({super.key});
+class GamePinScreen extends StatefulWidget {
+  const GamePinScreen({super.key});
 
   @override
-  State<gamePinScreen> createState() => gamePinScreenState();
+  State<GamePinScreen> createState() => GamePinScreenState();
 }
 
-class gamePinScreenState extends State<gamePinScreen> {
+class GamePinScreenState extends State<GamePinScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +28,69 @@ class gamePinScreenState extends State<gamePinScreen> {
         child: Stack(
           children: [
             Positioned(
-              top: 16,
-              right: 16,
-              child: userButton(),
-            ),
+                top: 16,
+                right: 106,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            LoginScreen(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white, // background color
+                    onPrimary:
+                        Color.fromARGB(255, 5, 70, 175), // foreground color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          7), // set the desired border radius here
+                    ),
+                    minimumSize: Size(90, 35),
+                  ),
+                )),
+            Positioned(
+                top: 16,
+                right: 16,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            Register(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Sign Up",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white, // background color
+                    onPrimary:
+                        Color.fromARGB(255, 5, 70, 175), // foreground color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          7), // set the desired border radius here
+                    ),
+                    minimumSize: Size(90, 35),
+                  ),
+                )),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +151,9 @@ class enterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.popAndPushNamed(context, "/");
+      },
       child: Text(
         "Enter",
         style: TextStyle(
@@ -143,66 +207,5 @@ class userTextField extends StatelessWidget {
           hintText: 'Nickname',
           labelStyle: new TextStyle(color: const Color(0xFF424242))),
     );
-  }
-}
-
-class userButton extends StatelessWidget {
-  const userButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Icon(
-                Icons.person,
-                color: Color.fromARGB(255, 5, 70, 175),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 0,
-            child: PopupMenuButton<String>(
-              icon: const SizedBox.shrink(),
-              onSelected: choiceAction,
-              itemBuilder: (BuildContext context) {
-                return Constants.choices.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Constants {
-  static const String FirstItem = 'Log In';
-  static const String SecondItem = 'Sign Up';
-
-  static const List<String> choices = <String>[
-    FirstItem,
-    SecondItem,
-  ];
-}
-
-void choiceAction(String choice) {
-  if (choice == Constants.FirstItem) {
-    print('I First Item');
-  } else if (choice == Constants.SecondItem) {
-    print('I Second Item');
   }
 }

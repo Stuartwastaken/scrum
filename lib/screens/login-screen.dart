@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             transitionDuration: Duration.zero,
                                             pageBuilder: (context, animation,
                                                     secondaryAnimation) =>
-                                                gamePinScreen(),
+                                                GamePinScreen(),
                                           ),
                                         );
                                       }
