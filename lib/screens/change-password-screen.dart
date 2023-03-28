@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'edit-profile-screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({Key? key}) : super(key: key);
+  final User user;
+
+  const ChangePasswordScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
