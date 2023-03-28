@@ -9,8 +9,8 @@ import 'screens/podium-screen.dart';
 
 var routes = <String, WidgetBuilder>{
   "/": (context) => const GamePinScreen(),
-  "/login": (context) => const LoginScreen(),
-  "/register": (context) => const Register(),
+  "/login": (context) => LoginScreen(),
+  "/register": (context) => RegisterScreen(),
   "/forgot-password": (context) => const ForgotPasswordWidget(),
   "/podium": (context) => const PodiumScreen(),
 };
