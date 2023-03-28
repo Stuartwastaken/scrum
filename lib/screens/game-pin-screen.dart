@@ -26,7 +26,8 @@ class GamePinScreenState extends State<GamePinScreen> {
   }
 
   String getPin() {
-    return pinController.text;
+    String pin = pinController.text;
+    return "uid" + pin;
   }
 
   bool isPinEmpty(TextEditingController pinController) {
