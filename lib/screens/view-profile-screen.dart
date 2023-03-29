@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'edit-profile-screen.dart';
-=======
-import 'package:firebase_core/firebase_core.dart';
->>>>>>> 9433ad4 (Preliminary screen for viewing profile)
-=======
->>>>>>> b50c583 (Added edit-profile-screen)
 
 class ViewProfileScreen extends StatefulWidget {
   final User user;
@@ -18,13 +11,6 @@ class ViewProfileScreen extends StatefulWidget {
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  final FirebaseAuth _auth = FirebaseAuth.instance;
->>>>>>> 9433ad4 (Preliminary screen for viewing profile)
-=======
->>>>>>> cf023f3 (Removed unused variable)
   String? _username;
   String? _email;
 
@@ -43,7 +29,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
-<<<<<<< HEAD
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () async {
@@ -51,8 +36,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
             Navigator.pop(context, updatedUser);
           },
         ),
-=======
->>>>>>> 9433ad4 (Preliminary screen for viewing profile)
       ),
       body: Center(
         child: Column(
@@ -67,7 +50,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               'Email: $_email',
               style: TextStyle(fontSize: 20),
             ),
-<<<<<<< HEAD
             SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
@@ -87,8 +69,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               },
               child: Text('Edit Profile'),
             ),
-=======
->>>>>>> 9433ad4 (Preliminary screen for viewing profile)
           ],
         ),
       ),
