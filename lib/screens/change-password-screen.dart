@@ -46,7 +46,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         );
         return;
       }
-
       try {
         final credential = EmailAuthProvider.credential(
             email: _currentUser.email!, password: oldPassword);
