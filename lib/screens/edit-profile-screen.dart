@@ -11,17 +11,63 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  String? _username;
-  String? _email;
-
-  late User _currentUser;
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  bool _isEmailTaken = false;
 
   @override
   void initState() {
-    _currentUser = widget.user;
-    _username = _currentUser.displayName;
-    _email = _currentUser.email;
+    _nameController =
+        TextEditingController(text: widget.user.displayName ?? '');
+    _emailController = TextEditingController(text: widget.user.email ?? '');
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<bool> _isEmailInUse(String email) async {
+    try {
+      final methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      return methods.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    final newName = _nameController.text.trim();
+    final newEmail = _emailController.text.trim();
+
+    if (newName.isNotEmpty) {
+      await widget.user.updateDisplayName(newName);
+    }
+    if (newEmail.isNotEmpty && widget.user.email != newEmail) {
+      final isEmailTaken = await _isEmailInUse(newEmail);
+      if (isEmailTaken) {
+        setState(() {
+          _isEmailTaken = true;
+        });
+        return;
+      }
+      await widget.user.updateEmail(newEmail);
+    }
+
+    final User? updatedUser = await FirebaseAuth.instance.currentUser;
+    Navigator.pop(context, updatedUser);
+  }
+
+  void _goToChangePasswordScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangePasswordScreen(user: widget.user),
+      ),
+    );
   }
 
   @override
@@ -30,35 +76,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Username: $_username',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Email: $_email',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangePasswordScreen(
-                      user: _currentUser,
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                'Change Password',
-                style: TextStyle(color: Colors.blue),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Display Name',
               ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                errorText:
+                    _isEmailTaken ? 'This email is already taken.' : null,
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _updateProfile,
+              child: Text('Save'),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _goToChangePasswordScreen,
+              child: Text('Change Password'),
             ),
           ],
         ),

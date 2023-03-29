@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
+import 'package:scrum/screens/view-profile-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -69,6 +70,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfileScreen(user: _currentUser),
+                  ),
+                ).then((updatedUser) {
+                  setState(() {
+                    _currentUser = updatedUser;
+                  });
+                });
+              },
+              child: Text('View Profile'),
+            ),
           ],
         ),
       ),
