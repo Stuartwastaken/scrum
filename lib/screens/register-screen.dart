@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'game-pin-screen.dart';
@@ -358,9 +359,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                                 _isProcessing =
                                                                     false;
                                                               });
-
+                                                              //authentication complete
                                                               if (user !=
                                                                   null) {
+                                                                //create firestore collection
+                                                                FirebaseFirestore
+                                                                    firestore =
+                                                                    FirebaseFirestore
+                                                                        .instance;
+                                                                firestore
+                                                                    .collection(
+                                                                        "User")
+                                                                    .doc(user
+                                                                        .uid)
+                                                                    .set({
+                                                                  "Quizzes": []
+                                                                });
+                                                                //navigate user to home page
                                                                 Navigator.of(
                                                                         context)
                                                                     .pushAndRemoveUntil(
