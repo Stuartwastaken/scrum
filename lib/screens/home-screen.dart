@@ -24,6 +24,8 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
   }
 
+  final List<String> entries = <String>['1', '2', '3', '4'];
+  //final List<String> entries = <String>[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,46 +33,48 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text('Profile'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome: ${_currentUser.displayName}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'EMAIL: ${_currentUser.email}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(height: 16.0),
-            _isSigningOut
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        _isSigningOut = true;
-                      });
-                      await FirebaseAuth.instance.signOut();
-                      setState(() {
-                        _isSigningOut = false;
-                      });
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
+        child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: entries.length > 0 ? entries.length : 1,
+            itemBuilder: (BuildContext context, int index) {
+              //final List<String> entries = <String>[];
+              if (entries.length == 0) {
+                print("no entries");
+                return Text("You don't have any quizzes");
+              } else {
+                return Container(
+                  height: 50,
+                  color: Colors.amber[600],
+                  child: Row(
+                    children: [
+                      Text("Title ${entries[index]}"),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          IconData(0xf67a, fontFamily: 'MaterialIcons'),
+                          color: Colors.blue,
                         ),
-                      );
-                    },
-                    child: Text('Sign out'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          IconData(0xf3e9, fontFamily: 'MaterialIcons'),
+                          color: Colors.red,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Delete"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Play"),
+                      ),
+                    ],
                   ),
-          ],
-        ),
+                );
+              }
+            }),
       ),
     );
   }
