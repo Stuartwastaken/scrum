@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class LeaderboardScreen extends StatefulWidget {
+class PlayerStandingsScreen extends StatefulWidget {
   final String quizId;
 
-  LeaderboardScreen({required this.quizId});
+  PlayerStandingsScreen({required this.quizId});
 
   @override
-  _LeaderboardScreenState createState() => _LeaderboardScreenState();
+  _PlayerStandingsScreenState createState() => _PlayerStandingsScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
+class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   late DatabaseReference _databaseReference;
   late List<Map<dynamic, dynamic>> _leaderboard;
 
@@ -40,35 +40,48 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Leaderboard'),
-      ),
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Top 5 Participants',
-              style: TextStyle(fontSize: 24.0),
+            SizedBox(height: 48.0),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 24.0),
+              child: Text(
+                'Current Standings',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 48.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            SizedBox(height: 16.0),
-            ..._leaderboard.map((entry) {
-              return Text(
-                '${entry["nickname"]} - ${entry["score"]}',
-                style: TextStyle(fontSize: 18.0),
-              );
-            }),
-            SizedBox(height: 32.0),
-            ElevatedButton(
-              onPressed: () {
-                /* Add appropriate navigation later
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NextQuestionScreen()),
-                );
-                */
-              },
-              child: Text('Next Question'),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ..._leaderboard.map((entry) {
+                      return Text(
+                        '${entry["nickname"]} - ${entry["score"]}',
+                        style: TextStyle(fontSize: 18.0),
+                      );
+                    }),
+                    SizedBox(height: 32.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        /* Add appropriate navigation later
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NextQuestionScreen()),
+                      );
+                      */
+                      },
+                      child: Text('Next Question'),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
