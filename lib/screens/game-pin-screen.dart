@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/lobby_screen.dart';
 import 'package:scrum/screens/login-screen.dart';
 import '../routes.dart';
 import 'package:scrum/screens/home-screen.dart';
@@ -48,8 +49,7 @@ class GamePinScreenState extends State<GamePinScreen> {
   }
 
   String getPin() {
-    String pin = pinController.text;
-    return "uid" + pin;
+    return pinController.text;
   }
 
   bool isPinEmpty(TextEditingController pinController) {
@@ -60,18 +60,35 @@ class GamePinScreenState extends State<GamePinScreen> {
     final databaseRef = FirebaseDatabase.instance.reference();
     final gamePinRef = databaseRef.child(gamePin);
     String? hash = gamePinRef.push().key;
+    String? uniqueId = "uid" + hash!;
 
-    await gamePinRef.child(hash!).set({
+    await gamePinRef.child(uniqueId!).set({
       'nickname': nickname,
       'score': 0,
     });
   }
 
   Future<bool> checkPinExists(String pinID) async {
-    final databaseRef = FirebaseDatabase.instance.ref();
+    final databaseRef = FirebaseDatabase.instance.reference();
     var snapshot = await databaseRef.child(pinID).once();
 
     return snapshot.snapshot.exists;
+  }
+
+  Future<void> incrementPeopleInLobby(String quizID, int incrementBy) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    int peopleInLobby = 0;
+    await databaseRef.child(quizID).once().then((DatabaseEvent event) {
+      Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
+      if (lobbyData != null) {
+        if (lobbyData.containsKey('peopleInLobby')) {
+          peopleInLobby = lobbyData['peopleInLobby'];
+        }
+      }
+      databaseRef
+          .child('$quizID/peopleInLobby')
+          .set(peopleInLobby + incrementBy);
+    });
   }
 
   @override
@@ -87,11 +104,13 @@ class GamePinScreenState extends State<GamePinScreen> {
                   body: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        stops: [0.0, 0.35, 1.0], // set stops for the gradient
                         colors: [
-                          Color.fromARGB(255, 5, 70, 175),
-                          Color.fromARGB(255, 180, 203, 240),
+                          Color.fromARGB(255, 161, 15, 223),
+                          Color.fromARGB(255, 251, 153, 42),
+                          Color.fromARGB(255, 63, 3, 192), // add a third color
                         ],
                       ),
                     ),
@@ -100,7 +119,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                         Positioned(
                             top: 16,
                             right: 106,
-                            child: ElevatedButton(
+                            child: OutlinedButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
@@ -120,9 +139,11 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.white, // background color
-                                onPrimary: Color.fromARGB(
-                                    255, 5, 70, 175), // foreground color
+                                onPrimary: Color.fromARGB(255, 255, 255, 255),
+                                side: BorderSide(
+                                    width: 2.0,
+                                    color: Color.fromARGB(255, 255, 255,
+                                        255)), // foreground color
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                       7), // set the desired border radius here
@@ -133,7 +154,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                         Positioned(
                             top: 16,
                             right: 16,
-                            child: ElevatedButton(
+                            child: OutlinedButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
@@ -153,9 +174,11 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.white, // background color
-                                onPrimary: Color.fromARGB(
-                                    255, 5, 70, 175), // foreground color
+                                onPrimary: Color.fromARGB(255, 255, 255, 255),
+                                side: BorderSide(
+                                    width: 2.0,
+                                    color: Color.fromARGB(255, 255, 255,
+                                        255)), // foreground color
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                       7), // set the desired border radius here
@@ -167,28 +190,24 @@ class GamePinScreenState extends State<GamePinScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                'images/SCRUM2.png', // path to your image file
-                                width:
-                                    MediaQuery.of(context).size.width * 0.265,
-                                //height: 250,
-                                fit: BoxFit.fitWidth,
+                              Text(
+                                "SCRUM",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 80,
+                                    color: Colors.white),
                               ),
-                              SizedBox(height: 12),
+                              Text(
+                                "Transforming the world of work.",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 32,
+                                    color: Colors.white),
+                              ),
                               Container(
                                 width: 400,
                                 height: 225,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(0.0, 1.0),
-                                      blurRadius: 15.0,
-                                    ),
-                                  ],
-                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -199,25 +218,36 @@ class GamePinScreenState extends State<GamePinScreen> {
                                           left: 40.0,
                                           right: 40.0),
                                       child: TextField(
-                                          controller: pinController,
-                                          style: new TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: "SegoeUI",
-                                              fontStyle: FontStyle.normal,
-                                              fontSize: 16.0),
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color.fromARGB(
-                                                        255,
-                                                        0,
-                                                        0,
-                                                        0)), // Set border color to a darker shade of grey
-                                              ),
-                                              hintText: 'Game PIN',
-                                              labelStyle: new TextStyle(
-                                                  color: const Color(
-                                                      0xFF424242)))),
+                                        controller: pinController,
+                                        style: TextStyle(color: Colors.white),
+                                        decoration: InputDecoration(
+                                          labelText: 'Game PIN',
+                                          labelStyle: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255)),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -227,23 +257,40 @@ class GamePinScreenState extends State<GamePinScreen> {
                                           right: 40.0),
                                       child: TextField(
                                         controller: nicknameController,
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        ),
+                                        style: TextStyle(color: Colors.white),
                                         decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            hintText: 'Nickname',
-                                            labelStyle: new TextStyle(
-                                                color:
-                                                    const Color(0xFF424242))),
+                                          labelText: 'Nickname',
+                                          labelStyle: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255)),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           top: 4.0, bottom: 12.0),
-                                      child: ElevatedButton(
+                                      child: OutlinedButton(
                                         onPressed: () async {
                                           if (isPinEmpty(pinController) &
                                               isNicknameEmpty(
@@ -334,24 +381,40 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                 getNickname(), getPin());
                                             print(
                                                 "The user should be written!");
+
+                                            String gameID = pinController.text;
+                                            incrementPeopleInLobby(gameID, 1);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              PageRouteBuilder(
+                                                pageBuilder: (context,
+                                                        animation1,
+                                                        animation2) =>
+                                                    LobbyScreen(gameID: gameID),
+                                                transitionDuration:
+                                                    Duration.zero,
+                                                reverseTransitionDuration:
+                                                    Duration.zero,
+                                              ),
+                                            );
                                           }
                                         },
                                         child: Text(
                                           "Enter",
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            fontSize: 16,
+                                            fontSize: 18,
                                           ),
                                         ),
-                                        style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Color.fromARGB(255, 5, 70, 175),
-                                          onPrimary: Colors.white,
-                                          shadowColor: Colors.grey,
-                                          elevation: 3,
+                                        style: OutlinedButton.styleFrom(
+                                          primary: Colors.white,
+                                          side: BorderSide(
+                                              width: 2.0,
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255)),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(7.0)),
+                                                  BorderRadius.circular(10.0)),
                                           minimumSize: Size(330, 50),
                                         ),
                                       ),
