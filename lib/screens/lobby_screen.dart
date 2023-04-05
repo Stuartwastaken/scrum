@@ -42,6 +42,22 @@ class LobbyScreenState extends State<LobbyScreen>
 
   Stream<int> get playerCountStream => playerStreamController.stream;
 
+  Future<void> incrementPeopleInLobby(String quizID, int incrementBy) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    int peopleInLobby = 0;
+    await databaseRef.child(quizID).once().then((DatabaseEvent event) {
+      Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
+      if (lobbyData != null) {
+        if (lobbyData.containsKey('peopleInLobby')) {
+          peopleInLobby = lobbyData['peopleInLobby'];
+        }
+      }
+      databaseRef
+          .child('$quizID/peopleInLobby')
+          .set(peopleInLobby + incrementBy);
+    });
+  }
+
   @override
   void dispose() {
     playerStreamController.close();
@@ -84,6 +100,8 @@ class LobbyScreenState extends State<LobbyScreen>
                   right: 16,
                   child: OutlinedButton(
                     onPressed: () {
+                      incrementPeopleInLobby(widget.gameID!, -1);
+
                       Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
