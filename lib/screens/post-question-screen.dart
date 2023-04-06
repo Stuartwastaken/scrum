@@ -5,8 +5,12 @@ import 'package:tuple/tuple.dart';
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
   final String uid;
+  final int pointsGained;
   const PostQuestionScreenWidget(
-      {Key? key, required this.isCorrect, required this.uid})
+      {Key? key,
+      required this.uid,
+      required this.isCorrect,
+      required this.pointsGained})
       : super(key: key);
 
   @override
@@ -107,6 +111,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
 
   @override
   Widget buildPostQuestionScreen(String playerStatus) {
+    final points = widget.pointsGained.toString();
     final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: scaffoldKey,
@@ -161,7 +166,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                         ),
                         alignment: AlignmentDirectional(0, 0),
                         child: Text(
-                          '+ 700 pts',
+                          '+ $points pts',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             color: Colors.white,
