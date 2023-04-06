@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:tuple/tuple.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
