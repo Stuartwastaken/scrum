@@ -40,7 +40,7 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
   return usersAndScores;
 }
 
-Tuple3<String, String, String> getPlayerStatus(
+String getPlayerStatus(
     List<MapEntry<String, dynamic>> sortedEntries, String uid) {
   int index = -1;
   for (int i = 0; i < sortedEntries.length; i++) {
@@ -52,18 +52,18 @@ Tuple3<String, String, String> getPlayerStatus(
   }
   //user uid not found. Fail gracefully.
   if (index == -1) {
-    return Tuple3("-1", "Better luck ", "next time.");
+    return "Better luck next time.";
   }
   //user is in first place
   if (index == 0) {
-    return Tuple3("1", "You are in ", "1st place!");
+    return "You're in 1st place! Way to go Scrum Master!";
   } else {
-    int competitorScore = int.parse(sortedEntries[index - 1].value['score']);
-    int thisPlayerScore = int.parse(sortedEntries[index].value['score']);
+    int competitorScore = sortedEntries[index - 1].value['score'];
+    String competitor = sortedEntries[index - 1].value['nickname'];
+    int thisPlayerScore = sortedEntries[index].value['score'];
     String scoreDifference = (competitorScore - thisPlayerScore).toString();
     String position = (index + 1).toString();
-    return Tuple3(
-        position, sortedEntries[index - 1].value['nickname'], scoreDifference);
+    return "Position: $position. You are $scoreDifference points behind $competitor";
   }
 }
 
@@ -94,10 +94,8 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
               Map<String, dynamic> usersAndScores_sorted = sort(usersAndScores);
               List<MapEntry<String, dynamic>> sortedEntries =
                   usersAndScores_sorted.entries.toList();
-              Tuple3<String, String, String> playerStatus =
-                  getPlayerStatus(sortedEntries, widget.uid);
-              return buildPostQuestionScreen(
-                  playerStatus.item1, playerStatus.item2, playerStatus.item3);
+              String playerStatus = getPlayerStatus(sortedEntries, widget.uid);
+              return buildPostQuestionScreen(playerStatus);
             } else if (snapshot.hasError) {
               return Center(child: Text("Error:  ${snapshot.error}"));
             } else {
@@ -108,8 +106,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   }
 
   @override
-  Widget buildPostQuestionScreen(
-      String position, String abovePlayer, String scoreDifference) {
+  Widget buildPostQuestionScreen(String playerStatus) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: scaffoldKey,
@@ -176,7 +173,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                       child: Text(
-                        'Position: $position. You are $scoreDifference points behind $abovePlayer!',
+                        playerStatus,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Poppins',
