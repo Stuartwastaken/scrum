@@ -16,12 +16,6 @@ class LobbyScreen extends StatefulWidget {
   State<LobbyScreen> createState() => LobbyScreenState();
 }
 
-/*
-//
-Edits needed for RTdatabase branch:
-  - properly remove user from RTdatabase. Current function does not work.
-//
-*/
 class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
