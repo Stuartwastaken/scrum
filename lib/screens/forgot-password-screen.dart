@@ -66,8 +66,8 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color.fromARGB(255, 144, 73, 180),
-                  Color.fromARGB(255, 144, 73, 180)
+                  Color.fromARGB(255, 147, 119, 221),
+                  Color.fromARGB(255, 243, 178, 228)
                 ],
                 stops: [0, 1],
                 begin: AlignmentDirectional(0, -1),

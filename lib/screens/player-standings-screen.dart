@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class PlayerStandingsScreen extends StatefulWidget {
   final String quizId;
@@ -10,35 +10,47 @@ class PlayerStandingsScreen extends StatefulWidget {
   _PlayerStandingsScreenState createState() => _PlayerStandingsScreenState();
 }
 
-class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
-  late DatabaseReference _databaseReference;
-  late List<Map<dynamic, dynamic>> _leaderboard;
+Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
+  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
+  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
+  usersAndScores = Map.fromEntries(usersList);
+  return usersAndScores;
+}
 
+class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   @override
   void initState() {
     super.initState();
-    _databaseReference = FirebaseDatabase.instance.ref().child(widget.quizId);
-    _leaderboard = [];
-    _loadLeaderboard();
-  }
-
-  void _loadLeaderboard() {
-    _databaseReference.onValue.listen((event) {
-      DataSnapshot snapshot = event.snapshot;
-      Map<dynamic, dynamic>? values = snapshot.value as Map<dynamic, dynamic>?;
-      if (values != null) {
-        // Sort the values by score
-        List<dynamic> sortedValues = values.values.toList()
-          ..sort((a, b) => b["score"].compareTo(a["score"]));
-        // Get the top 5 values
-        _leaderboard = sortedValues.sublist(0, 5).cast<Map<dynamic, dynamic>>();
-        setState(() {});
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: FutureBuilder<Map<String, dynamic>>(
+            future: ScrumRTdatabase.getUsersAndScores(widget.quizId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                Map<String, dynamic> usersAndScores = snapshot.data!;
+                Map<String, dynamic> usersAndScores_sorted =
+                    sort(usersAndScores);
+                List<MapEntry<String, dynamic>> sortedEntries =
+                    usersAndScores_sorted.entries.toList();
+                if (sortedEntries.length < 5) {
+                  return StandingsScreenBuilder(sortedEntries.sublist(0));
+                } else {
+                  return StandingsScreenBuilder(sortedEntries.sublist(0, 5));
+                }
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }));
+  }
+
+  Widget StandingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
+    final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -61,9 +73,9 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ..._leaderboard.map((entry) {
+                    ...sortedEntries.map((entry) {
                       return Text(
-                        '${entry["nickname"]} - ${entry["score"]}',
+                        '${entry.value["nickname"]} - ${entry.value["score"]}',
                         style: TextStyle(fontSize: 18.0),
                       );
                     }),
