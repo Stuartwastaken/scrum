@@ -1,7 +1,44 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 
 class ScrumRTdatabase {
+  static Future<bool> checkPinExists(String pinID) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    var snapshot = await databaseRef.child(pinID).once();
+    return snapshot.snapshot.exists;
+  }
+
+  //add user to RT database under correct lobbyID
+  static Future<void> writeUserToTree(String nickname, String gamePin) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    final gamePinRef = databaseRef.child(gamePin);
+    String? hash = gamePinRef.push().key;
+    String? uniqueId = "uid" + hash!;
+
+    await gamePinRef.child(uniqueId!).set({
+      'nickname': nickname,
+      'score': 0,
+    });
+  }
+
+  /*
+    Does not actually remove a user
+  */
+  static Future<void> removeUserFromTree(
+      String nickname, String gamePin) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    final gamePinRef = databaseRef.child(gamePin);
+    DatabaseEvent dataEvent = await gamePinRef.once();
+    Map<dynamic, dynamic> values = dataEvent.snapshot.value as Map;
+    if (values != null) {
+      values.forEach((key, value) {
+        if (value['nickname'] == nickname) {
+          gamePinRef.child(key).remove();
+        }
+      });
+    }
+  }
+
   //get all the users. UIDs are keys. Nicknames and scores are values belonging to UID key
   static Future<Map<String, dynamic>> getUsersAndScores(String lobbyID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
@@ -15,31 +52,13 @@ class ScrumRTdatabase {
             int score = userData['score'];
             usersInLobby[uid] = {'nickname': nickname, 'score': score};
           }
-          ;
         });
       }
     });
     return usersInLobby;
   }
 
-  static Future<void> writeUserToTree(String nickname, String gamePin) async {
-    final databaseRef = FirebaseDatabase.instance.ref();
-    final gamePinRef = databaseRef.child(gamePin);
-    String? hash = gamePinRef.push().key;
-    String? uniqueId = "uid" + hash!;
-
-    await gamePinRef.child(uniqueId!).set({
-      'nickname': nickname,
-      'score': 0,
-    });
-  }
-
-  static Future<bool> checkPinExists(String pinID) async {
-    final databaseRef = FirebaseDatabase.instance.ref();
-    var snapshot = await databaseRef.child(pinID).once();
-    return snapshot.snapshot.exists;
-  }
-
+  //increase or decrease lobby population as players enter and leave
   static Future<void> incrementPeopleInLobby(
       String quizID, int incrementBy) async {
     final databaseRef = FirebaseDatabase.instance.ref();

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/lobby_screen.dart';
 import 'package:scrum/screens/login-screen.dart';
-import '../routes.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'register-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -103,7 +102,8 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                onPrimary: Color.fromARGB(255, 255, 255, 255),
+                                foregroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
                                 side: BorderSide(
                                     width: 2.0,
                                     color: Color.fromARGB(255, 255, 255,
@@ -115,6 +115,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 minimumSize: Size(90, 35),
                               ),
                             )),
+                        //Sign Up Button
                         Positioned(
                             top: 16,
                             right: 16,
@@ -138,7 +139,8 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                onPrimary: Color.fromARGB(255, 255, 255, 255),
+                                foregroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
                                 side: BorderSide(
                                     width: 2.0,
                                     color: Color.fromARGB(255, 255, 255,
@@ -356,7 +358,10 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                 pageBuilder: (context,
                                                         animation1,
                                                         animation2) =>
-                                                    LobbyScreen(gameID: gameID),
+                                                    LobbyScreen(
+                                                        gameID: gameID,
+                                                        nickname:
+                                                            getNickname()),
                                                 transitionDuration:
                                                     Duration.zero,
                                                 reverseTransitionDuration:
@@ -373,7 +378,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                           ),
                                         ),
                                         style: OutlinedButton.styleFrom(
-                                          primary: Colors.white,
+                                          foregroundColor: Colors.white,
                                           side: BorderSide(
                                               width: 2.0,
                                               color: Color.fromARGB(

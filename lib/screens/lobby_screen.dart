@@ -1,18 +1,17 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
-import 'package:firebase_database/firebase_database.dart'; // DELETE AFTER CHANGES
 
 class LobbyScreen extends StatefulWidget {
+  final String gameID;
+  final String nickname;
   const LobbyScreen({
     Key? key,
-    this.gameID,
+    required this.gameID,
+    required this.nickname,
   }) : super(key: key);
-
-  final String? gameID;
 
   @override
   State<LobbyScreen> createState() => LobbyScreenState();
@@ -20,8 +19,11 @@ class LobbyScreen extends StatefulWidget {
 
 /*
 //
-Lines 29-48 need to be properly transferred to scrum/lib/utils/fire_RTdatabase
-Delete line 7 before merging
+Edits needed for RTdatabase branch:
+  - remove import of firebase_database
+  - remove 3rd line after this comment section. Reads as "final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();"
+  - transfer getPeopleInLobby function to lib/utils/fire_RTdatabase
+  - properly remove user from RTdatabase. Current function does not work.
 //
 */
 class LobbyScreenState extends State<LobbyScreen>
@@ -51,6 +53,7 @@ class LobbyScreenState extends State<LobbyScreen>
 
   @override
   void dispose() {
+    super.dispose();
     playerStreamController.close();
   }
 
@@ -65,7 +68,7 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    getPeopleInLobby(widget.gameID!);
+    getPeopleInLobby(widget.gameID);
   }
 
   @override
@@ -91,8 +94,9 @@ class LobbyScreenState extends State<LobbyScreen>
                   right: 16,
                   child: OutlinedButton(
                     onPressed: () {
-                      ScrumRTdatabase.incrementPeopleInLobby(
-                          widget.gameID!, -1);
+                      ScrumRTdatabase.removeUserFromTree(
+                          widget.nickname, widget.gameID);
+                      ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
 
                       Navigator.pushReplacement(
                         context,
