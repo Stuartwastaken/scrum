@@ -2,6 +2,25 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 
 class ScrumRTdatabase {
+  static final StreamController<int> playerStreamController = StreamController<int>();
+
+  static Future<int?> getPeopleInLobby(String gameID) async {
+    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+
+    databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
+      final int? numberOfPlayers = event.snapshot.value as int?;
+      if (numberOfPlayers != null) {
+        playerStreamController.add(numberOfPlayers);
+      }
+    }, onError: (error) {
+      playerStreamController.addError(error);
+    });
+
+    // Return null since we don't need to return anything
+    return null;
+  }
+
+  
   static Future<bool> checkPinExists(String pinID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     var snapshot = await databaseRef.child(pinID).once();

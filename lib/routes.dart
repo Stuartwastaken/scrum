@@ -14,5 +14,5 @@ var routes = <String, WidgetBuilder>{
   "/register": (context) => RegisterScreen(),
   "/forgot-password": (context) => const ForgotPasswordWidget(),
   "/podium": (context) => const PodiumScreen(),
-  "/lobby": (context) => const LobbyScreen(),
+  "/lobby": (context) => const LobbyScreen(gameID: "998765", nickname: "stu"),
 };

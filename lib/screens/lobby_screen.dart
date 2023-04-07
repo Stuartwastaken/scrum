@@ -31,23 +31,24 @@ class LobbyScreenState extends State<LobbyScreen>
   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
   late AnimationController _controller;
   late Animation<double> _animation;
-  final StreamController<int> playerStreamController = StreamController<int>();
+  final StreamController<int> playerStreamController =
+      ScrumRTdatabase.playerStreamController;
 
-  Future<int?> getPeopleInLobby(String gameID) async {
-    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+  // Future<int?> getPeopleInLobby(String gameID) async {
+  //   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
-    databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
-      final int? numberOfPlayers = event.snapshot.value as int?;
-      if (numberOfPlayers != null) {
-        playerStreamController.add(numberOfPlayers);
-      }
-    }, onError: (error) {
-      playerStreamController.addError(error);
-    });
+  //   databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
+  //     final int? numberOfPlayers = event.snapshot.value as int?;
+  //     if (numberOfPlayers != null) {
+  //       playerStreamController.add(numberOfPlayers);
+  //     }
+  //   }, onError: (error) {
+  //     playerStreamController.addError(error);
+  //   });
 
-    // Return null since we don't need to return anything
-    return null;
-  }
+  //   // Return null since we don't need to return anything
+  //   return null;
+  // }
 
   Stream<int> get playerCountStream => playerStreamController.stream;
 
@@ -68,7 +69,7 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    getPeopleInLobby(widget.gameID);
+    ScrumRTdatabase.getPeopleInLobby(widget.gameID);
   }
 
   @override
