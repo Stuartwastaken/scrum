@@ -5,7 +5,8 @@ import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class PodiumScreen extends StatefulWidget {
-  const PodiumScreen({super.key});
+  final String gameID;
+  const PodiumScreen({Key? key, required this.gameID}) : super(key: key);
 
   @override
   State<PodiumScreen> createState() => _PodiumScreenState();
@@ -19,17 +20,12 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
 }
 
 class _PodiumScreenState extends State<PodiumScreen> {
-  //global variables
-  Map<String, dynamic> usersAndScores_sorted = {};
-  List<MapEntry<String, dynamic>> sortedEntries = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: FutureBuilder<Map<String, dynamic>>(
-        future: ScrumRTdatabase.getUsersAndScores(
-            '998765'), //hardcoded lobbyID. Will need to be changed where lobbyID is passed as parameter to constructor.
+        future: ScrumRTdatabase.getUsersAndScores(widget.gameID),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Map<String, dynamic> usersAndScores = snapshot.data!;
