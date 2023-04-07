@@ -24,9 +24,7 @@ class ScrumRTdatabase {
     });
   }
 
-  /*
-    Does not actually remove a user
-  */
+  //remove user from RT database under correct lobbyID
   static Future<void> removeUserFromTree(
       String nickname, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
