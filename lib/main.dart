@@ -17,7 +17,7 @@ void main() async {
   runApp(
     MaterialApp(
       title: "SCRUM",
-      home: LobbyScreen(gameID: "998765", nickname: "stu"),
+      home: GamePinScreen(),
     ),
   );
 }

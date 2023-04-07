@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class LobbyScreen extends StatefulWidget {
@@ -20,35 +19,15 @@ class LobbyScreen extends StatefulWidget {
 /*
 //
 Edits needed for RTdatabase branch:
-  - remove import of firebase_database
-  - remove 3rd line after this comment section. Reads as "final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();"
-  - transfer getPeopleInLobby function to lib/utils/fire_RTdatabase
   - properly remove user from RTdatabase. Current function does not work.
 //
 */
 class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
-  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
   late AnimationController _controller;
   late Animation<double> _animation;
   final StreamController<int> playerStreamController =
       ScrumRTdatabase.playerStreamController;
-
-  // Future<int?> getPeopleInLobby(String gameID) async {
-  //   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-
-  //   databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
-  //     final int? numberOfPlayers = event.snapshot.value as int?;
-  //     if (numberOfPlayers != null) {
-  //       playerStreamController.add(numberOfPlayers);
-  //     }
-  //   }, onError: (error) {
-  //     playerStreamController.addError(error);
-  //   });
-
-  //   // Return null since we don't need to return anything
-  //   return null;
-  // }
 
   Stream<int> get playerCountStream => playerStreamController.stream;
 
