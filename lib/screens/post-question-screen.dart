@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
@@ -15,25 +15,6 @@ class PostQuestionScreenWidget extends StatefulWidget {
   @override
   _PostQuestionScreenWidgetState createState() =>
       _PostQuestionScreenWidgetState();
-}
-
-Future<Map<String, dynamic>> getUsersAndScores(String lobbyID) async {
-  final databaseRef = FirebaseDatabase.instance.ref();
-  Map<String, dynamic> usersInLobby = {};
-  await databaseRef.child(lobbyID).once().then((DatabaseEvent event) {
-    Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
-    if (lobbyData != null) {
-      lobbyData.forEach((uid, userData) {
-        if (uid.toString().substring(0, 3) == 'uid') {
-          String nickname = userData['nickname'];
-          int score = userData['score'];
-          usersInLobby[uid] = {'nickname': nickname, 'score': score};
-        }
-        ;
-      });
-    }
-  });
-  return usersInLobby;
 }
 
 Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
@@ -89,7 +70,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     return Scaffold(
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
       body: FutureBuilder<Map<String, dynamic>>(
-          future: getUsersAndScores(
+          future: ScrumRTdatabase.getUsersAndScores(
               '998765'), //------ hardcoded lobbyID. Will need to be changed
           builder: (context, snapshot) {
             if (snapshot.hasData) {

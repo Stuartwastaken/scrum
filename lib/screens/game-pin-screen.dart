@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/lobby_screen.dart';
 import 'package:scrum/screens/login-screen.dart';
-import '../routes.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'register-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class GamePinScreen extends StatefulWidget {
   const GamePinScreen({super.key});
@@ -36,7 +35,6 @@ class GamePinScreenState extends State<GamePinScreen> {
     return firebaseApp;
   }
 
-  FirebaseDatabase database = FirebaseDatabase.instance;
   final nicknameController = TextEditingController();
   final pinController = TextEditingController();
 
@@ -54,41 +52,6 @@ class GamePinScreenState extends State<GamePinScreen> {
 
   bool isPinEmpty(TextEditingController pinController) {
     return pinController.text.isEmpty;
-  }
-
-  Future<void> writeUserToTree(String nickname, String gamePin) async {
-    final databaseRef = FirebaseDatabase.instance.reference();
-    final gamePinRef = databaseRef.child(gamePin);
-    String? hash = gamePinRef.push().key;
-    String? uniqueId = "uid" + hash!;
-
-    await gamePinRef.child(uniqueId!).set({
-      'nickname': nickname,
-      'score': 0,
-    });
-  }
-
-  Future<bool> checkPinExists(String pinID) async {
-    final databaseRef = FirebaseDatabase.instance.reference();
-    var snapshot = await databaseRef.child(pinID).once();
-
-    return snapshot.snapshot.exists;
-  }
-
-  Future<void> incrementPeopleInLobby(String quizID, int incrementBy) async {
-    final databaseRef = FirebaseDatabase.instance.ref();
-    int peopleInLobby = 0;
-    await databaseRef.child(quizID).once().then((DatabaseEvent event) {
-      Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
-      if (lobbyData != null) {
-        if (lobbyData.containsKey('peopleInLobby')) {
-          peopleInLobby = lobbyData['peopleInLobby'];
-        }
-      }
-      databaseRef
-          .child('$quizID/peopleInLobby')
-          .set(peopleInLobby + incrementBy);
-    });
   }
 
   @override
@@ -139,7 +102,8 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                onPrimary: Color.fromARGB(255, 255, 255, 255),
+                                foregroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
                                 side: BorderSide(
                                     width: 2.0,
                                     color: Color.fromARGB(255, 255, 255,
@@ -151,6 +115,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 minimumSize: Size(90, 35),
                               ),
                             )),
+                        //Sign Up Button
                         Positioned(
                             top: 16,
                             right: 16,
@@ -174,7 +139,8 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                onPrimary: Color.fromARGB(255, 255, 255, 255),
+                                foregroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
                                 side: BorderSide(
                                     width: 2.0,
                                     color: Color.fromARGB(255, 255, 255,
@@ -353,8 +319,8 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                 );
                                               },
                                             );
-                                          } else if (!await checkPinExists(
-                                              getPin())) {
+                                          } else if (!await ScrumRTdatabase
+                                              .checkPinExists(getPin())) {
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
@@ -373,24 +339,29 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                 );
                                               },
                                             );
-                                          } else if (await checkPinExists(
-                                                  getPin()) &
+                                          } else if (await ScrumRTdatabase
+                                                  .checkPinExists(getPin()) &
                                               !isNicknameEmpty(
                                                   nicknameController)) {
-                                            writeUserToTree(
+                                            ScrumRTdatabase.writeUserToTree(
                                                 getNickname(), getPin());
                                             print(
                                                 "The user should be written!");
 
                                             String gameID = pinController.text;
-                                            incrementPeopleInLobby(gameID, 1);
+                                            ScrumRTdatabase
+                                                .incrementPeopleInLobby(
+                                                    gameID, 1);
                                             Navigator.pushReplacement(
                                               context,
                                               PageRouteBuilder(
                                                 pageBuilder: (context,
                                                         animation1,
                                                         animation2) =>
-                                                    LobbyScreen(gameID: gameID),
+                                                    LobbyScreen(
+                                                        gameID: gameID,
+                                                        nickname:
+                                                            getNickname()),
                                                 transitionDuration:
                                                     Duration.zero,
                                                 reverseTransitionDuration:
@@ -407,7 +378,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                           ),
                                         ),
                                         style: OutlinedButton.styleFrom(
-                                          primary: Colors.white,
+                                          foregroundColor: Colors.white,
                                           side: BorderSide(
                                               width: 2.0,
                                               color: Color.fromARGB(

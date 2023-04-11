@@ -1,17 +1,16 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class LobbyScreen extends StatefulWidget {
+  final String gameID;
+  final String nickname;
   const LobbyScreen({
     Key? key,
-    this.gameID,
+    required this.gameID,
+    required this.nickname,
   }) : super(key: key);
-
-  final String? gameID;
 
   @override
   State<LobbyScreen> createState() => LobbyScreenState();
@@ -19,47 +18,16 @@ class LobbyScreen extends StatefulWidget {
 
 class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
-  final DatabaseReference databaseRef = FirebaseDatabase.instance.reference();
   late AnimationController _controller;
   late Animation<double> _animation;
-  final StreamController<int> playerStreamController = StreamController<int>();
-
-  Future<int?> getPeopleInLobby(String gameID) async {
-    final DatabaseReference databaseRef = FirebaseDatabase.instance.reference();
-
-    databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
-      final int? numberOfPlayers = event.snapshot.value as int?;
-      if (numberOfPlayers != null) {
-        playerStreamController.add(numberOfPlayers);
-      }
-    }, onError: (error) {
-      playerStreamController.addError(error);
-    });
-
-    // Return null since we don't need to return anything
-    return null;
-  }
+  final StreamController<int> playerStreamController =
+      ScrumRTdatabase.playerStreamController;
 
   Stream<int> get playerCountStream => playerStreamController.stream;
 
-  Future<void> incrementPeopleInLobby(String quizID, int incrementBy) async {
-    final databaseRef = FirebaseDatabase.instance.ref();
-    int peopleInLobby = 0;
-    await databaseRef.child(quizID).once().then((DatabaseEvent event) {
-      Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
-      if (lobbyData != null) {
-        if (lobbyData.containsKey('peopleInLobby')) {
-          peopleInLobby = lobbyData['peopleInLobby'];
-        }
-      }
-      databaseRef
-          .child('$quizID/peopleInLobby')
-          .set(peopleInLobby + incrementBy);
-    });
-  }
-
   @override
   void dispose() {
+    super.dispose();
     playerStreamController.close();
   }
 
@@ -74,7 +42,7 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    getPeopleInLobby(widget.gameID!);
+    ScrumRTdatabase.getPeopleInLobby(widget.gameID);
   }
 
   @override
@@ -100,7 +68,9 @@ class LobbyScreenState extends State<LobbyScreen>
                   right: 16,
                   child: OutlinedButton(
                     onPressed: () {
-                      incrementPeopleInLobby(widget.gameID!, -1);
+                      ScrumRTdatabase.removeUserFromTree(
+                          widget.nickname, widget.gameID);
+                      ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
 
                       Navigator.pushReplacement(
                         context,
@@ -119,7 +89,7 @@ class LobbyScreenState extends State<LobbyScreen>
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      onPrimary: Color.fromARGB(255, 255, 255, 255),
+                      foregroundColor: Color.fromARGB(255, 255, 255, 255),
                       side: BorderSide(
                           width: 2.0,
                           color: Color.fromARGB(
