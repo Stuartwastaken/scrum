@@ -17,9 +17,9 @@ class MultipleChoiceWidget extends StatefulWidget {
   _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
 }
 
-class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
-    with TickerProviderStateMixin {
+class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget> with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool buttonsEnabled = true;
 
   @override
   void initState() {
@@ -29,6 +29,12 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void disableButtons() {
+    setState(() {
+      buttonsEnabled = false;
+    });
   }
 
   @override
@@ -87,14 +93,24 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFFB21B3C),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.favorite_sharp,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled ? () => disableButtons() : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (states.contains(MaterialState.disabled)) {
+                                          return Colors.grey; // Disabled button color
+                                        }
+                                        return Color(0xFFB21B3C); // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.favorite_sharp,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
@@ -110,14 +126,24 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFF45A3E5),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.waves_sharp,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled ? () => disableButtons() : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (states.contains(MaterialState.disabled)) {
+                                          return Colors.grey; // Disabled button color
+                                        }
+                                        return Color(0xFF45A3E5); // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.waves_sharp,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
@@ -141,14 +167,24 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFFFFA602),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.brightness_1_rounded,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled ? () => disableButtons() : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (states.contains(MaterialState.disabled)) {
+                                          return Colors.grey; // Disabled button color
+                                        }
+                                        return Color(0xFFFFA602); // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.brightness_1_rounded,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
@@ -164,14 +200,24 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFF26890C),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.bedtime_sharp,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled ? () => disableButtons() : null, 
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (states.contains(MaterialState.disabled)) {
+                                          return Colors.grey; // Disabled button color
+                                        }
+                                        return Color(0xFF26890C); // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.bedtime_sharp,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
