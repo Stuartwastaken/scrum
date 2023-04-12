@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/screens/leaderboard-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
   final String uid;
   final int pointsGained;
+  final String quizID;
   const PostQuestionScreenWidget(
       {Key? key,
+      required this.quizID,
       required this.uid,
       required this.isCorrect,
       required this.pointsGained})
@@ -54,10 +58,24 @@ String getPlayerStatus(
 class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+  late final QuizTimeStream quizTime;
 
   @override
   void initState() {
     super.initState();
+
+    quizTime = QuizTimeStream();
+    quizTime.timeStream.listen((time) {
+      // Check if time is 0
+      if (time == 0) {
+        // Navigate to a different page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LeaderboardScreen(quizID: "999999")),
+        );
+      }
+    });
   }
 
   @override
