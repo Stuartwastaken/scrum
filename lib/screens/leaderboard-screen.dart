@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class LeaderboardScreen extends StatefulWidget {
@@ -38,8 +39,23 @@ String getScore(List<MapEntry<String, dynamic>> sortedEntries, int place) {
 
 class LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
+  late final QuizTimeStream quizTime;
+
   void initState() {
     super.initState();
+
+    quizTime = QuizTimeStream();
+    quizTime.timeStream.listen((time) {
+      // Check if time is 0
+      if (time == 0) {
+        // Navigate to a different page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LeaderboardScreen(quizID: "999999")),
+        );
+      }
+    });
   }
 
   @override
