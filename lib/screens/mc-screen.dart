@@ -17,9 +17,18 @@ class MultipleChoiceWidget extends StatefulWidget {
   _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
 }
 
-class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget> with TickerProviderStateMixin {
+class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
+    with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool buttonsEnabled = true;
+  int selectedIndex = 0;
+
+  void onButtonPressed(int index) {
+    setState(() {
+      selectedIndex = index;
+      buttonsEnabled = false;
+    });
+  }
 
   @override
   void initState() {
@@ -95,14 +104,20 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget> with Ticker
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: ElevatedButton(
-                                  onPressed: buttonsEnabled ? () => disableButtons() : null,
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(1)
+                                      : null,
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.disabled)) {
-                                          return Colors.grey; // Disabled button color
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 1) {
+                                          return Color(
+                                              0xFFB21B3C); // Disabled button color
                                         }
-                                        return Color(0xFFB21B3C); // Default button color
+                                        return Colors
+                                            .grey; // Default button color
                                       },
                                     ),
                                   ),
@@ -128,14 +143,20 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget> with Ticker
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: ElevatedButton(
-                                  onPressed: buttonsEnabled ? () => disableButtons() : null,
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(2)
+                                      : null,
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.disabled)) {
-                                          return Colors.grey; // Disabled button color
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 2) {
+                                          return Color(
+                                              0xFF45A3E5); // Disabled button color
                                         }
-                                        return Color(0xFF45A3E5); // Default button color
+                                        return Colors
+                                            .grey; // Default button color
                                       },
                                     ),
                                   ),
@@ -169,14 +190,20 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget> with Ticker
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: ElevatedButton(
-                                  onPressed: buttonsEnabled ? () => disableButtons() : null,
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(3)
+                                      : null,
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.disabled)) {
-                                          return Colors.grey; // Disabled button color
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 3) {
+                                          return Color(
+                                              0xFFFFA602); // Disabled button color
                                         }
-                                        return Color(0xFFFFA602); // Default button color
+                                        return Colors
+                                            .grey; // Default button color
                                       },
                                     ),
                                   ),
@@ -202,14 +229,20 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget> with Ticker
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: ElevatedButton(
-                                  onPressed: buttonsEnabled ? () => disableButtons() : null, 
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(4)
+                                      : null,
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.disabled)) {
-                                          return Colors.grey; // Disabled button color
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 4) {
+                                          return Color(
+                                              0xFF26890C); // Disabled button color
                                         }
-                                        return Color(0xFF26890C); // Default button color
+                                        return Colors
+                                            .grey; // Default button color
                                       },
                                     ),
                                   ),
