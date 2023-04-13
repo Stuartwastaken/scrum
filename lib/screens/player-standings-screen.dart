@@ -29,7 +29,7 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
-        quizTime, context, MultipleChoiceWidget(quizID: "999999"));
+        quizTime, context, MultipleChoiceWidget(quizID: widget.quizID));
   }
 
   @override
