@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 
 class QuizListener {
