@@ -1,17 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:scrum/controllers/quiz-listener.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/screens/post-question-screen.dart';
 
 class MultipleChoiceWidget extends StatefulWidget {
   const MultipleChoiceWidget({
     Key? key,
-    this.gamepin,
+    required this.gamepin,
   }) : super(key: key);
 
-  final DocumentReference? gamepin;
+  final String gamepin;
 
   @override
   _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
@@ -20,6 +18,7 @@ class MultipleChoiceWidget extends StatefulWidget {
 class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late final QuizTimeStream quizTime;
   bool buttonsEnabled = true;
   int selectedIndex = 0;
 
@@ -30,20 +29,31 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     });
   }
 
+  void disableButtons() {
+    setState(() {
+      buttonsEnabled = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    quizTime = QuizTimeStream();
+    quizTime.listenToQuizTime(widget.gamepin);
+    QuizListener.listen(
+        quizTime,
+        context,
+        PostQuestionScreenWidget(
+            quizID: widget.gamepin,
+            uid: "",
+            isCorrect: false,
+            pointsGained: 0));
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void disableButtons() {
-    setState(() {
-      buttonsEnabled = false;
-    });
   }
 
   @override
@@ -56,10 +66,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
           height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF4B39EF), Color(0xFFEE8B60)],
-              stops: [0, 1],
-              begin: AlignmentDirectional(1, -1),
-              end: AlignmentDirectional(-1, 1),
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: [0.0, 0.35, 1.0], // set stops for the gradient
+              colors: [
+                Color.fromARGB(255, 161, 15, 223),
+                Color.fromARGB(255, 251, 153, 42),
+                Color.fromARGB(255, 63, 3, 192), // add a third color
+              ],
             ),
           ),
           child: Column(
@@ -260,6 +274,33 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                     ),
                   ],
                 ),
+              ),
+              StreamBuilder<int>(
+                stream: quizTime.timeStream,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        return Text('Not connected to the stream');
+                      case ConnectionState.waiting:
+                        return Text('Loading...');
+                      case ConnectionState.active:
+                        return Text(
+                          '${snapshot.data}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 64,
+                            fontStyle: FontStyle.normal,
+                            color: Colors.white,
+                          ),
+                        );
+                      case ConnectionState.done:
+                        return Text('Stream has ended');
+                    }
+                  }
+                },
               ),
             ],
           )),
