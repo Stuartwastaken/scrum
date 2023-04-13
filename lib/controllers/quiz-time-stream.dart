@@ -1,19 +1,16 @@
 import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:rxdart/rxdart.dart';
 
 class QuizTimeStream {
-  final DatabaseReference _databaseReference =
-      FirebaseDatabase.instance.reference();
-  final StreamController<String> _timeStreamController =
-      BehaviorSubject<String>();
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
+  final StreamController<int> _timeStreamController = BehaviorSubject<int>();
 
-  Future<String?> listenToQuizTime(String quizId) {
-    final completer = Completer<String?>();
+  Future<int?> listenToQuizTime(String quizId) {
+    final completer = Completer<int?>();
 
-    _databaseReference.child('quiz/$quizId/time').onValue.listen((event) {
-      final String? time = event.snapshot.value as String?;
+    _databaseReference.child('$quizId/time').onValue.listen((event) {
+      final int? time = event.snapshot.value as int?;
       if (time != null) {
         _timeStreamController.add(time);
         completer.complete(time);
@@ -25,7 +22,7 @@ class QuizTimeStream {
     return completer.future;
   }
 
-  Stream<String> get timeStream => _timeStreamController.stream;
+  Stream<int> get timeStream => _timeStreamController.stream;
 
   void dispose() {
     _timeStreamController.close();

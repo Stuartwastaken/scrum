@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
 
-class PlayerStandingsScreen extends StatefulWidget {
+class LeaderboardScreen extends StatefulWidget {
   final String quizID;
 
-  PlayerStandingsScreen({required this.quizID});
+  LeaderboardScreen({required this.quizID});
 
   @override
-  _PlayerStandingsScreenState createState() => _PlayerStandingsScreenState();
+  LeaderboardScreenState createState() => LeaderboardScreenState();
 }
 
 Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
@@ -20,12 +20,13 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
   return usersAndScores;
 }
 
-class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
+class LeaderboardScreenState extends State<LeaderboardScreen> {
   late final QuizTimeStream quizTime;
 
   @override
   void initState() {
     super.initState();
+
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
@@ -89,17 +90,6 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
                       );
                     }),
                     SizedBox(height: 32.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        /* Add appropriate navigation later
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NextQuestionScreen()),
-                      );
-                      */
-                      },
-                      child: Text('Next Question'),
-                    ),
                   ],
                 ),
               ),

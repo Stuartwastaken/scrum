@@ -14,3 +14,4 @@ var routes = <String, WidgetBuilder>{
   "/register": (context) => RegisterScreen(),
   "/forgot-password": (context) => const ForgotPasswordWidget(),
 };
+
