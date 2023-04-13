@@ -67,7 +67,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
 
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(quizTime, context, LeaderboardScreen(quizID: "999999"));
+    QuizListener.listen(quizTime, context, LeaderboardScreen(quizID: widget.quizID));
   }
 
   @override
