@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-listener.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/screens/leaderboard-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
   final String uid;
   final int pointsGained;
+  final String quizID;
   const PostQuestionScreenWidget(
       {Key? key,
+      required this.quizID,
       required this.uid,
       required this.isCorrect,
       required this.pointsGained})
@@ -54,10 +59,15 @@ String getPlayerStatus(
 class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+  late final QuizTimeStream quizTime;
 
   @override
   void initState() {
     super.initState();
+
+    quizTime = QuizTimeStream();
+    quizTime.listenToQuizTime(widget.quizID);
+    QuizListener.listen(quizTime, context, LeaderboardScreen(quizID: widget.quizID));
   }
 
   @override
@@ -70,8 +80,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     return Scaffold(
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
       body: FutureBuilder<Map<String, dynamic>>(
-          future: ScrumRTdatabase.getUsersAndScores(
-              '998765'), //------ hardcoded lobbyID. Will need to be changed
+          future: ScrumRTdatabase.getUsersAndScores(widget.quizID),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Map<String, dynamic> usersAndScores = snapshot.data!;
