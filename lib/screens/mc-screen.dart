@@ -6,10 +6,10 @@ import 'package:scrum/screens/post-question-screen.dart';
 class MultipleChoiceWidget extends StatefulWidget {
   const MultipleChoiceWidget({
     Key? key,
-    required this.gamepin,
+    required this.quizID,
   }) : super(key: key);
 
-  final String gamepin;
+  final String quizID;
 
   @override
   _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
@@ -40,15 +40,12 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     super.initState();
 
     quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.gamepin);
+    quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
         quizTime,
         context,
         PostQuestionScreenWidget(
-            quizID: widget.gamepin,
-            uid: "",
-            isCorrect: false,
-            pointsGained: 0));
+            quizID: widget.quizID, uid: "", isCorrect: false, pointsGained: 0));
   }
 
   @override
