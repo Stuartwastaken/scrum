@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/post-question-screen.dart';
 
@@ -30,21 +26,12 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     super.initState();
 
     quizTime = QuizTimeStream();
-    quizTime.timeStream.listen((time) {
-      // Check if time is 0
-      if (time == 0) {
-        // Navigate to a different page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PostQuestionScreenWidget(
-                  quizID: "999999",
-                  uid: "",
-                  isCorrect: false,
-                  pointsGained: 0)),
-        );
-      }
-    });
+    quizTime.listenToQuizTime(widget.quizID);
+    QuizListener.listen(
+        quizTime,
+        context,
+        PostQuestionScreenWidget(
+            quizID: "999999", uid: "", isCorrect: false, pointsGained: 0));
   }
 
   @override

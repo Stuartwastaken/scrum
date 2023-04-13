@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/leaderboard-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -65,17 +66,8 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     super.initState();
 
     quizTime = QuizTimeStream();
-    quizTime.timeStream.listen((time) {
-      // Check if time is 0
-      if (time == 0) {
-        // Navigate to a different page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LeaderboardScreen(quizID: "999999")),
-        );
-      }
-    });
+    quizTime.listenToQuizTime(widget.quizID);
+    QuizListener.listen(quizTime, context, LeaderboardScreen(quizID: "999999"));
   }
 
   @override

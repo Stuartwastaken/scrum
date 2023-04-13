@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-listener.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class PlayerStandingsScreen extends StatefulWidget {
-  final String quizId;
+  final String quizID;
 
-  PlayerStandingsScreen({required this.quizId});
+  PlayerStandingsScreen({required this.quizID});
 
   @override
   _PlayerStandingsScreenState createState() => _PlayerStandingsScreenState();
@@ -18,9 +21,15 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
 }
 
 class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
+  late final QuizTimeStream quizTime;
+
   @override
   void initState() {
     super.initState();
+    quizTime = QuizTimeStream();
+    quizTime.listenToQuizTime(widget.quizID);
+    QuizListener.listen(
+        quizTime, context, MultipleChoiceWidget(quizID: "999999"));
   }
 
   @override
@@ -28,7 +37,7 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: FutureBuilder<Map<String, dynamic>>(
-            future: ScrumRTdatabase.getUsersAndScores(widget.quizId),
+            future: ScrumRTdatabase.getUsersAndScores(widget.quizID),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic> usersAndScores = snapshot.data!;

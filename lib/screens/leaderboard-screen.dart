@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-listener.dart';
+import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/controllers/quiz-time-stream.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final String quizID;
@@ -18,44 +20,17 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
   return usersAndScores;
 }
 
-String getPlayer(List<MapEntry<String, dynamic>> sortedEntries, int place) {
-  String username = "";
-
-  if (sortedEntries != null && sortedEntries.isNotEmpty) {
-    username = sortedEntries.length > place
-        ? sortedEntries[place].value["nickname"]
-        : "N/A";
-  }
-
-  return username;
-}
-
-String getScore(List<MapEntry<String, dynamic>> sortedEntries, int place) {
-  String score =
-      '${sortedEntries.length > place ? sortedEntries[place].value["score"] : "N/A"}';
-
-  return score;
-}
-
 class LeaderboardScreenState extends State<LeaderboardScreen> {
-  @override
   late final QuizTimeStream quizTime;
 
+  @override
   void initState() {
     super.initState();
 
     quizTime = QuizTimeStream();
-    quizTime.timeStream.listen((time) {
-      // Check if time is 0
-      if (time == 0) {
-        // Navigate to a different page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LeaderboardScreen(quizID: "999999")),
-        );
-      }
-    });
+    quizTime.listenToQuizTime(widget.quizID);
+    QuizListener.listen(
+        quizTime, context, MultipleChoiceWidget(quizID: "999999"));
   }
 
   @override
@@ -72,9 +47,9 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
                 List<MapEntry<String, dynamic>> sortedEntries =
                     usersAndScores_sorted.entries.toList();
                 if (sortedEntries.length < 5) {
-                  return StandingsScreenBuilder2(sortedEntries.sublist(0));
+                  return StandingsScreenBuilder(sortedEntries.sublist(0));
                 } else {
-                  return StandingsScreenBuilder2(sortedEntries.sublist(0, 5));
+                  return StandingsScreenBuilder(sortedEntries.sublist(0, 5));
                 }
               } else if (snapshot.hasError) {
                 return Center(child: Text("Error: ${snapshot.error}"));
@@ -87,32 +62,19 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget StandingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.0, 0.35, 1.0], // set stops for the gradient
-            colors: [
-              Color.fromARGB(255, 161, 15, 223),
-              Color.fromARGB(255, 251, 153, 42),
-              Color.fromARGB(255, 63, 3, 192), // add a third color
-            ],
-          ),
-        ),
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: 12,
-            ),
+            SizedBox(height: 48.0),
             Container(
+              padding: EdgeInsets.symmetric(vertical: 24.0),
               child: Text(
-                "Current Standings",
+                'Current Standings',
                 style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 80,
-                  color: Colors.white,
+                  fontFamily: 'Poppins',
+                  fontSize: 48.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -121,564 +83,13 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 4),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 4,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  getPlayer(sortedEntries, 0),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  getScore(sortedEntries, 0),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  getPlayer(sortedEntries, 1),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  getScore(sortedEntries, 1),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  getPlayer(sortedEntries, 2),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  getScore(sortedEntries, 2),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  getPlayer(sortedEntries, 3),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  getScore(sortedEntries, 3),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  getPlayer(sortedEntries, 4),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  getScore(sortedEntries, 4),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          children: [
-                            Text(
-                              "14",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected A",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 28,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected B",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 28,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "6",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected C",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 28,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "1",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected D",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget StandingsScreenBuilder2(
-      List<MapEntry<String, dynamic>> sortedEntries) {
-    final scaffoldKey = GlobalKey<ScaffoldState>();
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.0, 0.35, 1.0], // set stops for the gradient
-            colors: [
-              Color.fromARGB(255, 161, 15, 223),
-              Color.fromARGB(255, 251, 153, 42),
-              Color.fromARGB(255, 63, 3, 192), // add a third color
-            ],
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: 12,
-            ),
-            Container(
-              child: Text(
-                "Current Standings",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 80,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 4),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 4,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  getPlayer(sortedEntries, 0),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  getScore(sortedEntries, 0),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              height: 3,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              child: Container(color: Colors.white)),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50.0, right: 50.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  " ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          children: [
-                            Text(
-                              "14",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected A",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 28,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected B",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 28,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "6",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected C",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 28,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "1",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 80,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "Selected D",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                    ...sortedEntries.map((entry) {
+                      return Text(
+                        '${entry.value["nickname"]} - ${entry.value["score"]}',
+                        style: TextStyle(fontSize: 18.0),
+                      );
+                    }),
+                    SizedBox(height: 32.0),
                   ],
                 ),
               ),
