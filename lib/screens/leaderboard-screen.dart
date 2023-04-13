@@ -30,7 +30,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
-        quizTime, context, MultipleChoiceWidget(quizID: "999999"));
+        quizTime, context, MultipleChoiceWidget(quizID: widget.quizID));
   }
 
   @override
