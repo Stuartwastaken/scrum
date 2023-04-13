@@ -80,8 +80,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     return Scaffold(
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
       body: FutureBuilder<Map<String, dynamic>>(
-          future: ScrumRTdatabase.getUsersAndScores(
-              '998765'), //------ hardcoded lobbyID. Will need to be changed
+          future: ScrumRTdatabase.getUsersAndScores(widget.quizID),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Map<String, dynamic> usersAndScores = snapshot.data!;
