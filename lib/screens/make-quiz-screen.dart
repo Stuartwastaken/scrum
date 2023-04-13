@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class EditQuizScreen extends StatefulWidget {
-  const EditQuizScreen({Key? key}) : super(key: key);
+class MakeQuizScreen extends StatefulWidget {
+  const MakeQuizScreen({Key? key}) : super(key: key);
 
   @override
-  _EditQuizScreenState createState() => _EditQuizScreenState();
+  _MakeQuizScreenState createState() => _MakeQuizScreenState();
 }
 
-class _EditQuizScreenState extends State<EditQuizScreen> {
+class _MakeQuizScreenState extends State<MakeQuizScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   final _quizTitleController = TextEditingController();
+  final _questionController = TextEditingController();
+  final _correctAnswerController = TextEditingController();
+  final _incorrectAnswer1Controller = TextEditingController();
+  final _incorrectAnswer2Controller = TextEditingController();
+  final _incorrectAnswer3Controller = TextEditingController();
+
+  final List<String> questions = [];
+  final List<String> answers = [];
 
   @override
   void initState() {
@@ -21,6 +30,116 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
   void dispose() {
     _unfocusNode.dispose();
     super.dispose();
+  }
+
+  void _addQuestionDialog() {
+    bool _validateFields() {
+      if (_questionController.text.isEmpty ||
+          _correctAnswerController.text.isEmpty ||
+          _incorrectAnswer1Controller.text.isEmpty ||
+          _incorrectAnswer2Controller.text.isEmpty ||
+          _incorrectAnswer3Controller.text.isEmpty) {
+        return false;
+      }
+      return true;
+    }
+
+    void _showErrorDialog(String errorMessage) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: SingleChildScrollView(
+              child: Text(errorMessage),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Question'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _questionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Question',
+                  ),
+                ),
+                TextField(
+                  controller: _correctAnswerController,
+                  decoration: const InputDecoration(
+                    labelText: 'Correct Answer',
+                  ),
+                ),
+                TextField(
+                  controller: _incorrectAnswer1Controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Incorrect Answer 1',
+                  ),
+                ),
+                TextField(
+                  controller: _incorrectAnswer2Controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Incorrect Answer 2',
+                  ),
+                ),
+                TextField(
+                  controller: _incorrectAnswer3Controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Incorrect Answer 3',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_validateFields()) {
+                  setState(() {
+                    questions.add(_questionController.text);
+                    answers.add(_correctAnswerController.text);
+                    answers.add(_incorrectAnswer1Controller.text);
+                    answers.add(_incorrectAnswer2Controller.text);
+                    answers.add(_incorrectAnswer3Controller.text);
+                    _questionController.clear();
+                    _correctAnswerController.clear();
+                    _incorrectAnswer1Controller.clear();
+                    _incorrectAnswer2Controller.clear();
+                    _incorrectAnswer3Controller.clear();
+                  });
+                  Navigator.pop(context);
+                } else {
+                  _showErrorDialog(
+                      'Please fill out all fields before confirming.');
+                }
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -140,7 +259,10 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _addQuestionDialog();
+                            setState(() {});
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF39D2C0),
                             padding: const EdgeInsets.symmetric(
@@ -167,10 +289,67 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
                         decoration: const BoxDecoration(
                           color: Colors.white,
                         ),
-                        child: ListView(
+                        child: ListView.builder(
                           padding: EdgeInsets.zero,
                           scrollDirection: Axis.vertical,
-                          children: [],
+                          itemCount: questions.length,
+                          itemBuilder: (context, index) {
+                            // Calculate the indices of the answers based on the question index
+                            final int answerIndex = index * 4;
+                            final List<String> questionAnswers =
+                                answers.sublist(answerIndex, answerIndex + 4);
+                            // Build the question box
+                            return Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 40.0),
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Question ${index + 1}'),
+                                      SizedBox(height: 8.0),
+                                      Text(questions[index]),
+                                      SizedBox(height: 16.0),
+                                      Text(
+                                          'Correct Answer: ${questionAnswers[0]}'),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                          'Incorrect Answer #1: ${questionAnswers[1]}'),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                          'Incorrect Answer #2: ${questionAnswers[2]}'),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                          'Incorrect Answer #3: ${questionAnswers[3]}'),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Remove the question and its answers from the lists
+                                      setState(() {
+                                        questions.removeAt(index);
+                                        answers.removeRange(
+                                            answerIndex, answerIndex + 4);
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
