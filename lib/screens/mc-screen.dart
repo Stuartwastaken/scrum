@@ -18,6 +18,22 @@ class MultipleChoiceWidget extends StatefulWidget {
 class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late final QuizTimeStream quizTime;
+  bool buttonsEnabled = true;
+  int selectedIndex = 0;
+
+  void onButtonPressed(int index) {
+    setState(() {
+      selectedIndex = index;
+      buttonsEnabled = false;
+    });
+  }
+
+  void disableButtons() {
+    setState(() {
+      buttonsEnabled = false;
+    });
+  }
 
   late final QuizTimeStream quizTime;
 
@@ -31,7 +47,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
         quizTime,
         context,
         PostQuestionScreenWidget(
-            quizID: "999999", uid: "", isCorrect: false, pointsGained: 0));
+            quizID: widget.quizID, uid: "", isCorrect: false, pointsGained: 0));
   }
 
   @override
@@ -99,14 +115,30 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFFB21B3C),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.favorite_sharp,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(1)
+                                      : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 1) {
+                                          return Color(
+                                              0xFFB21B3C); // Disabled button color
+                                        }
+                                        return Colors
+                                            .grey; // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.favorite_sharp,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
@@ -122,14 +154,30 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFF45A3E5),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.waves_sharp,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(2)
+                                      : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 2) {
+                                          return Color(
+                                              0xFF45A3E5); // Disabled button color
+                                        }
+                                        return Colors
+                                            .grey; // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.waves_sharp,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
@@ -153,14 +201,30 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFFFFA602),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.brightness_1_rounded,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(3)
+                                      : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 3) {
+                                          return Color(
+                                              0xFFFFA602); // Disabled button color
+                                        }
+                                        return Colors
+                                            .grey; // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.brightness_1_rounded,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
@@ -176,14 +240,30 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                   color: Color(0xFF26890C),
                                   borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.bedtime_sharp,
-                                  color: Colors.white,
-                                  size: 120,
+                                child: ElevatedButton(
+                                  onPressed: buttonsEnabled
+                                      ? () => onButtonPressed(4)
+                                      : null,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (selectedIndex == 0 ||
+                                            selectedIndex == 4) {
+                                          return Color(
+                                              0xFF26890C); // Disabled button color
+                                        }
+                                        return Colors
+                                            .grey; // Default button color
+                                      },
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.bedtime_sharp,
+                                    color: Colors.white,
+                                    size: 120,
+                                  ),
                                 ),
                               ),
                             ),
