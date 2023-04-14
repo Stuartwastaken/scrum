@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MakeQuizScreen extends StatefulWidget {
-  const MakeQuizScreen({Key? key}) : super(key: key);
+  final User user;
+  const MakeQuizScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   _MakeQuizScreenState createState() => _MakeQuizScreenState();
@@ -122,6 +124,128 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                     answers.add(_incorrectAnswer1Controller.text);
                     answers.add(_incorrectAnswer2Controller.text);
                     answers.add(_incorrectAnswer3Controller.text);
+                    _questionController.clear();
+                    _correctAnswerController.clear();
+                    _incorrectAnswer1Controller.clear();
+                    _incorrectAnswer2Controller.clear();
+                    _incorrectAnswer3Controller.clear();
+                  });
+                  Navigator.pop(context);
+                } else {
+                  _showErrorDialog(
+                      'Please fill out all fields before confirming.');
+                }
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editQuestionDialog(int index) {
+    // Store the current contents of the question and its answers
+    String currentQuestion = questions[index];
+    String currentCorrectAnswer = answers[index * 4];
+    String currentIncorrectAnswer1 = answers[index * 4 + 1];
+    String currentIncorrectAnswer2 = answers[index * 4 + 2];
+    String currentIncorrectAnswer3 = answers[index * 4 + 3];
+
+    bool _validateFields() {
+      if (_questionController.text.isEmpty ||
+          _correctAnswerController.text.isEmpty ||
+          _incorrectAnswer1Controller.text.isEmpty ||
+          _incorrectAnswer2Controller.text.isEmpty ||
+          _incorrectAnswer3Controller.text.isEmpty) {
+        return false;
+      }
+      return true;
+    }
+
+    void _showErrorDialog(String errorMessage) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: SingleChildScrollView(
+              child: Text(errorMessage),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Question'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _questionController..text = currentQuestion,
+                  decoration: const InputDecoration(
+                    labelText: 'Question',
+                  ),
+                ),
+                TextField(
+                  controller: _correctAnswerController
+                    ..text = currentCorrectAnswer,
+                  decoration: const InputDecoration(
+                    labelText: 'Correct Answer',
+                  ),
+                ),
+                TextField(
+                  controller: _incorrectAnswer1Controller
+                    ..text = currentIncorrectAnswer1,
+                  decoration: const InputDecoration(
+                    labelText: 'Incorrect Answer 1',
+                  ),
+                ),
+                TextField(
+                  controller: _incorrectAnswer2Controller
+                    ..text = currentIncorrectAnswer2,
+                  decoration: const InputDecoration(
+                    labelText: 'Incorrect Answer 2',
+                  ),
+                ),
+                TextField(
+                  controller: _incorrectAnswer3Controller
+                    ..text = currentIncorrectAnswer3,
+                  decoration: const InputDecoration(
+                    labelText: 'Incorrect Answer 3',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_validateFields()) {
+                  setState(() {
+                    // Update the question and its answers with the new contents
+                    questions[index] = _questionController.text;
+                    answers[index * 4] = _correctAnswerController.text;
+                    answers[index * 4 + 1] = _incorrectAnswer1Controller.text;
+                    answers[index * 4 + 2] = _incorrectAnswer2Controller.text;
+                    answers[index * 4 + 3] = _incorrectAnswer3Controller.text;
                     _questionController.clear();
                     _correctAnswerController.clear();
                     _incorrectAnswer1Controller.clear();
@@ -332,19 +456,34 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                                           'Incorrect Answer #3: ${questionAnswers[3]}'),
                                     ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      // Remove the question and its answers from the lists
-                                      setState(() {
-                                        questions.removeAt(index);
-                                        answers.removeRange(
-                                            answerIndex, answerIndex + 4);
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          _editQuestionDialog(index);
+                                          setState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      SizedBox(width: 16.0),
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Remove the question and its answers from the lists
+                                          setState(() {
+                                            questions.removeAt(index);
+                                            answers.removeRange(
+                                                answerIndex, answerIndex + 4);
+                                          });
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -364,7 +503,34 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            // Get the quiz data from the text controllers
+                            final quizTitle = _quizTitleController.text;
+                            final questionsList =
+                                questions.map((q) => q).toList();
+                            final answersList = answers.map((a) => a).toList();
+
+                            // Save the quiz data to Firebase
+                            final quizRef = FirebaseFirestore.instance
+                                .collection('Quiz')
+                                .doc();
+                            await quizRef.set({
+                              'Title': quizTitle,
+                              'Questions': questionsList,
+                              'Answers': answersList,
+                            });
+
+                            // Update the user's document to reference the newly created quiz
+                            final userRef = FirebaseFirestore.instance
+                                .collection('User')
+                                .doc(widget.user.uid);
+                            await userRef.update({
+                              'Quizzes': FieldValue.arrayUnion([quizRef]),
+                            });
+
+                            // Navigate back to the previous screen
+                            Navigator.of(context).pop();
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF3355),
                             padding: const EdgeInsets.symmetric(
