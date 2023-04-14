@@ -35,8 +35,6 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     });
   }
 
-  late final QuizTimeStream quizTime;
-
   @override
   void initState() {
     super.initState();
