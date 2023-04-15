@@ -8,7 +8,7 @@ class CalculateScore {
     int? remainingTime = await ScrumRTdatabase.getTime(quizID);
 
     // Do your calculations using remainingTime as an int value
-    int score = remainingTime! * 30;
+    int score = remainingTime! * 30 + 100;
 
     print('Score: $score');
     return score;
