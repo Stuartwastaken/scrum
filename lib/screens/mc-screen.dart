@@ -49,7 +49,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             quizID: widget.quizID,
             uid: "",
             isCorrect: false,
-            pointsGained: CalculateScore.calculateAddValue("999999")));
+            pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
   }
 
   @override
