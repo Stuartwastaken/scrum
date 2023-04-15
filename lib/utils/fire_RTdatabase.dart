@@ -93,4 +93,22 @@ class ScrumRTdatabase {
     });
     return null; // Return null since we don't need to return anything
   }
+
+  // Grabs the time that is remaining in a specified quiz
+  static Future<int?> getTime(String quizID) async {
+    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+    int remainingTime = 0;
+
+    await databaseRef
+        .child(quizID)
+        .child('time')
+        .once()
+        .then((DatabaseEvent event) {
+      int quizTime = event.snapshot.value as int;
+      if (quizTime != null) {
+        remainingTime = quizTime;
+      }
+    });
+    return remainingTime;
+  }
 }

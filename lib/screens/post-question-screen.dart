@@ -7,7 +7,7 @@ import 'package:scrum/utils/fire_RTdatabase.dart';
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
   final String uid;
-  final int pointsGained;
+  final Future<int> pointsGained;
   final String quizID;
   const PostQuestionScreenWidget(
       {Key? key,
@@ -67,7 +67,8 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
 
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(quizTime, context, LeaderboardScreen(quizID: widget.quizID));
+    QuizListener.listen(
+        quizTime, context, LeaderboardScreen(quizID: widget.quizID));
   }
 
   @override
@@ -154,13 +155,28 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                           shape: BoxShape.rectangle,
                         ),
                         alignment: AlignmentDirectional(0, 0),
-                        child: Text(
-                          '+ $points pts',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
-                            fontSize: 40,
-                          ),
+                        child: FutureBuilder<int>(
+                          future: widget.pointsGained,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<int> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Text(
+                                  '+ ${snapshot.data} pts',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 40,
+                                  ),
+                                );
+                              }
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
                         ),
                       ),
                     ),
