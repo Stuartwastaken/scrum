@@ -10,7 +10,6 @@ class CalculateScore {
     // Do your calculations using remainingTime as an int value
     int score = remainingTime! * 30 + 100;
 
-    print('Score: $score');
     return score;
   }
 }
