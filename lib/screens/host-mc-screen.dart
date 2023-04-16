@@ -137,10 +137,13 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       },
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.favorite_sharp,
-                                    color: Colors.white,
-                                    size: 120,
+                                  child: Text(
+                                    "January 1 on the new years day because it was raining outside",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 28,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -176,10 +179,13 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       },
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.waves_sharp,
-                                    color: Colors.white,
-                                    size: 120,
+                                  child: Text(
+                                    "January 1 on the new years day because it was raining outside",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 28,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -223,10 +229,13 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       },
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.brightness_1_rounded,
-                                    color: Colors.white,
-                                    size: 120,
+                                  child: Text(
+                                    "January 1 on the new years day because it was raining outside",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 28,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -262,10 +271,13 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       },
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.bedtime_sharp,
-                                    color: Colors.white,
-                                    size: 120,
+                                  child: Text(
+                                    "January 1 on the new years day because it was raining outside",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 28,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
