@@ -11,6 +11,20 @@ class ScrumRTdatabase {
     return snapshot.snapshot.exists;
   }
 
+  static bool isHostReady(String quizID){
+    final databaseRef = FirebaseDatabase.instance.ref();
+    bool hostIsReady = databaseRef.child('hostIsReady').once() as bool;
+    return hostIsReady;
+  }
+
+  static void setHostReadyState(String quizID, bool readyState) {
+    FirebaseDatabase.instance.ref().child('hostIsReady').set(readyState);
+  }
+
+  static void setTimer(int time) {
+    FirebaseDatabase.instance.ref().child('time').set(time);
+  }
+
   //add user to RT database under correct lobbyID
   static Future<void> writeUserToTree(String nickname, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
