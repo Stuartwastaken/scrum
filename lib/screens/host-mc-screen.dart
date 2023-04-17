@@ -21,21 +21,6 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
-  bool buttonsEnabled = true;
-  int selectedIndex = 0;
-
-  void onButtonPressed(int index) {
-    setState(() {
-      selectedIndex = index;
-      buttonsEnabled = false;
-    });
-  }
-
-  void disableButtons() {
-    setState(() {
-      buttonsEnabled = false;
-    });
-  }
 
   @override
   void initState() {
