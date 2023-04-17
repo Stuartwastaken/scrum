@@ -116,35 +116,26 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                 height: 300,
                                 decoration: BoxDecoration(
                                   color: Color(0xFFB21B3C),
-                                  borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(1)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 1) {
-                                          return Color(
-                                              0xFFB21B3C); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.favorite_sharp,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Text(
-                                    "January 1 on the new years day because it was raining outside",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 28,
-                                        color: Colors.white),
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -158,35 +149,26 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                 height: 300,
                                 decoration: BoxDecoration(
                                   color: Color(0xFF45A3E5),
-                                  borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(2)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 2) {
-                                          return Color(
-                                              0xFF45A3E5); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.waves_sharp,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Text(
-                                    "January 1 on the new years day because it was raining outside",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 28,
-                                        color: Colors.white),
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -208,35 +190,26 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                 height: 300,
                                 decoration: BoxDecoration(
                                   color: Color(0xFFFFA602),
-                                  borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(3)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 3) {
-                                          return Color(
-                                              0xFFFFA602); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.brightness_1_rounded,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Text(
-                                    "January 1 on the new years day because it was raining outside",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 28,
-                                        color: Colors.white),
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -250,35 +223,26 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                 height: 300,
                                 decoration: BoxDecoration(
                                   color: Color(0xFF26890C),
-                                  borderRadius: BorderRadius.circular(30),
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(4)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 4) {
-                                          return Color(
-                                              0xFF26890C); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.bedtime_sharp,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Text(
-                                    "January 1 on the new years day because it was raining outside",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 28,
-                                        color: Colors.white),
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
