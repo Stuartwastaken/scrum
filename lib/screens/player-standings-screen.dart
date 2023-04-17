@@ -41,14 +41,14 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic> usersAndScores = snapshot.data!;
-                Map<String, dynamic> usersAndScores_sorted =
+                Map<String, dynamic> usersandscoresSorted =
                     sort(usersAndScores);
                 List<MapEntry<String, dynamic>> sortedEntries =
-                    usersAndScores_sorted.entries.toList();
+                    usersandscoresSorted.entries.toList();
                 if (sortedEntries.length < 5) {
-                  return StandingsScreenBuilder(sortedEntries.sublist(0));
+                  return standingsScreenBuilder(sortedEntries.sublist(0));
                 } else {
-                  return StandingsScreenBuilder(sortedEntries.sublist(0, 5));
+                  return standingsScreenBuilder(sortedEntries.sublist(0, 5));
                 }
               } else if (snapshot.hasError) {
                 return Center(child: Text("Error: ${snapshot.error}"));
@@ -58,7 +58,7 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
             }));
   }
 
-  Widget StandingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
+  Widget standingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       body: SafeArea(
@@ -89,17 +89,6 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
                       );
                     }),
                     SizedBox(height: 32.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        /* Add appropriate navigation later
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NextQuestionScreen()),
-                      );
-                      */
-                      },
-                      child: Text('Next Question'),
-                    ),
                   ],
                 ),
               ),

@@ -1,40 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/calculate-score.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
-import 'package:scrum/screens/post-question-screen.dart';
+import 'package:scrum/screens/player-standings-screen.dart';
 
-class MultipleChoiceWidget extends StatefulWidget {
-  const MultipleChoiceWidget({
+class HostCorrectAnswerScreen extends StatefulWidget {
+  const HostCorrectAnswerScreen({
     Key? key,
     required this.quizID,
+    required this.correctOption,
   }) : super(key: key);
 
   final String quizID;
+  final int correctOption;
 
   @override
-  _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
+  _HostCorrectAnswerScreenState createState() =>
+      _HostCorrectAnswerScreenState();
 }
 
-class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
+class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
-  bool buttonsEnabled = true;
-  int selectedIndex = 0;
-
-  void onButtonPressed(int index) {
-    setState(() {
-      selectedIndex = index;
-      buttonsEnabled = false;
-    });
-  }
-
-  void disableButtons() {
-    setState(() {
-      buttonsEnabled = false;
-    });
-  }
 
   @override
   void initState() {
@@ -43,13 +30,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
-        quizTime,
-        context,
-        PostQuestionScreenWidget(
-            quizID: widget.quizID,
-            uid: "",
-            isCorrect: false,
-            pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
+        quizTime, context, PlayerStandingsScreen(quizID: widget.quizID), 7);
   }
 
   @override
@@ -114,33 +95,29 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFB21B3C),
-                                  borderRadius: BorderRadius.circular(30),
+                                  color: widget.correctOption == 0
+                                      ? Color(0xFFB21B3C)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(1)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 1) {
-                                          return Color(
-                                              0xFFB21B3C); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.favorite_sharp,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.favorite_sharp,
-                                    color: Colors.white,
-                                    size: 120,
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -153,33 +130,29 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF45A3E5),
-                                  borderRadius: BorderRadius.circular(30),
+                                  color: widget.correctOption == 1
+                                      ? Color(0xFF45A3E5)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(2)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 2) {
-                                          return Color(
-                                              0xFF45A3E5); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.waves_sharp,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.waves_sharp,
-                                    color: Colors.white,
-                                    size: 120,
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -200,33 +173,29 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFFFA602),
-                                  borderRadius: BorderRadius.circular(30),
+                                  color: widget.correctOption == 2
+                                      ? Color(0xFFFFA602)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(3)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 3) {
-                                          return Color(
-                                              0xFFFFA602); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.brightness_1_rounded,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.brightness_1_rounded,
-                                    color: Colors.white,
-                                    size: 120,
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -239,33 +208,29 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF26890C),
-                                  borderRadius: BorderRadius.circular(30),
+                                  color: widget.correctOption == 3
+                                      ? Color(0xFF26890C)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
-                                child: ElevatedButton(
-                                  onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(4)
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 4) {
-                                          return Color(
-                                              0xFF26890C); // Disabled button color
-                                        }
-                                        return Colors
-                                            .grey; // Default button color
-                                      },
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.bedtime_sharp,
+                                      color: Colors.white,
+                                      size: 60,
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.bedtime_sharp,
-                                    color: Colors.white,
-                                    size: 120,
-                                  ),
+                                    Flexible(
+                                      child: Text(
+                                        "January 1 on the new years day because it was raining outside",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 28,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
