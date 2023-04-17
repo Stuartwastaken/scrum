@@ -111,4 +111,40 @@ class ScrumRTdatabase {
     });
     return remainingTime;
   }
+
+  static Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
+    List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
+    usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
+    usersAndScores = Map.fromEntries(usersList);
+    return usersAndScores;
+  }
+
+  static int getPlayerPosition(
+      List<MapEntry<String, dynamic>> users, String uid) {
+    int index = 0;
+    for (int i = 0; i < users.length; i++) {
+      MapEntry<String, dynamic> currentEntry = users[i];
+      if (currentEntry.key == uid) {
+        index = i;
+        break;
+      }
+    }
+    return index + 1;
+  }
+
+  static int getPlayerPoints(
+      List<MapEntry<String, dynamic>> users, String uid) {
+    for (int i = 0; i < users.length; i++) {
+      MapEntry<String, dynamic> currentEntry = users[i];
+      if (currentEntry.key == uid) {
+        return currentEntry.value['score'];
+      }
+    }
+    return 0;
+  }
+
+  //VERY POWERFUL FUNCTION! BE CAREFUL WITH ITS USE
+  static void deleteLobby(String quizID) {
+    FirebaseDatabase.instance.ref().child(quizID).remove();
+  }
 }
