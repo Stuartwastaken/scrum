@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
 
 class ScrumRTdatabase {
@@ -110,5 +111,51 @@ class ScrumRTdatabase {
       }
     });
     return remainingTime;
+  }
+
+  static Future<String> createQuiz() async {
+    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+
+    String? quizID = createQuizID();
+    bool matchFound = await checkPinExists(quizID);
+
+    while (matchFound) {
+      quizID = createQuizID();
+      matchFound = await checkPinExists(quizID);
+    }
+
+    await databaseRef.child(quizID!).set({
+      'time': 0,
+      'peopleInLobby': 0,
+      'start': false,
+    });
+
+    return quizID;
+  }
+
+  static String createQuizID() {
+    Random quizID = new Random();
+    String result = '';
+    for (int i = 0; i < 6; i++) {
+      result += quizID.nextInt(10).toString();
+    }
+    return result;
+  }
+
+  static Future<List<String>> getUserNicknames(String lobbyID) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    List<String> nicknames = [];
+    await databaseRef.child(lobbyID).once().then((DatabaseEvent event) {
+      Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
+      if (lobbyData != null) {
+        lobbyData.forEach((uid, userData) {
+          if (uid.toString().substring(0, 3) == 'uid') {
+            String nickname = userData['nickname'];
+            nicknames.add(nickname);
+          }
+        });
+      }
+    });
+    return nicknames;
   }
 }
