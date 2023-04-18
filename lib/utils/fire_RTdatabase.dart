@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 
 class ScrumRTdatabase {
   static final StreamController<int> playerStreamController =
       StreamController<int>();
-
+    final StreamController<int> _peopleInLobbyStreamController =
+      BehaviorSubject<int>();
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
+  
   static Future<bool> checkPinExists(String pinID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     var snapshot = await databaseRef.child(pinID).once();
@@ -85,21 +89,23 @@ class ScrumRTdatabase {
     });
   }
 
-  static Future<int?> getPeopleInLobby(String gameID) async {
-    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+  Future<int?> listenToPeopleInLobby(String gameId) {
+    final completer = Completer<int?>();
 
-    print("Listenting for player count");
-
-    databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
+    _databaseReference.child('$gameId/peopleInLobby').onValue.listen((event) {
       final int? numberOfPlayers = event.snapshot.value as int?;
       if (numberOfPlayers != null) {
-        playerStreamController.add(numberOfPlayers);
+        _peopleInLobbyStreamController.add(numberOfPlayers);
+        completer.complete(numberOfPlayers);
       }
     }, onError: (error) {
-      playerStreamController.addError(error);
+      completer.completeError(error);
     });
-    return null; // Return null since we don't need to return anything
+
+    return completer.future;
   }
+
+  Stream<int> get peopleInLobbyStream => _peopleInLobbyStreamController.stream;
 
   // Grabs the time that is remaining in a specified quiz
   static Future<int?> getTime(String quizID) async {
