@@ -104,22 +104,27 @@ class _ProfilePageState extends State<ProfilePage> {
                 snapshot.data!;
             // build the UI using documentList
             return ListView.builder(
-              itemCount: documentList.length,
+              itemCount: documentList.length > 0 ? documentList.length : 1,
               itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(documentList[index].data()?['Title'] ?? ''),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                              IconData(0xf00a0, fontFamily: 'MaterialIcons'))),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                    ],
-                  ),
-                );
+                if (documentList.length == 0) {
+                  print("no entries");
+                  return Text("You dont have any quizzes");
+                } else {
+                  return ListTile(
+                    title: Text(documentList[index].data()?['Title'] ?? ''),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(IconData(0xf00a0,
+                                fontFamily: 'MaterialIcons'))),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                      ],
+                    ),
+                  );
+                }
               },
             );
           } else if (snapshot.hasError) {
