@@ -63,4 +63,12 @@ class Quiz {
   void resetQuiz() {
     currentIndex = 0;
   }
+
+  bool isQuizEmpty() {
+    if (currentIndex == questions.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
