@@ -237,7 +237,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: TextField(
-                                        controller: question,
+                                        controller: answer4,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
