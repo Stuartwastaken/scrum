@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/lobby_screen.dart';
 import 'package:scrum/screens/login-screen.dart';
-import '../routes.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'register-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class GamePinScreen extends StatefulWidget {
   const GamePinScreen({super.key});
@@ -30,8 +32,26 @@ class GamePinScreenState extends State<GamePinScreen> {
         ),
       );
     }
-
     return firebaseApp;
+  }
+
+  final nicknameController = TextEditingController();
+  final pinController = TextEditingController();
+
+  String getNickname() {
+    return nicknameController.text;
+  }
+
+  bool isNicknameEmpty(TextEditingController nicknameController) {
+    return nicknameController.text.isEmpty;
+  }
+
+  String getPin() {
+    return pinController.text;
+  }
+
+  bool isPinEmpty(TextEditingController pinController) {
+    return pinController.text.isEmpty;
   }
 
   @override
@@ -47,11 +67,13 @@ class GamePinScreenState extends State<GamePinScreen> {
                   body: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        stops: [0.0, 0.35, 1.0], // set stops for the gradient
                         colors: [
-                          Color.fromARGB(255, 5, 70, 175),
-                          Color.fromARGB(255, 180, 203, 240),
+                          Color.fromARGB(255, 161, 15, 223),
+                          Color.fromARGB(255, 251, 153, 42),
+                          Color.fromARGB(255, 63, 3, 192), // add a third color
                         ],
                       ),
                     ),
@@ -60,7 +82,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                         Positioned(
                             top: 16,
                             right: 106,
-                            child: ElevatedButton(
+                            child: OutlinedButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
@@ -80,9 +102,12 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.white, // background color
-                                onPrimary: Color.fromARGB(
-                                    255, 5, 70, 175), // foreground color
+                                foregroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
+                                side: BorderSide(
+                                    width: 2.0,
+                                    color: Color.fromARGB(255, 255, 255,
+                                        255)), // foreground color
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                       7), // set the desired border radius here
@@ -90,10 +115,11 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 minimumSize: Size(90, 35),
                               ),
                             )),
+                        //Sign Up Button
                         Positioned(
                             top: 16,
                             right: 16,
-                            child: ElevatedButton(
+                            child: OutlinedButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
@@ -113,9 +139,12 @@ class GamePinScreenState extends State<GamePinScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.white, // background color
-                                onPrimary: Color.fromARGB(
-                                    255, 5, 70, 175), // foreground color
+                                foregroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
+                                side: BorderSide(
+                                    width: 2.0,
+                                    color: Color.fromARGB(255, 255, 255,
+                                        255)), // foreground color
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                       7), // set the desired border radius here
@@ -127,28 +156,24 @@ class GamePinScreenState extends State<GamePinScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Image.asset(
-                                'images/SCRUM2.png', // path to your image file
-                                width:
-                                    MediaQuery.of(context).size.width * 0.265,
-                                //height: 250,
-                                fit: BoxFit.fitWidth,
+                              Text(
+                                "SCRUM",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 80,
+                                    color: Colors.white),
                               ),
-                              SizedBox(height: 12),
+                              Text(
+                                "Transforming the world of work.",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 32,
+                                    color: Colors.white),
+                              ),
                               Container(
                                 width: 400,
                                 height: 225,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(0.0, 1.0),
-                                      blurRadius: 15.0,
-                                    ),
-                                  ],
-                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -158,7 +183,37 @@ class GamePinScreenState extends State<GamePinScreen> {
                                           bottom: 12.0,
                                           left: 40.0,
                                           right: 40.0),
-                                      child: keyTextField(),
+                                      child: TextField(
+                                        controller: pinController,
+                                        style: TextStyle(color: Colors.white),
+                                        decoration: InputDecoration(
+                                          labelText: 'Game PIN',
+                                          labelStyle: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255)),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -166,12 +221,174 @@ class GamePinScreenState extends State<GamePinScreen> {
                                           bottom: 12.0,
                                           left: 40.0,
                                           right: 40.0),
-                                      child: userTextField(),
+                                      child: TextField(
+                                        controller: nicknameController,
+                                        style: TextStyle(color: Colors.white),
+                                        decoration: InputDecoration(
+                                          labelText: 'Nickname',
+                                          labelStyle: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255)),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           top: 4.0, bottom: 12.0),
-                                      child: enterButton(),
+                                      child: OutlinedButton(
+                                        onPressed: () async {
+                                          if (isPinEmpty(pinController) &
+                                              isNicknameEmpty(
+                                                  nicknameController)) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      "Please enter a game pin and nickname"),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text("OK"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else if (isPinEmpty(
+                                              pinController)) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      "Please enter a gamepin"),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text("OK"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else if (isNicknameEmpty(
+                                              nicknameController)) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      "Please enter a nickname"),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text("OK"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else if (!await ScrumRTdatabase
+                                              .checkPinExists(getPin())) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      "Game pin is not valid"),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text("OK"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else if (await ScrumRTdatabase
+                                                  .checkPinExists(getPin()) &
+                                              !isNicknameEmpty(
+                                                  nicknameController)) {
+                                            ScrumRTdatabase.writeUserToTree(
+                                                getNickname(), getPin());
+                                            print(
+                                                "The user should be written!");
+
+                                            String gameID = pinController.text;
+                                            ScrumRTdatabase
+                                                .incrementPeopleInLobby(
+                                                    gameID, 1);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              PageRouteBuilder(
+                                                pageBuilder: (context,
+                                                        animation1,
+                                                        animation2) =>
+                                                    LobbyScreen(
+                                                        gameID: gameID,
+                                                        nickname:
+                                                            getNickname()),
+                                                transitionDuration:
+                                                    Duration.zero,
+                                                reverseTransitionDuration:
+                                                    Duration.zero,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          "Enter",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        style: OutlinedButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          side: BorderSide(
+                                              width: 2.0,
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          minimumSize: Size(330, 50),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -189,69 +406,6 @@ class GamePinScreenState extends State<GamePinScreen> {
               );
             }),
       ),
-    );
-  }
-}
-
-class enterButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.popAndPushNamed(context, "/");
-      },
-      child: Text(
-        "Enter",
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-        ),
-      ),
-      style: ElevatedButton.styleFrom(
-        primary: Color.fromARGB(255, 5, 70, 175),
-        onPrimary: Colors.white,
-        shadowColor: Colors.grey,
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-        minimumSize: Size(330, 50),
-      ),
-    );
-  }
-}
-
-class keyTextField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-        style: new TextStyle(
-            fontWeight: FontWeight.w400,
-            fontFamily: "SegoeUI",
-            fontStyle: FontStyle.normal,
-            fontSize: 16.0),
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Color.fromARGB(255, 0, 0,
-                      0)), // Set border color to a darker shade of grey
-            ),
-            hintText: 'Game PIN',
-            labelStyle: new TextStyle(color: const Color(0xFF424242))));
-  }
-}
-
-class userTextField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      style: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        color: Colors.black,
-      ),
-      decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Nickname',
-          labelStyle: new TextStyle(color: const Color(0xFF424242))),
     );
   }
 }
