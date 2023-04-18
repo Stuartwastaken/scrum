@@ -143,10 +143,10 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                               return Text('Loading...');
                             case ConnectionState.active:
                               return Text(
-                                '${snapshot.data}',
+                                '${snapshot.data} players joined',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 80,
+                                  fontSize: 48,
                                   fontStyle: FontStyle.normal,
                                   color: Colors.white,
                                 ),
@@ -157,58 +157,97 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                         }
                       },
                     ),
-                    Text(
-                      "Players Joined",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontStyle: FontStyle.normal,
-                          fontSize: 28,
-                          color: Colors.white),
-                    ),
-                    /*
-                    StreamBuilder(
-                      stream: FirebaseDatabase.instance
-                          .reference()
-                          .child(quizIDString)
-                          .onChildAdded,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<DatabaseEvent> snapshot) {
-                        if (snapshot.hasData) {
-                          DataSnapshot dataSnapshot =
-                              snapshot.data as DataSnapshot;
-                          Map<dynamic, dynamic> lobbyData = dataSnapshot as Map;
-                          if (lobbyData != null) {
-                            List<Widget> buttons = [];
-                            lobbyData.forEach((key, value) {
-                              if (key.startsWith('uid')) {
-                                String nickname = value['nickname'];
-                                // Create an outlined button with the nickname
-                                buttons.add(
-                                  OutlinedButton(
-                                    child: Text(nickname),
-                                    onPressed: () {},
-                                  ),
-                                );
-                              }
-                            });
-                            // Create a container with the list of buttons evenly spaced
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.8,
+                        maxHeight: MediaQuery.of(context).size.height * 0.65,
+                      ),
+                      child: FutureBuilder<String>(
+                        future: quizID,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> quizIdSnapshot) {
+                          if (quizIdSnapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(
-                              child: Wrap(
-                                spacing: 10,
-                                children: buttons,
-                              ),
+                              child: CircularProgressIndicator(),
                             );
                           }
-                        }
-                        // Return a placeholder widget while data is being fetched
-                        return CircularProgressIndicator();
-                      },
+                          if (quizIdSnapshot.hasError) {
+                            return Center(
+                              child: Text('Failed to create quiz'),
+                            );
+                          }
+                          final quizId = quizIdSnapshot.data!;
+                          ScrumRTdatabase.getPeopleInLobby(quizId);
+                          return StreamBuilder(
+                            stream: FirebaseDatabase.instance
+                                .ref()
+                                .child(quizIDString)
+                                .onValue,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DatabaseEvent> snapshot) {
+                              if (snapshot.hasData) {
+                                final eventData = snapshot.data?.snapshot.value;
+                                if (eventData is Map<dynamic, dynamic>) {
+                                  final lobbyData = eventData;
+                                  List<Widget> buttons = [];
+                                  lobbyData.forEach((key, value) {
+                                    if (key.startsWith('uid')) {
+                                      String nickname = value['nickname'];
+                                      // Create an outlined button with the nickname
+                                      buttons.add(
+                                        OutlinedButton(
+                                          child: Text(
+                                            nickname,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                              fontSize: 22,
+                                            ),
+                                          ),
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            side: BorderSide(
+                                                width: 2.0,
+                                                color: Color.fromARGB(
+                                                    255,
+                                                    255,
+                                                    255,
+                                                    255)), // foreground color
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  7), // set the desired border radius here
+                                            ),
+                                            minimumSize: Size(0, 55),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
+                                  // Create a container with the list of buttons evenly spaced
+                                  return Center(
+                                    child: Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      runAlignment: WrapAlignment.center,
+                                      children: buttons,
+                                    ),
+                                  );
+                                }
+                              }
+                              // Return a placeholder widget while data is being fetched
+                              return CircularProgressIndicator();
+                            },
+                          );
+                        },
+                      ),
                     ),
-                    */
                     OutlinedButton(
                       onPressed: () {},
                       child: Text(
-                        "Play!",
+                        "Begin!",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
