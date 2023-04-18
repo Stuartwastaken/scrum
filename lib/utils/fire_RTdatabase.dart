@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
 
 class ScrumRTdatabase {
   static final StreamController<int> playerStreamController =
@@ -86,6 +88,8 @@ class ScrumRTdatabase {
   static Future<int?> getPeopleInLobby(String gameID) async {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
+    print("Listenting for player count");
+
     databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
       final int? numberOfPlayers = event.snapshot.value as int?;
       if (numberOfPlayers != null) {
@@ -166,5 +170,24 @@ class ScrumRTdatabase {
         FirebaseDatabase.instance.ref().child(quizID).child(hash!);
 
     return userRef;
+  }
+
+  static void listenForKick(String quizID, String hash, BuildContext context) {
+    DatabaseReference playersRef =
+        FirebaseDatabase.instance.ref().child(quizID);
+    print('Listening for Kick with hash: $hash and quizID: $quizID');
+
+    playersRef.onChildRemoved.listen((event) {
+      if (event.snapshot.key == hash) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => GamePinScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        );
+      }
+    });
   }
 }

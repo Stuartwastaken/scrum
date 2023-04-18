@@ -43,23 +43,7 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    final DatabaseReference userRef =
-        ScrumRTdatabase.getUserRef(widget.gameID, widget.hash);
-
-    userRef.onValue.listen((event) {
-      if (!event.snapshot.exists) {
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) =>
-                const GamePinScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
-      }
-    });
-
+    ScrumRTdatabase.listenForKick(widget.gameID, widget.hash!, context);
     ScrumRTdatabase.getPeopleInLobby(widget.gameID);
   }
 
