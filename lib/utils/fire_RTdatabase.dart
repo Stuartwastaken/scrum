@@ -21,8 +21,8 @@ class ScrumRTdatabase {
     FirebaseDatabase.instance.ref().child('hostIsReady').set(readyState);
   }
 
-  static void setTimer(int time) {
-    FirebaseDatabase.instance.ref().child('time').set(time);
+  static void setTimer(String quizID, int time) {
+    FirebaseDatabase.instance.ref().child(quizID).update({'time': time});
   }
 
   //add user to RT database under correct lobbyID

@@ -28,7 +28,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(quizTime, context,
-        HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 2), 7);
+        HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 2), widget.quizID, 7);
   }
 
   @override

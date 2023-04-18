@@ -30,7 +30,7 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
-        quizTime, context, PlayerStandingsScreen(quizID: widget.quizID), 7);
+        quizTime, context, PlayerStandingsScreen(quizID: widget.quizID), widget.quizID, 7);
   }
 
   @override
