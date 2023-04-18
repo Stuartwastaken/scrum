@@ -4,6 +4,11 @@ import 'package:scrum/screens/login-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum MenuItem {
+  item1,
+  item2,
+}
+
 class ProfilePage extends StatefulWidget {
   final User user;
 
@@ -43,6 +48,51 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: TextButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => ProfilePage(user: _currentUser)));
+            },
+            child: const Text(
+              "Home Screen",
+              style: TextStyle(color: Colors.white),
+            )),
+        actions: [
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value == MenuItem.item1) {
+                print("View Profile");
+              }
+              if (value == MenuItem.item2) {
+                print("Sign Out");
+                setState(() {
+                  _isSigningOut = true;
+                });
+                FirebaseAuth.instance.signOut();
+                setState(() {
+                  _isSigningOut = false;
+                });
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: MenuItem.item1,
+                child: Text("View Profile"),
+              ),
+              PopupMenuItem(
+                value: MenuItem.item2,
+                child: Text("Sign Out"),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
         future: _getDataFuture,
         builder: (BuildContext context,
@@ -58,6 +108,17 @@ class _ProfilePageState extends State<ProfilePage> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Text(documentList[index].data()?['Title'] ?? ''),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                              IconData(0xf00a0, fontFamily: 'MaterialIcons'))),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                    ],
+                  ),
                 );
               },
             );
