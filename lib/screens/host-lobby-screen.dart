@@ -205,7 +205,18 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                                               fontSize: 22,
                                             ),
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            ScrumRTdatabase.removeUserFromTree(
+                                                key, quizIDString);
+                                            ScrumRTdatabase
+                                                .incrementPeopleInLobby(
+                                                    quizIDString, -1);
+                                            setState(() {
+                                              buttons.removeWhere((element) =>
+                                                  element.key == ValueKey(key));
+                                            });
+                                          },
+                                          key: ValueKey(key),
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Color.fromARGB(
                                                 255, 255, 255, 255),

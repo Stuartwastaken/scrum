@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class LobbyScreen extends StatefulWidget {
   final String gameID;
-  final String nickname;
+  final String? hash;
   const LobbyScreen({
     Key? key,
     required this.gameID,
-    required this.nickname,
+    required this.hash,
   }) : super(key: key);
 
   @override
@@ -42,6 +43,23 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
+    final DatabaseReference userRef =
+        ScrumRTdatabase.getUserRef(widget.gameID, widget.hash);
+
+    userRef.onValue.listen((event) {
+      if (!event.snapshot.exists) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) =>
+                const GamePinScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        );
+      }
+    });
+
     ScrumRTdatabase.getPeopleInLobby(widget.gameID);
   }
 
@@ -69,7 +87,7 @@ class LobbyScreenState extends State<LobbyScreen>
                   child: OutlinedButton(
                     onPressed: () {
                       ScrumRTdatabase.removeUserFromTree(
-                          widget.nickname, widget.gameID);
+                          widget.hash!, widget.gameID);
                       ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
 
                       Navigator.pushReplacement(

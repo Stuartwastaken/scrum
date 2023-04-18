@@ -13,7 +13,8 @@ class ScrumRTdatabase {
   }
 
   //add user to RT database under correct lobbyID
-  static Future<void> writeUserToTree(String nickname, String gamePin) async {
+  static Future<String?> writeUserToTree(
+      String nickname, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     final gamePinRef = databaseRef.child(gamePin);
     String? hash = gamePinRef.push().key;
@@ -23,11 +24,12 @@ class ScrumRTdatabase {
       'nickname': nickname,
       'score': 0,
     });
+
+    return uniqueId;
   }
 
   //remove user from RT database under correct lobbyID
-  static Future<void> removeUserFromTree(
-      String nickname, String gamePin) async {
+  static Future<void> removeUserFromTree(String hash, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     final gamePinRef = databaseRef.child(gamePin);
     DatabaseEvent dataEvent = await gamePinRef.once();
@@ -35,7 +37,7 @@ class ScrumRTdatabase {
     if (users != null) {
       users.forEach((key, value) {
         if (key.toString().substring(0, 3) == 'uid') {
-          if (value['nickname'] == nickname) {
+          if (key == hash) {
             gamePinRef.child(key).remove();
             return; //break out of forEach loop
           }
@@ -157,5 +159,12 @@ class ScrumRTdatabase {
       }
     });
     return nicknames;
+  }
+
+  static DatabaseReference getUserRef(String quizID, String? hash) {
+    final DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child(quizID).child(hash!);
+
+    return userRef;
   }
 }
