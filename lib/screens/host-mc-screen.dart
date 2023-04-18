@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
@@ -22,18 +23,16 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
-  final Quiz quiz = Quiz.getInstance(quizID);
-  final TextEditingController question = quiz.nextQuestion();
-  final List<String> answers = quiz.nextAnswers();
-  final TextEditingController answer1 = answers[0];
-  final TextEditingController answer2 = answers[1];
-  final TextEditingController answer3 = answers[2];
-  final TextEditingController answer4 = answers[3];
+  late Quiz quiz;
+  late final TextEditingController question;
+  late final TextEditingController answer1;
+  late final TextEditingController answer2;
+  late final TextEditingController answer3;
+  late final TextEditingController answer4;
 
   @override
   void initState() {
     super.initState();
-
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
@@ -44,6 +43,17 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
             uid: "",
             isCorrect: false,
             pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
+    _loadQuestion();
+  }
+
+  Future<void> _loadQuestion() async {
+    quiz = Quiz.getInstance(document: widget.quizID);
+    final answers = quiz.currentAnswers;
+    question = TextEditingController(text: quiz.nextQuestion());
+    answer1 = TextEditingController(text: answers[0]);
+    answer2 = TextEditingController(text: answers[1]);
+    answer3 = TextEditingController(text: answers[2]);
+    answer4 = TextEditingController(text: answers[3]);
   }
 
   @override

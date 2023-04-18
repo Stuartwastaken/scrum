@@ -21,8 +21,8 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
-  final Quiz quiz = Quiz.getInstance(quizID);
-  final String question = quiz.nextQuestion();
+  late Quiz quiz;
+  late final TextEditingController question;
   bool buttonsEnabled = true;
   int selectedIndex = 0;
 
@@ -53,6 +53,12 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             uid: "",
             isCorrect: false,
             pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
+    _loadQuestion();
+  }
+
+  Future<void> _loadQuestion() async {
+    quiz = Quiz.getInstance(document: widget.quizID);
+    question = TextEditingController(text: quiz.nextQuestion());
   }
 
   @override
@@ -86,8 +92,8 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: Text(
-                  'When did Lebron meet Mia Khalifa?',
+                child: TextField(
+                  controller: question,
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
