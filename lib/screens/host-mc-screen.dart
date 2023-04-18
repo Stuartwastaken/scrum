@@ -22,7 +22,13 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
-  final 
+  final Quiz quiz = Quiz.getInstance(quizID);
+  final TextEditingController question = quiz.nextQuestion();
+  final List<String> answers = quiz.nextAnswers();
+  final TextEditingController answer1 = answers[0];
+  final TextEditingController answer2 = answers[1];
+  final TextEditingController answer3 = answers[2];
+  final TextEditingController answer4 = answers[3];
 
   @override
   void initState() {
@@ -71,8 +77,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: Text(
-                  'When did Lebron meet Mia Khalifa?',
+                child: TextField(
+                  controller: question,
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
@@ -113,8 +119,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                      child: TextField(
+                                        controller: answer1,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -146,8 +152,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                      child: TextField(
+                                        controller: answer2,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -187,8 +193,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                      child: TextField(
+                                        controller: answer3,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -220,8 +226,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                      child: TextField(
+                                        controller: question,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
