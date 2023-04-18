@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/player-standings-screen.dart';
+import 'package:scrum/controllers/quiz-document.dart';
+import 'package:scrum/screens/podium-screen.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class HostCorrectAnswerScreen extends StatefulWidget {
   const HostCorrectAnswerScreen({
@@ -21,16 +23,43 @@ class HostCorrectAnswerScreen extends StatefulWidget {
 class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTime;
+  late final QuizTimeStream quizTimeStream;
+  late Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
-
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, PlayerStandingsScreen(quizID: widget.quizID), widget.quizID, 7);
+    Quiz quiz = Quiz.getInstance(document: widget.quizID);
+    quizTimeStream = QuizTimeStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    if (quizTimeStream.isTimeZeroStream as bool) {
+      if (quiz.isQuizEmpty() == false) {
+        ScrumRTdatabase.setTimer(widget.quizID, 7);
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return PlayerStandingsScreen(quizID: widget.quizID);
+            },
+          )
+        );
+      } 
+      else {
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return PodiumScreen(gameID: widget.quizID);
+            },
+          )
+        );
+      }
+    }
   }
 
   @override
@@ -242,7 +271,7 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
                 ),
               ),
               StreamBuilder<int>(
-                stream: quizTime.timeStream,
+                stream: timeStream,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

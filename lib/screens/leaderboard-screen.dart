@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-document.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final String quizID;
+  final String uid;
 
-  LeaderboardScreen({required this.quizID});
+  LeaderboardScreen({required this.quizID, required this.uid});
 
   @override
   LeaderboardScreenState createState() => LeaderboardScreenState();
@@ -21,16 +22,28 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
 }
 
 class LeaderboardScreenState extends State<LeaderboardScreen> {
-  late final QuizTimeStream quizTime;
+  late final QuizTimeStream quizTimeStream;
+  late Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
 
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, MultipleChoiceWidget(quizID: widget.quizID));
+    quizTimeStream = QuizTimeStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    if (quizTimeStream.isTimeZeroStream as bool) {
+      Navigator.pushReplacement(
+        context, 
+        PageRouteBuilder(
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid);
+          },
+        )
+      );
+    } 
   }
 
   @override

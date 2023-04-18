@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/host-mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/controllers/quiz-document.dart';
 
 class PlayerStandingsScreen extends StatefulWidget {
   final String quizID;
@@ -21,15 +21,29 @@ Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
 }
 
 class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
-  late final QuizTimeStream quizTime;
+  late final QuizTimeStream quizTimeStream;
+  late final Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, HostMultipleChoiceWidget(quizID: widget.quizID), widget.quizID, 30);
+    Quiz quiz = Quiz.getInstance(document: widget.quizID);
+    quizTimeStream = QuizTimeStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    if (quizTimeStream.isTimeZeroStream as bool) {
+      ScrumRTdatabase.setTimer(widget.quizID, 30);
+      Navigator.pushReplacement(
+        context, 
+        PageRouteBuilder(
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return HostMultipleChoiceWidget(quizID: widget.quizID);
+          },
+        )
+      );
+    } 
   }
 
   @override

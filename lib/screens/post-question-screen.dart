@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/leaderboard-screen.dart';
+import 'package:scrum/screens/player-end-game-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/controllers/quiz-document.dart';
+import 'package:scrum/screens/player-standings-screen.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
   final bool isCorrect;
   final String uid;
-  final Future<int> pointsGained;
+  final int pointsGained;
   final String quizID;
   const PostQuestionScreenWidget(
       {Key? key,
@@ -59,16 +61,44 @@ String getPlayerStatus(
 class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
-  late final QuizTimeStream quizTime;
+  late final QuizTimeStream quizTimeStream;
+  late final Stream<int> timeStream;
+
 
   @override
   void initState() {
     super.initState();
+    Quiz quiz = Quiz.getInstance(document: widget.quizID);
+    quizTimeStream = QuizTimeStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    if (quizTimeStream.isTimeZeroStream as bool) {
+      if (quiz.isQuizEmpty() == false) {
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return LeaderboardScreen(quizID: widget.quizID, uid: widget.uid);
+            },
+          )
+        );
+      }
+      else {
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return PlayerEndScreen(quizID: widget.quizID, uid: widget.uid);
+            },
+          )
+        );
 
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, LeaderboardScreen(quizID: widget.quizID));
+      }
+    } 
   }
 
   @override
@@ -156,7 +186,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                         ),
                         alignment: AlignmentDirectional(0, 0),
                         child: FutureBuilder<int>(
-                          future: widget.pointsGained,
+                          future: widget.pointsGained as Future<int>,
                           builder: (BuildContext context,
                               AsyncSnapshot<int> snapshot) {
                             if (snapshot.connectionState ==

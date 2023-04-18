@@ -11,16 +11,6 @@ class ScrumRTdatabase {
     return snapshot.snapshot.exists;
   }
 
-  static bool isHostReady(String quizID){
-    final databaseRef = FirebaseDatabase.instance.ref();
-    bool hostIsReady = databaseRef.child('hostIsReady').once() as bool;
-    return hostIsReady;
-  }
-
-  static void setHostReadyState(String quizID, bool readyState) {
-    FirebaseDatabase.instance.ref().child('hostIsReady').set(readyState);
-  }
-
   static void setTimer(String quizID, int time) {
     FirebaseDatabase.instance.ref().child(quizID).update({'time': time});
   }

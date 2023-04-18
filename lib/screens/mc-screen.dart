@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/post-question-screen.dart';
 
 class MultipleChoiceWidget extends StatefulWidget {
-  const MultipleChoiceWidget({
+  MultipleChoiceWidget({
     Key? key,
     required this.quizID,
+    required this.uid,
   }) : super(key: key);
 
   final String quizID;
+  final String uid;
+  bool isCorrect = false;
+  late Future<int> pointsGained;
 
   @override
   _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
@@ -19,7 +22,8 @@ class MultipleChoiceWidget extends StatefulWidget {
 class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTime;
+  late final QuizTimeStream quizTimeStream;
+  late Stream<int> timeStream;
   bool buttonsEnabled = true;
   int selectedIndex = 0;
 
@@ -40,16 +44,21 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   void initState() {
     super.initState();
 
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime,
-        context,
-        PostQuestionScreenWidget(
-            quizID: widget.quizID,
-            uid: "",
-            isCorrect: false,
-            pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
+    quizTimeStream = QuizTimeStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    if (quizTimeStream.isTimeZeroStream as bool) {
+      Navigator.pushReplacement(
+        context, 
+        PageRouteBuilder(
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return PostQuestionScreenWidget(quizID: widget.quizID, uid: widget.uid, isCorrect: widget.isCorrect, pointsGained: widget.pointsGained as int);
+          },
+        )
+      );
+    } 
   }
 
   @override
@@ -277,7 +286,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                 ),
               ),
               StreamBuilder<int>(
-                stream: quizTime.timeStream,
+                stream: timeStream,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

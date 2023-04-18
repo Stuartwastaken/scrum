@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/host-correct-answer-screen.dart';
+import 'package:scrum/controllers/quiz-document.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class HostMultipleChoiceWidget extends StatefulWidget {
   const HostMultipleChoiceWidget({
@@ -19,16 +20,30 @@ class HostMultipleChoiceWidget extends StatefulWidget {
 class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTime;
+  late final QuizTimeStream quizTimeStream;
+  late Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
 
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(quizTime, context,
-        HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 2), widget.quizID, 7);
+    Quiz quiz = Quiz.getInstance(document: widget.quizID);
+    quizTimeStream = QuizTimeStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    if (quizTimeStream.isTimeZeroStream as bool) {
+      ScrumRTdatabase.setTimer(widget.quizID, 7);
+      Navigator.pushReplacement(
+        context, 
+        PageRouteBuilder(
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 3);
+          },
+        )
+      );
+    } 
   }
 
   @override
@@ -232,7 +247,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                 ),
               ),
               StreamBuilder<int>(
-                stream: quizTime.timeStream,
+                stream: timeStream,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
