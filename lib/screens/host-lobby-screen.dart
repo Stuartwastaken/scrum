@@ -39,9 +39,6 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
       quizIDString = value;
       ScrumRTdatabase.getPeopleInLobby(value);
     });
-
-    //ScrumRTdatabase.getPeopleInLobby(
-    //    '999999'); // This is a just a dummy holder so we can get the page to compile without making so many quizzes
   }
 
   @override
@@ -78,6 +75,8 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                         ),
                       );
                       */
+
+                      ScrumRTdatabase.deleteLobby(quizIDString);
                     },
                     child: Text(
                       "Leave",
@@ -256,7 +255,19 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                       ),
                     ),
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        /*
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              const HostMultipleChoiceWidget(quizID: quizIDString),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                      */
+                      },
                       child: Text(
                         "Begin!",
                         style: TextStyle(

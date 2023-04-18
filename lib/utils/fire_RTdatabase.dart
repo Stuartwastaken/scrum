@@ -190,4 +190,8 @@ class ScrumRTdatabase {
       }
     });
   }
+
+  static void deleteLobby(String quizID) {
+    FirebaseDatabase.instance.ref().child(quizID).remove();
+  }
 }
