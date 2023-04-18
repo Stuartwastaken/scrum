@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -17,64 +18,55 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isSigningOut = false;
 
   late User _currentUser;
+  late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _getDataFuture;
 
   @override
   void initState() {
     _currentUser = widget.user;
+    _getDataFuture = getData();
     super.initState();
   }
 
-  final List<String> entries = <String>['1', '2', '3', '4'];
-  //final List<String> entries = <String>[];
+  final db = FirebaseFirestore.instance;
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getData() async {
+    final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
+    final userQuizRefs = userDocRef.data()?['Quizzes'] as List<dynamic>;
+    List<DocumentSnapshot<Map<String, dynamic>>> documentList = [];
+    for (var ref in userQuizRefs) {
+      ref = ref.path;
+      final quizDoc = await db.doc(ref).get();
+      documentList.add(quizDoc);
+    }
+    return documentList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
-      body: Center(
-        child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: entries.length > 0 ? entries.length : 1,
-            itemBuilder: (BuildContext context, int index) {
-              //final List<String> entries = <String>[];
-              if (entries.length == 0) {
-                print("no entries");
-                return Text("You don't have any quizzes");
-              } else {
-                return Container(
-                  height: 50,
-                  color: Colors.amber[600],
-                  child: Row(
-                    children: [
-                      Text("Title ${entries[index]}"),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          IconData(0xf67a, fontFamily: 'MaterialIcons'),
-                          color: Colors.blue,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          IconData(0xf3e9, fontFamily: 'MaterialIcons'),
-                          color: Colors.red,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Delete"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Play"),
-                      ),
-                    ],
-                  ),
+      body: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
+        future: _getDataFuture,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
+                snapshot) {
+          if (snapshot.hasData) {
+            // use the result of the getData() function
+            List<DocumentSnapshot<Map<String, dynamic>>> documentList =
+                snapshot.data!;
+            // build the UI using documentList
+            return ListView.builder(
+              itemCount: documentList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(documentList[index].data()?['Title'] ?? ''),
                 );
-              }
-            }),
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
       ),
     );
   }
