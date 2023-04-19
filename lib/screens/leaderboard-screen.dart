@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
-import 'package:scrum/controllers/quiz-document.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final String quizID;
