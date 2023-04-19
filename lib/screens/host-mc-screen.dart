@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
-import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/screens/post-question-screen.dart';
 
 class HostMultipleChoiceWidget extends StatefulWidget {
