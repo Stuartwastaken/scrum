@@ -5,6 +5,7 @@ import 'package:scrum/screens/view-profile-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Implementation to track which drop-down menu item is selected
 enum MenuItem {
   item1,
   item2,
@@ -33,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
   }
 
+  //fetches user's firestore data & stores the documents within a list
   final db = FirebaseFirestore.instance;
   Future<List<DocumentSnapshot<Map<String, dynamic>>>> getData() async {
     final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
@@ -124,6 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   return Text("You dont have any quizzes");
                   //body if user has one or more quizzes
                 } else {
+                  //Each "Quiz"
                   return ListTile(
                     title: Text(documentList[index].data()?['Title'] ?? ''),
                     trailing: Row(
