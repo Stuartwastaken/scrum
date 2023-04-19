@@ -86,15 +86,6 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: Text(
-                  quiz.nextQuestion(),
-                  style: TextStyle(
-                    fontFamily: 'Lexend Deca',
-                    color: Colors.white,
-                    fontSize: 55,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
               Container(
                 width: 919.8,

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class Quiz {
   late List<String> questions = [];
@@ -31,7 +30,6 @@ class Quiz {
 
   Future<void> loadQuiz(String document) async {
     resetQuiz();
-
     final quizDoc =
         await FirebaseFirestore.instance.collection('Quiz').doc(document).get();
 
@@ -44,10 +42,12 @@ class Quiz {
         (index) => answersList.sublist(index * 4, (index + 1) * 4));
   }
 
-  String nextQuestion() {
-    String currentQuestion = questions[currentIndex];
+  String getQuestion() {
+    return questions[currentIndex];
+  }
+
+  void nextQuestion() {
     currentIndex++;
-    return currentQuestion;
   }
 
   bool checkAnswer(int answerIndex) {
@@ -56,6 +56,10 @@ class Quiz {
     } else {
       return false;
     }
+  }
+
+  String getCorrectAnswer() {
+    return answers[currentIndex][correctAnswers[currentIndex]];
   }
 
   List<String> get currentAnswers => answers[currentIndex];

@@ -73,7 +73,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                 child: Text(
-                  quiz.nextQuestion(),
+                  quiz.getQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
