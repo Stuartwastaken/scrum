@@ -31,19 +31,24 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
-    if (quizTimeStream.isTimeZeroStream as bool) {
-      ScrumRTdatabase.setTimer(widget.quizID, 7);
-      Navigator.pushReplacement(
-        context, 
-        PageRouteBuilder(
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 3);
-          },
-        )
-      );
-    } 
+
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        ScrumRTdatabase.setTimer(widget.quizID, 7);
+        Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return HostCorrectAnswerScreen(
+                    quizID: widget.quizID, correctOption: 3);
+              },
+            ));
+      } else {
+        ScrumRTdatabase.decrementTimer(widget.quizID);
+      }
+    });
   }
 
   @override

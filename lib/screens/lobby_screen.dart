@@ -2,14 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/screens/mc-screen.dart';
 
 class LobbyScreen extends StatefulWidget {
   final String gameID;
-  final String nickname;
+  final String? hash;
   const LobbyScreen({
     Key? key,
     required this.gameID,
-    required this.nickname,
+    required this.hash,
   }) : super(key: key);
 
   @override
@@ -20,15 +21,13 @@ class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  final StreamController<int> playerStreamController =
-      ScrumRTdatabase.playerStreamController;
 
-  Stream<int> get playerCountStream => playerStreamController.stream;
+  late ScrumRTdatabase _scrumRTdatabase;
+  late Stream<int> playerStreamController;
 
   @override
   void dispose() {
     super.dispose();
-    playerStreamController.close();
   }
 
   @override
@@ -42,7 +41,10 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    ScrumRTdatabase.getPeopleInLobby(widget.gameID);
+    _scrumRTdatabase = ScrumRTdatabase();
+    ScrumRTdatabase.listenForKick(widget.gameID, widget.hash!, context);
+    _scrumRTdatabase.listenToPeopleInLobby(widget.gameID);
+    playerStreamController = _scrumRTdatabase.playerCountStream;
   }
 
   @override
@@ -69,7 +71,7 @@ class LobbyScreenState extends State<LobbyScreen>
                   child: OutlinedButton(
                     onPressed: () {
                       ScrumRTdatabase.removeUserFromTree(
-                          widget.nickname, widget.gameID);
+                          widget.hash!, widget.gameID);
                       ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
 
                       Navigator.pushReplacement(
@@ -123,7 +125,7 @@ class LobbyScreenState extends State<LobbyScreen>
                     ),
                     SizedBox(height: 2),
                     StreamBuilder<int>(
-                      stream: playerCountStream,
+                      stream: playerStreamController,
                       builder:
                           (BuildContext context, AsyncSnapshot<int> snapshot) {
                         if (snapshot.hasError) {

@@ -10,10 +10,13 @@ class QuizTimeStream {
     final completer = Completer<int?>();
 
     _databaseReference.child('$quizId/time').onValue.listen((event) {
-      final int? time = event.snapshot.value as int?;
-      if (time != null) {
+      final value = event.snapshot.value;
+      if (value is int) {
+        final int time = value;
         _timeStreamController.add(time);
         completer.complete(time);
+      } else {
+        completer.completeError('Unexpected data type');
       }
     }, onError: (error) {
       completer.completeError(error);

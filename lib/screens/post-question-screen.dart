@@ -4,13 +4,12 @@ import 'package:scrum/screens/leaderboard-screen.dart';
 import 'package:scrum/screens/player-end-game-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-document.dart';
-import 'package:scrum/screens/player-standings-screen.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
-  final bool isCorrect;
-  final String uid;
-  final int pointsGained;
   final String quizID;
+  final String uid;
+  final bool isCorrect;
+  final int pointsGained;
   const PostQuestionScreenWidget(
       {Key? key,
       required this.quizID,
@@ -64,7 +63,6 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   late final QuizTimeStream quizTimeStream;
   late final Stream<int> timeStream;
 
-
   @override
   void initState() {
     super.initState();
@@ -75,30 +73,27 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     if (quizTimeStream.isTimeZeroStream as bool) {
       if (quiz.isQuizEmpty() == false) {
         Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return LeaderboardScreen(quizID: widget.quizID, uid: widget.uid);
-            },
-          )
-        );
-      }
-      else {
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return LeaderboardScreen(
+                    quizID: widget.quizID, uid: widget.uid);
+              },
+            ));
+      } else {
         Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return PlayerEndScreen(quizID: widget.quizID, uid: widget.uid);
-            },
-          )
-        );
-
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return PlayerEndScreen(quizID: widget.quizID, uid: widget.uid);
+              },
+            ));
       }
-    } 
+    }
   }
 
   @override
