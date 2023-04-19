@@ -24,15 +24,11 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
   late Quiz quiz;
-  late final TextEditingController question;
-  late final TextEditingController answer1;
-  late final TextEditingController answer2;
-  late final TextEditingController answer3;
-  late final TextEditingController answer4;
 
   @override
   void initState() {
     super.initState();
+    quiz = Quiz.getInstance(document: widget.quizID);
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
@@ -43,17 +39,6 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
             uid: "",
             isCorrect: false,
             pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
-    _loadQuestion();
-  }
-
-  Future<void> _loadQuestion() async {
-    quiz = Quiz.getInstance(document: widget.quizID);
-    final answers = quiz.currentAnswers;
-    question = TextEditingController(text: quiz.nextQuestion());
-    answer1 = TextEditingController(text: answers[0]);
-    answer2 = TextEditingController(text: answers[1]);
-    answer3 = TextEditingController(text: answers[2]);
-    answer4 = TextEditingController(text: answers[3]);
   }
 
   @override
@@ -87,8 +72,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: TextField(
-                  controller: question,
+                child: Text(
+                  quiz.nextQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
@@ -129,8 +114,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: TextField(
-                                        controller: answer1,
+                                      child: Text(
+                                        quiz.currentAnswers[0],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -162,8 +147,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: TextField(
-                                        controller: answer2,
+                                      child: Text(
+                                        quiz.currentAnswers[1],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -203,8 +188,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: TextField(
-                                        controller: answer3,
+                                      child: Text(
+                                        quiz.currentAnswers[2],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -236,8 +221,8 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                       size: 60,
                                     ),
                                     Flexible(
-                                      child: TextField(
-                                        controller: answer4,
+                                      child: Text(
+                                        quiz.currentAnswers[3],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,

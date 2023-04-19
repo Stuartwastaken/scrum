@@ -22,7 +22,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
   late Quiz quiz;
-  late final TextEditingController question;
+  //late final TextEditingController question;
   bool buttonsEnabled = true;
   int selectedIndex = 0;
 
@@ -42,7 +42,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-
+    quiz = Quiz.getInstance(document: widget.quizID);
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
@@ -53,12 +53,6 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             uid: "",
             isCorrect: false,
             pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
-    _loadQuestion();
-  }
-
-  Future<void> _loadQuestion() async {
-    quiz = Quiz.getInstance(document: widget.quizID);
-    question = TextEditingController(text: quiz.nextQuestion());
   }
 
   @override
@@ -92,8 +86,8 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: TextField(
-                  controller: question,
+                child: Text(
+                  quiz.nextQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
