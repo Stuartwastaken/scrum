@@ -36,7 +36,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
-            transitionDuration: Duration.zero,
+            transitionDuration: Duration(milliseconds: 100),
             reverseTransitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) {
               return MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid);

@@ -42,7 +42,7 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
           Navigator.pushReplacement(
             context, 
             PageRouteBuilder(
-              transitionDuration: Duration.zero,
+              transitionDuration: Duration(milliseconds: 100),
               reverseTransitionDuration: Duration.zero,
               pageBuilder: (context, animation, secondaryAnimation) {
                 return PlayerStandingsScreen(quizID: widget.quizID);

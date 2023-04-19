@@ -52,7 +52,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
-            transitionDuration: Duration.zero,
+            transitionDuration: Duration(milliseconds: 100),
             reverseTransitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) {
               return PostQuestionScreenWidget(quizID: widget.quizID, uid: widget.uid, isCorrect: widget.isCorrect, pointsGained: widget.pointsGained as int);
