@@ -66,13 +66,15 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void initState() {
     super.initState();
+
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
-    if (quizTimeStream.isTimeZeroStream as bool) {
-      if (quiz.isQuizEmpty() == false) {
-        Navigator.pushReplacement(
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        if (quiz.isQuizEmpty() == false) {
+          Navigator.pushReplacement(
             context,
             PageRouteBuilder(
               transitionDuration: Duration.zero,
@@ -82,18 +84,20 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                     quizID: widget.quizID, uid: widget.uid);
               },
             ));
-      } else {
-        Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              transitionDuration: Duration.zero,
-              reverseTransitionDuration: Duration.zero,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return PlayerEndScreen(quizID: widget.quizID, uid: widget.uid);
-              },
-            ));
+        } else {
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return PlayerEndScreen(quizID: widget.quizID, uid: widget.uid);
+                },
+              )
+            );
+          }
       }
-    }
+    });
   }
 
   @override

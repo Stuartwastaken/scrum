@@ -27,23 +27,28 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   @override
   void initState() {
     super.initState();
+
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
-    if (quizTimeStream.isTimeZeroStream as bool) {
-      ScrumRTdatabase.setTimer(widget.quizID, 30);
-      Navigator.pushReplacement(
-        context, 
-        PageRouteBuilder(
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return HostMultipleChoiceWidget(quizID: widget.quizID);
-          },
-        )
-      );
-    } 
+    quizTimeStream.startTimer(widget.quizID);
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        quizTimeStream.cancelTimer();
+        ScrumRTdatabase.setTimer(widget.quizID, 30);
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return HostMultipleChoiceWidget(quizID: widget.quizID);
+            },
+          )
+        );
+      } 
+    });
   }
 
   @override

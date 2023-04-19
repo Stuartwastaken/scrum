@@ -32,18 +32,20 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
-    if (quizTimeStream.isTimeZeroStream as bool) {
-      Navigator.pushReplacement(
-        context, 
-        PageRouteBuilder(
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid);
-          },
-        )
-      );
-    } 
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid);
+            },
+          )
+        );
+      } 
+    });
   }
 
   @override

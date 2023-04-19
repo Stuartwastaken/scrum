@@ -116,8 +116,8 @@ class ScrumRTdatabase {
     FirebaseDatabase.instance.ref().child(quizID).update({'time': time});
   }
 
-  static void decrementTimer(String quizID) {
-    int time = getTime(quizID) as int;
+  static void decrementTimer(String quizID) async {
+    int time = await getTime(quizID) as int;
     FirebaseDatabase.instance.ref().child(quizID).update({'time': time - 1});
   }
 

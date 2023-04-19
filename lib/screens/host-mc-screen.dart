@@ -31,9 +31,10 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
-
+    quizTimeStream.startTimer(widget.quizID);
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
+        quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 7);
         Navigator.pushReplacement(
             context,
@@ -45,8 +46,6 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                     quizID: widget.quizID, correctOption: 3);
               },
             ));
-      } else {
-        ScrumRTdatabase.decrementTimer(widget.quizID);
       }
     });
   }

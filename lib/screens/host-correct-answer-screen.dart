@@ -33,21 +33,23 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
-    if (quizTimeStream.isTimeZeroStream as bool) {
-      if (quiz.isQuizEmpty() == false) {
-        ScrumRTdatabase.setTimer(widget.quizID, 7);
-        Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return PlayerStandingsScreen(quizID: widget.quizID);
-            },
-          )
-        );
-      } 
-      else {
+    quizTimeStream.startTimer(widget.quizID);
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        quizTimeStream.cancelTimer();
+        if (quiz.isQuizEmpty() == false) {
+          ScrumRTdatabase.setTimer(widget.quizID, 7);
+          Navigator.pushReplacement(
+            context, 
+            PageRouteBuilder(
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return PlayerStandingsScreen(quizID: widget.quizID);
+              },
+            )
+          );
+        }else {
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
@@ -59,7 +61,8 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
           )
         );
       }
-    }
+      } 
+    });
   }
 
   @override
