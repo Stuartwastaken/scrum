@@ -49,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //appbar
       appBar: AppBar(
         title: TextButton(
             onPressed: () {
@@ -62,9 +63,21 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           PopupMenuButton(
             onSelected: (value) {
+              //view profile button
               if (value == MenuItem.item1) {
                 print("View Profile");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfileScreen(user: _currentUser),
+                  ),
+                ).then((updatedUser) {
+                  setState(() {
+                    _currentUser = updatedUser;
+                  });
+                });
               }
+              //sign out button
               if (value == MenuItem.item2) {
                 print("Sign Out");
                 setState(() {
@@ -100,16 +113,16 @@ class _ProfilePageState extends State<ProfilePage> {
             AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
                 snapshot) {
           if (snapshot.hasData) {
-            // use the result of the getData() function
             List<DocumentSnapshot<Map<String, dynamic>>> documentList =
                 snapshot.data!;
-            // build the UI using documentList
             return ListView.builder(
               itemCount: documentList.length > 0 ? documentList.length : 1,
               itemBuilder: (BuildContext context, int index) {
+                //body if user has no quizzes
                 if (documentList.length == 0) {
                   print("no entries");
                   return Text("You dont have any quizzes");
+                  //body if user has one or more quizzes
                 } else {
                   return ListTile(
                     title: Text(documentList[index].data()?['Title'] ?? ''),
