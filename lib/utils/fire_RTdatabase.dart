@@ -6,6 +6,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 
 class ScrumRTdatabase {
+  final StreamController<int> _peopleInLobbyStreamController =
+      BehaviorSubject<int>();
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
+
   static Future<bool> checkPinExists(String pinID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     var snapshot = await databaseRef.child(pinID).once();
@@ -83,29 +87,23 @@ class ScrumRTdatabase {
     });
   }
 
-  final StreamController<int> playerStreamController =
-      StreamController<int>.broadcast();
+  Future<int?> listenToPeopleInLobby(String gameId) {
+    final completer = Completer<int?>();
 
-  void getPeopleInLobby(String gameID) async {
-    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-
-    print("Listening for player count");
-
-    databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
+    _databaseReference.child('$gameId/peopleInLobby').onValue.listen((event) {
       final int? numberOfPlayers = event.snapshot.value as int?;
       if (numberOfPlayers != null) {
-        playerStreamController.add(numberOfPlayers);
+        _peopleInLobbyStreamController.add(numberOfPlayers);
+        completer.complete(numberOfPlayers);
       }
     }, onError: (error) {
-      playerStreamController.addError(error);
+      completer.completeError(error);
     });
+
+    return completer.future;
   }
 
-  Stream<int> get playerCountStream => playerStreamController.stream;
-
-  void dispose() {
-    playerStreamController.close();
-  }
+  Stream<int> get playerCountStream => _peopleInLobbyStreamController.stream;
 
   // Grabs the time that is remaining in a specified quiz
   static Future<int?> getTime(String quizID) async {

@@ -13,7 +13,8 @@ class HostLobbyScreen extends StatefulWidget {
 
 class HostLobbyScreenState extends State<HostLobbyScreen>
     with SingleTickerProviderStateMixin {
-  late final ScrumRTdatabase playerStream;
+  late ScrumRTdatabase _scrumRTdatabase;
+  late Stream<int> playerStreamController;
   Future<String> quizID = ScrumRTdatabase.createQuiz();
   String quizIDString = '';
 
@@ -26,11 +27,11 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
   void initState() {
     super.initState();
 
-    playerStream = ScrumRTdatabase();
-
+    _scrumRTdatabase = ScrumRTdatabase();
     quizID.then((value) {
       quizIDString = value;
-      playerStream.getPeopleInLobby(value);
+      _scrumRTdatabase.listenToPeopleInLobby(quizIDString);
+      playerStreamController = _scrumRTdatabase.playerCountStream;
     });
   }
 
@@ -122,7 +123,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                     ),
                     SizedBox(height: 2),
                     StreamBuilder<int>(
-                      stream: playerStream.playerCountStream,
+                      stream: playerStreamController,
                       builder:
                           (BuildContext context, AsyncSnapshot<int> snapshot) {
                         if (snapshot.hasError) {
@@ -170,7 +171,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
                             );
                           }
                           final quizId = quizIdSnapshot.data!;
-                          playerStream.getPeopleInLobby(quizId);
+                          _scrumRTdatabase.listenToPeopleInLobby(quizId);
                           return StreamBuilder(
                             stream: FirebaseDatabase.instance
                                 .ref()

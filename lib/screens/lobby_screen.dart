@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -19,12 +21,12 @@ class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  late final ScrumRTdatabase playerStream;
+
+  late ScrumRTdatabase _scrumRTdatabase;
+  late Stream<int> playerStreamController;
 
   @override
   void dispose() {
-    _controller.dispose();
-    playerStream.dispose();
     super.dispose();
   }
 
@@ -39,9 +41,10 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
-    playerStream = ScrumRTdatabase();
+    _scrumRTdatabase = ScrumRTdatabase();
     ScrumRTdatabase.listenForKick(widget.gameID, widget.hash!, context);
-    playerStream.getPeopleInLobby(widget.gameID);
+    _scrumRTdatabase.listenToPeopleInLobby(widget.gameID);
+    playerStreamController = _scrumRTdatabase.playerCountStream;
   }
 
   @override
@@ -122,7 +125,7 @@ class LobbyScreenState extends State<LobbyScreen>
                     ),
                     SizedBox(height: 2),
                     StreamBuilder<int>(
-                      stream: playerStream.playerCountStream,
+                      stream: playerStreamController,
                       builder:
                           (BuildContext context, AsyncSnapshot<int> snapshot) {
                         if (snapshot.hasError) {
