@@ -15,13 +15,15 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
   final _unfocusNode = FocusNode();
   final _quizTitleController = TextEditingController();
   final _questionController = TextEditingController();
-  final _correctAnswerController = TextEditingController();
-  final _incorrectAnswer1Controller = TextEditingController();
-  final _incorrectAnswer2Controller = TextEditingController();
-  final _incorrectAnswer3Controller = TextEditingController();
+  final _answer1Controller = TextEditingController();
+  final _answer2Controller = TextEditingController();
+  final _answer3Controller = TextEditingController();
+  final _answer4Controller = TextEditingController();
+  late final int correctAnswer;
 
   final List<String> questions = [];
   final List<String> answers = [];
+  final List<int> correctAnswers = [];
 
   @override
   void initState() {
@@ -37,10 +39,10 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
   void _addQuestionDialog() {
     bool _validateFields() {
       if (_questionController.text.isEmpty ||
-          _correctAnswerController.text.isEmpty ||
-          _incorrectAnswer1Controller.text.isEmpty ||
-          _incorrectAnswer2Controller.text.isEmpty ||
-          _incorrectAnswer3Controller.text.isEmpty) {
+          _answer1Controller.text.isEmpty ||
+          _answer2Controller.text.isEmpty ||
+          _answer3Controller.text.isEmpty ||
+          _answer4Controller.text.isEmpty) {
         return false;
       }
       return true;
@@ -84,27 +86,27 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                   ),
                 ),
                 TextField(
-                  controller: _correctAnswerController,
+                  controller: _answer1Controller,
                   decoration: const InputDecoration(
-                    labelText: 'Correct Answer',
+                    labelText: 'Answer 1',
                   ),
                 ),
                 TextField(
-                  controller: _incorrectAnswer1Controller,
+                  controller: _answer2Controller,
                   decoration: const InputDecoration(
-                    labelText: 'Incorrect Answer 1',
+                    labelText: 'Answer 2',
                   ),
                 ),
                 TextField(
-                  controller: _incorrectAnswer2Controller,
+                  controller: _answer3Controller,
                   decoration: const InputDecoration(
-                    labelText: 'Incorrect Answer 2',
+                    labelText: 'Answer 3',
                   ),
                 ),
                 TextField(
-                  controller: _incorrectAnswer3Controller,
+                  controller: _answer4Controller,
                   decoration: const InputDecoration(
-                    labelText: 'Incorrect Answer 3',
+                    labelText: 'Answer 4',
                   ),
                 ),
               ],
@@ -120,15 +122,15 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                 if (_validateFields()) {
                   setState(() {
                     questions.add(_questionController.text);
-                    answers.add(_correctAnswerController.text);
-                    answers.add(_incorrectAnswer1Controller.text);
-                    answers.add(_incorrectAnswer2Controller.text);
-                    answers.add(_incorrectAnswer3Controller.text);
+                    answers.add(_answer1Controller.text);
+                    answers.add(_answer2Controller.text);
+                    answers.add(_answer3Controller.text);
+                    answers.add(_answer4Controller.text);
                     _questionController.clear();
-                    _correctAnswerController.clear();
-                    _incorrectAnswer1Controller.clear();
-                    _incorrectAnswer2Controller.clear();
-                    _incorrectAnswer3Controller.clear();
+                    _answer1Controller.clear();
+                    _answer2Controller.clear();
+                    _answer3Controller.clear();
+                    _answer4Controller.clear();
                   });
                   Navigator.pop(context);
                 } else {
@@ -147,17 +149,18 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
   void _editQuestionDialog(int index) {
     // Store the current contents of the question and its answers
     String currentQuestion = questions[index];
-    String currentCorrectAnswer = answers[index * 4];
-    String currentIncorrectAnswer1 = answers[index * 4 + 1];
-    String currentIncorrectAnswer2 = answers[index * 4 + 2];
-    String currentIncorrectAnswer3 = answers[index * 4 + 3];
+    String currentAnswer1 = answers[index * 4];
+    String currentAnswer2 = answers[index * 4 + 1];
+    String currentAnswer3 = answers[index * 4 + 2];
+    String currentAnswer4 = answers[index * 4 + 3];
+    int currentCorrectAnswer = correctAnswers[index];
 
     bool _validateFields() {
       if (_questionController.text.isEmpty ||
-          _correctAnswerController.text.isEmpty ||
-          _incorrectAnswer1Controller.text.isEmpty ||
-          _incorrectAnswer2Controller.text.isEmpty ||
-          _incorrectAnswer3Controller.text.isEmpty) {
+          _answer1Controller.text.isEmpty ||
+          _answer2Controller.text.isEmpty ||
+          _answer3Controller.text.isEmpty ||
+          _answer4Controller.text.isEmpty) {
         return false;
       }
       return true;
@@ -201,31 +204,27 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                   ),
                 ),
                 TextField(
-                  controller: _correctAnswerController
-                    ..text = currentCorrectAnswer,
+                  controller: _answer1Controller..text = currentAnswer1,
                   decoration: const InputDecoration(
-                    labelText: 'Correct Answer',
+                    labelText: 'Answer 1',
                   ),
                 ),
                 TextField(
-                  controller: _incorrectAnswer1Controller
-                    ..text = currentIncorrectAnswer1,
+                  controller: _answer2Controller..text = currentAnswer2,
                   decoration: const InputDecoration(
-                    labelText: 'Incorrect Answer 1',
+                    labelText: 'Answer 2',
                   ),
                 ),
                 TextField(
-                  controller: _incorrectAnswer2Controller
-                    ..text = currentIncorrectAnswer2,
+                  controller: _answer3Controller..text = currentAnswer3,
                   decoration: const InputDecoration(
-                    labelText: 'Incorrect Answer 2',
+                    labelText: 'Answer 3',
                   ),
                 ),
                 TextField(
-                  controller: _incorrectAnswer3Controller
-                    ..text = currentIncorrectAnswer3,
+                  controller: _answer4Controller..text = currentAnswer4,
                   decoration: const InputDecoration(
-                    labelText: 'Incorrect Answer 3',
+                    labelText: 'Answer 4',
                   ),
                 ),
               ],
@@ -242,15 +241,15 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                   setState(() {
                     // Update the question and its answers with the new contents
                     questions[index] = _questionController.text;
-                    answers[index * 4] = _correctAnswerController.text;
-                    answers[index * 4 + 1] = _incorrectAnswer1Controller.text;
-                    answers[index * 4 + 2] = _incorrectAnswer2Controller.text;
-                    answers[index * 4 + 3] = _incorrectAnswer3Controller.text;
+                    answers[index * 4] = _answer1Controller.text;
+                    answers[index * 4 + 1] = _answer2Controller.text;
+                    answers[index * 4 + 2] = _answer3Controller.text;
+                    answers[index * 4 + 3] = _answer4Controller.text;
                     _questionController.clear();
-                    _correctAnswerController.clear();
-                    _incorrectAnswer1Controller.clear();
-                    _incorrectAnswer2Controller.clear();
-                    _incorrectAnswer3Controller.clear();
+                    _answer1Controller.clear();
+                    _answer2Controller.clear();
+                    _answer3Controller.clear();
+                    _answer4Controller.clear();
                   });
                   Navigator.pop(context);
                 } else {
@@ -509,6 +508,8 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                             final questionsList =
                                 questions.map((q) => q).toList();
                             final answersList = answers.map((a) => a).toList();
+                            final correctAnswersList =
+                                correctAnswers.map((a) => a).toList();
 
                             // Save the quiz data to Firebase
                             final quizRef = FirebaseFirestore.instance
@@ -518,6 +519,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                               'Title': quizTitle,
                               'Questions': questionsList,
                               'Answers': answersList,
+                              'CorrectAnswers': correctAnswersList,
                             });
 
                             // Update the user's document to reference the newly created quiz
