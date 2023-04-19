@@ -21,11 +21,9 @@ class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  final StreamController<int> playerStreamController =
-      ScrumRTdatabase.playerStreamController;
-  ScrumRTdatabase _scrumRTdatabase = ScrumRTdatabase();
 
-  Stream<int> get playerCountStream => playerStreamController.stream;
+  late ScrumRTdatabase _scrumRTdatabase;
+  late Stream<int> playerStreamController;
 
   @override
   void dispose() {
@@ -43,8 +41,10 @@ class LobbyScreenState extends State<LobbyScreen>
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
+    _scrumRTdatabase = ScrumRTdatabase();
     ScrumRTdatabase.listenForKick(widget.gameID, widget.hash!, context);
     _scrumRTdatabase.listenToPeopleInLobby(widget.gameID);
+    playerStreamController = _scrumRTdatabase.playerCountStream;
   }
 
   @override
@@ -125,7 +125,7 @@ class LobbyScreenState extends State<LobbyScreen>
                     ),
                     SizedBox(height: 2),
                     StreamBuilder<int>(
-                      stream: playerCountStream,
+                      stream: playerStreamController,
                       builder:
                           (BuildContext context, AsyncSnapshot<int> snapshot) {
                         if (snapshot.hasError) {

@@ -6,12 +6,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 
 class ScrumRTdatabase {
-  static final StreamController<int> playerStreamController =
-      StreamController<int>();
     final StreamController<int> _peopleInLobbyStreamController =
       BehaviorSubject<int>();
   final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
-  
+
   static Future<bool> checkPinExists(String pinID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     var snapshot = await databaseRef.child(pinID).once();
@@ -104,8 +102,7 @@ class ScrumRTdatabase {
 
     return completer.future;
   }
-
-  Stream<int> get peopleInLobbyStream => _peopleInLobbyStreamController.stream;
+  Stream<int> get playerCountStream => _peopleInLobbyStreamController.stream;
 
   // Grabs the time that is remaining in a specified quiz
   static Future<int?> getTime(String quizID) async {
