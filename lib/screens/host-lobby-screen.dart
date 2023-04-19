@@ -11,8 +11,7 @@ class HostLobbyScreen extends StatefulWidget {
   State<HostLobbyScreen> createState() => HostLobbyScreenState();
 }
 
-class HostLobbyScreenState extends State<HostLobbyScreen>
-    with SingleTickerProviderStateMixin {
+class HostLobbyScreenState extends State<HostLobbyScreen> {
   late ScrumRTdatabase _scrumRTdatabase;
   late Stream<int> playerStreamController;
   Future<String> quizID = ScrumRTdatabase.createQuiz();
@@ -28,10 +27,10 @@ class HostLobbyScreenState extends State<HostLobbyScreen>
     super.initState();
 
     _scrumRTdatabase = ScrumRTdatabase();
+    playerStreamController = _scrumRTdatabase.playerCountStream;
     quizID.then((value) {
       quizIDString = value;
       _scrumRTdatabase.listenToPeopleInLobby(quizIDString);
-      playerStreamController = _scrumRTdatabase.playerCountStream;
     });
   }
 

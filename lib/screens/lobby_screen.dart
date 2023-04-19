@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -27,6 +26,7 @@ class LobbyScreenState extends State<LobbyScreen>
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
