@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class HostLobbyScreen extends StatefulWidget {
+  final String document;
   const HostLobbyScreen({
     Key? key,
+    required this.document,
   }) : super(key: key);
 
   @override
@@ -14,7 +16,7 @@ class HostLobbyScreen extends StatefulWidget {
 class HostLobbyScreenState extends State<HostLobbyScreen> {
   late ScrumRTdatabase _scrumRTdatabase;
   late Stream<int> playerStreamController;
-  Future<String> quizID = ScrumRTdatabase.createQuiz();
+  late Future<String> quizID = ScrumRTdatabase.createQuiz(widget.document);
   String quizIDString = '';
 
   @override

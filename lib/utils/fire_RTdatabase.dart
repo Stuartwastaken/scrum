@@ -123,7 +123,7 @@ class ScrumRTdatabase {
     return remainingTime;
   }
 
-  static Future<String> createQuiz() async {
+  static Future<String> createQuiz(String document) async {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
     String? quizID = createQuizID();
@@ -135,6 +135,7 @@ class ScrumRTdatabase {
     }
 
     await databaseRef.child(quizID!).set({
+      'document': document,
       'time': 0,
       'peopleInLobby': 0,
       'start': false,
