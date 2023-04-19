@@ -34,7 +34,11 @@ class Quiz {
         await FirebaseFirestore.instance.collection('Quiz').doc(document).get();
 
     title = quizDoc.data()?['Title'] ?? '';
-    questions = List<String>.from(quizDoc.data()?['Questions'] ?? []);
+    questions = [
+      "your mom",
+      "your dad",
+      "your dog"
+    ]; //List<String>.from(quizDoc.data()?['Questions'] ?? []);
     correctAnswers = List<int>.from(quizDoc.data()?['CorrectAnswers'] ?? []);
     List<String> answersList =
         List<String>.from(quizDoc.data()?['Answers'] ?? []);
