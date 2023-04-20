@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
+import 'package:scrum/screens/make-quiz-screen.dart';
 import 'package:scrum/screens/view-profile-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -112,7 +113,13 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Column(
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => MakeQuizScreen(user: _currentUser),
+                ),
+              );
+            },
             child: Text("Add Quiz"),
           ),
           Expanded(
