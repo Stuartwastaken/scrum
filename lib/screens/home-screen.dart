@@ -109,47 +109,61 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-        future: _getDataFuture,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
-                snapshot) {
-          if (snapshot.hasData) {
-            List<DocumentSnapshot<Map<String, dynamic>>> documentList =
-                snapshot.data!;
-            return ListView.builder(
-              itemCount: documentList.length > 0 ? documentList.length : 1,
-              itemBuilder: (BuildContext context, int index) {
-                //body if user has no quizzes
-                if (documentList.length == 0) {
-                  print("no entries");
-                  return Text("You dont have any quizzes");
-                  //body if user has one or more quizzes
-                } else {
-                  //Each "Quiz"
-                  return ListTile(
-                    title: Text(documentList[index].data()?['Title'] ?? ''),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(IconData(0xf00a0,
-                                fontFamily: 'MaterialIcons'))),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                      ],
-                    ),
+      body: Column(
+        children: [
+          TextButton(
+            onPressed: () {},
+            child: Text("Add Quiz"),
+          ),
+          Expanded(
+            child: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
+              future: _getDataFuture,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
+                      snapshot) {
+                if (snapshot.hasData) {
+                  List<DocumentSnapshot<Map<String, dynamic>>> documentList =
+                      snapshot.data!;
+                  return ListView.builder(
+                    itemCount:
+                        documentList.length > 0 ? documentList.length : 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      //body if user has no quizzes
+                      if (documentList.length == 0) {
+                        print("no entries");
+                        return Text("You dont have any quizzes");
+                        //body if user has one or more quizzes
+                      } else {
+                        //Each "Quiz"
+                        return ListTile(
+                          title:
+                              Text(documentList[index].data()?['Title'] ?? ''),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(IconData(0xf00a0,
+                                      fontFamily: 'MaterialIcons'))),
+                              IconButton(
+                                  onPressed: () {}, icon: Icon(Icons.edit)),
+                              IconButton(
+                                  onPressed: () {}, icon: Icon(Icons.delete)),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return CircularProgressIndicator();
                 }
               },
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
