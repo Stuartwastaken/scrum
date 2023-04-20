@@ -27,25 +27,43 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late User _currentUser;
   late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _getDataFuture;
+  late Future<List<dynamic>> _quizRefs;
 
   @override
   void initState() {
     _currentUser = widget.user;
+    _quizRefs = getQuizRefs();
+    //_quizDocs = getQuizDocsFromRefs();
     _getDataFuture = getData();
     super.initState();
   }
 
   //fetches user's firestore data & stores the documents within a list
   final db = FirebaseFirestore.instance;
+  Future<List<dynamic>> getQuizRefs() async {
+    final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
+    final userQuizRefs = userDocRef.data()?['Quizzes'] as List<dynamic>;
+    List userQuizStringRefs = [];
+    for (var ref in userQuizRefs) {
+      ref = ref.path;
+      userQuizStringRefs.add(ref);
+    }
+    print(userQuizStringRefs);
+    return userQuizStringRefs;
+  }
+
   Future<List<DocumentSnapshot<Map<String, dynamic>>>> getData() async {
     final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
     final userQuizRefs = userDocRef.data()?['Quizzes'] as List<dynamic>;
     List<DocumentSnapshot<Map<String, dynamic>>> documentList = [];
     for (var ref in userQuizRefs) {
       ref = ref.path;
+      //quizRefs.add(ref);
+      print(ref);
       final quizDoc = await db.doc(ref).get();
       documentList.add(quizDoc);
     }
+    //print(quizRefs);
     return documentList;
   }
 
@@ -153,9 +171,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   icon: Icon(IconData(0xf00a0,
                                       fontFamily: 'MaterialIcons'))),
                               IconButton(
-                                  onPressed: () {}, icon: Icon(Icons.edit)),
-                              IconButton(
-                                  onPressed: () {}, icon: Icon(Icons.delete)),
+                                  onPressed: () {
+                                    //delete from "User" Collection
+                                  },
+                                  icon: Icon(Icons.delete)),
                             ],
                           ),
                         );
