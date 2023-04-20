@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'package:scrum/screens/view-profile-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Implementation to track which drop-down menu item is selected
+enum MenuItem {
+  item1,
+  item2,
+}
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -18,61 +25,49 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isSigningOut = false;
 
   late User _currentUser;
+  late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _getDataFuture;
 
   @override
   void initState() {
     _currentUser = widget.user;
+    _getDataFuture = getData();
     super.initState();
+  }
+
+  //fetches user's firestore data & stores the documents within a list
+  final db = FirebaseFirestore.instance;
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getData() async {
+    final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
+    final userQuizRefs = userDocRef.data()?['Quizzes'] as List<dynamic>;
+    List<DocumentSnapshot<Map<String, dynamic>>> documentList = [];
+    for (var ref in userQuizRefs) {
+      ref = ref.path;
+      final quizDoc = await db.doc(ref).get();
+      documentList.add(quizDoc);
+    }
+    return documentList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //appbar
       appBar: AppBar(
-        title: Text('Profile'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome: ${_currentUser.displayName}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'EMAIL: ${_currentUser.email}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(height: 16.0),
-            _isSigningOut
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        _isSigningOut = true;
-                      });
-                      await FirebaseAuth.instance.signOut();
-                      setState(() {
-                        _isSigningOut = false;
-                      });
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: Text('Sign out'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
+        title: TextButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => ProfilePage(user: _currentUser)));
+            },
+            child: const Text(
+              "Home Screen",
+              style: TextStyle(color: Colors.white),
+            )),
+        actions: [
+          PopupMenuButton(
+            onSelected: (value) {
+              //view profile button
+              if (value == MenuItem.item1) {
+                print("View Profile");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -83,11 +78,78 @@ class _ProfilePageState extends State<ProfilePage> {
                     _currentUser = updatedUser;
                   });
                 });
+              }
+              //sign out button
+              if (value == MenuItem.item2) {
+                print("Sign Out");
+                setState(() {
+                  _isSigningOut = true;
+                });
+                FirebaseAuth.instance.signOut();
+                setState(() {
+                  _isSigningOut = false;
+                });
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: MenuItem.item1,
+                child: Text("View Profile"),
+              ),
+              PopupMenuItem(
+                value: MenuItem.item2,
+                child: Text("Sign Out"),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
+        future: _getDataFuture,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
+                snapshot) {
+          if (snapshot.hasData) {
+            List<DocumentSnapshot<Map<String, dynamic>>> documentList =
+                snapshot.data!;
+            return ListView.builder(
+              itemCount: documentList.length > 0 ? documentList.length : 1,
+              itemBuilder: (BuildContext context, int index) {
+                //body if user has no quizzes
+                if (documentList.length == 0) {
+                  print("no entries");
+                  return Text("You dont have any quizzes");
+                  //body if user has one or more quizzes
+                } else {
+                  //Each "Quiz"
+                  return ListTile(
+                    title: Text(documentList[index].data()?['Title'] ?? ''),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(IconData(0xf00a0,
+                                fontFamily: 'MaterialIcons'))),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                      ],
+                    ),
+                  );
+                }
               },
-              child: Text('View Profile'),
-            ),
-          ],
-        ),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
       ),
     );
   }
