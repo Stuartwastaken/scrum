@@ -36,7 +36,24 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
     super.dispose();
   }
 
-  void _addQuestionDialog() {
+  void _addOrEditQuestionDialog({int? index}) {
+    bool editingExistingQuestion = index != null;
+    String currentQuestion = '';
+    String currentAnswer1 = '';
+    String currentAnswer2 = '';
+    String currentAnswer3 = '';
+    String currentAnswer4 = '';
+    int correctAnswer = 0;
+
+    if (editingExistingQuestion) {
+      currentQuestion = questions[index];
+      currentAnswer1 = answers[index * 4];
+      currentAnswer2 = answers[index * 4 + 1];
+      currentAnswer3 = answers[index * 4 + 2];
+      currentAnswer4 = answers[index * 4 + 3];
+      correctAnswer = correctAnswers[index] - (4 * index);
+    }
+
     bool _validateFields() {
       if (_questionController.text.isEmpty ||
           _answer1Controller.text.isEmpty ||
@@ -73,59 +90,117 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        _questionController.text = currentQuestion;
+        _answer1Controller.text = currentAnswer1;
+        _answer2Controller.text = currentAnswer2;
+        _answer3Controller.text = currentAnswer3;
+        _answer4Controller.text = currentAnswer4;
         return AlertDialog(
-          title: const Text('Add Question'),
+          title:
+              Text(editingExistingQuestion ? 'Edit Question' : 'Add Question'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: _questionController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Question',
+                    hintText: 'Enter the question here',
                   ),
+                  autofocus: true,
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _answer1Controller,
                   decoration: const InputDecoration(
                     labelText: 'Answer 1',
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _answer2Controller,
                   decoration: const InputDecoration(
                     labelText: 'Answer 2',
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _answer3Controller,
                   decoration: const InputDecoration(
                     labelText: 'Answer 3',
                   ),
                 ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _answer4Controller,
                   decoration: const InputDecoration(
                     labelText: 'Answer 4',
                   ),
                 ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<int>(
+                  decoration: const InputDecoration(
+                    labelText: 'Correct Answer',
+                  ),
+                  value: correctAnswer,
+                  items: [
+                    DropdownMenuItem(
+                      value: 0,
+                      child: Text('Answer 1'),
+                    ),
+                    DropdownMenuItem(
+                      value: 1,
+                      child: Text('Answer 2'),
+                    ),
+                    DropdownMenuItem(
+                      value: 2,
+                      child: Text('Answer 3'),
+                    ),
+                    DropdownMenuItem(
+                      value: 3,
+                      child: Text('Answer 4'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      correctAnswer = value!;
+                    });
+                  },
+                ),
               ],
             ),
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('CANCEL'),
             ),
             TextButton(
               onPressed: () {
                 if (_validateFields()) {
                   setState(() {
-                    questions.add(_questionController.text);
-                    answers.add(_answer1Controller.text);
-                    answers.add(_answer2Controller.text);
-                    answers.add(_answer3Controller.text);
-                    answers.add(_answer4Controller.text);
+                    if (editingExistingQuestion) {
+                      // Update the question and its answers with the new contents
+                      questions[index] = _questionController.text;
+                      answers[index * 4] = _answer1Controller.text;
+                      answers[index * 4 + 1] = _answer2Controller.text;
+                      answers[index * 4 + 2] = _answer3Controller.text;
+                      answers[index * 4 + 3] = _answer4Controller.text;
+                      correctAnswers[index] =
+                          correctAnswer + questions.length * 4 - 4;
+                    } else {
+                      // Add the new question and its answers
+                      questions.add(_questionController.text);
+                      answers.add(_answer1Controller.text);
+                      answers.add(_answer2Controller.text);
+                      answers.add(_answer3Controller.text);
+                      answers.add(_answer4Controller.text);
+                      correctAnswers
+                          .add(correctAnswer + questions.length * 4 - 4);
+                    }
                     _questionController.clear();
                     _answer1Controller.clear();
                     _answer2Controller.clear();
@@ -134,130 +209,10 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                   });
                   Navigator.pop(context);
                 } else {
-                  _showErrorDialog(
-                      'Please fill out all fields before confirming.');
+                  _showErrorDialog("All fields are required.");
                 }
               },
-              child: const Text('Confirm'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _editQuestionDialog(int index) {
-    // Store the current contents of the question and its answers
-    String currentQuestion = questions[index];
-    String currentAnswer1 = answers[index * 4];
-    String currentAnswer2 = answers[index * 4 + 1];
-    String currentAnswer3 = answers[index * 4 + 2];
-    String currentAnswer4 = answers[index * 4 + 3];
-    int currentCorrectAnswer = correctAnswers[index];
-
-    bool _validateFields() {
-      if (_questionController.text.isEmpty ||
-          _answer1Controller.text.isEmpty ||
-          _answer2Controller.text.isEmpty ||
-          _answer3Controller.text.isEmpty ||
-          _answer4Controller.text.isEmpty) {
-        return false;
-      }
-      return true;
-    }
-
-    void _showErrorDialog(String errorMessage) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: SingleChildScrollView(
-              child: Text(errorMessage),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Edit Question'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: _questionController..text = currentQuestion,
-                  decoration: const InputDecoration(
-                    labelText: 'Question',
-                  ),
-                ),
-                TextField(
-                  controller: _answer1Controller..text = currentAnswer1,
-                  decoration: const InputDecoration(
-                    labelText: 'Answer 1',
-                  ),
-                ),
-                TextField(
-                  controller: _answer2Controller..text = currentAnswer2,
-                  decoration: const InputDecoration(
-                    labelText: 'Answer 2',
-                  ),
-                ),
-                TextField(
-                  controller: _answer3Controller..text = currentAnswer3,
-                  decoration: const InputDecoration(
-                    labelText: 'Answer 3',
-                  ),
-                ),
-                TextField(
-                  controller: _answer4Controller..text = currentAnswer4,
-                  decoration: const InputDecoration(
-                    labelText: 'Answer 4',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (_validateFields()) {
-                  setState(() {
-                    // Update the question and its answers with the new contents
-                    questions[index] = _questionController.text;
-                    answers[index * 4] = _answer1Controller.text;
-                    answers[index * 4 + 1] = _answer2Controller.text;
-                    answers[index * 4 + 2] = _answer3Controller.text;
-                    answers[index * 4 + 3] = _answer4Controller.text;
-                    _questionController.clear();
-                    _answer1Controller.clear();
-                    _answer2Controller.clear();
-                    _answer3Controller.clear();
-                    _answer4Controller.clear();
-                  });
-                  Navigator.pop(context);
-                } else {
-                  _showErrorDialog(
-                      'Please fill out all fields before confirming.');
-                }
-              },
-              child: const Text('Confirm'),
+              child: Text('SAVE'),
             ),
           ],
         );
@@ -383,7 +338,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                                 BorderRadius.all(Radius.circular(20))),
                         child: ElevatedButton(
                           onPressed: () {
-                            _addQuestionDialog();
+                            _addOrEditQuestionDialog();
                             setState(() {});
                           },
                           style: ElevatedButton.styleFrom(
@@ -442,24 +397,24 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                                       SizedBox(height: 8.0),
                                       Text(questions[index]),
                                       SizedBox(height: 16.0),
-                                      Text(
-                                          'Correct Answer: ${questionAnswers[0]}'),
+                                      Text('Answer #1: ${questionAnswers[0]}'),
+                                      SizedBox(height: 8.0),
+                                      Text('Answer #2: ${questionAnswers[1]}'),
+                                      SizedBox(height: 8.0),
+                                      Text('Answer #3: ${questionAnswers[2]}'),
+                                      SizedBox(height: 8.0),
+                                      Text('Answer #4: ${questionAnswers[3]}'),
                                       SizedBox(height: 8.0),
                                       Text(
-                                          'Incorrect Answer #1: ${questionAnswers[1]}'),
-                                      SizedBox(height: 8.0),
-                                      Text(
-                                          'Incorrect Answer #2: ${questionAnswers[2]}'),
-                                      SizedBox(height: 8.0),
-                                      Text(
-                                          'Incorrect Answer #3: ${questionAnswers[3]}'),
+                                          'Correct Answer: Answer #${(correctAnswers[index] - (4 * index)) + 1}'),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          _editQuestionDialog(index);
+                                          _addOrEditQuestionDialog(
+                                              index: index);
                                           setState(() {});
                                         },
                                         child: Icon(
@@ -475,6 +430,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                                             questions.removeAt(index);
                                             answers.removeRange(
                                                 answerIndex, answerIndex + 4);
+                                            correctAnswers.removeAt(index);
                                           });
                                         },
                                         child: Icon(
