@@ -60,10 +60,14 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF4434CD), Color(0xFFE6963F), Color(0xFFB73AB7)],
-            stops: [0, 0.9, 1],
-            begin: AlignmentDirectional(0.64, 1),
-            end: AlignmentDirectional(-0.64, -1),
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.0, 0.35, 1.0], // set stops for the gradient
+            colors: [
+              Color.fromARGB(255, 161, 15, 223),
+              Color.fromARGB(255, 251, 153, 42),
+              Color.fromARGB(255, 63, 3, 192), // add a third color
+            ],
           ),
         ),
         child: Column(
@@ -157,10 +161,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                   'It looks very empty in here, go ahead and create a SCRUM Battle.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'Poppins',
                                     color: Colors.white,
                                     fontSize: 60,
                                     fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 4.0, bottom: 12.0),
+                                  child: OutlinedButton(
+                                    onPressed: () async {},
+                                    child: Text(
+                                      "Create Battle",
+                                      style: TextStyle(
+                                        letterSpacing: 1.1,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      side: BorderSide(
+                                          width: 2.0,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255)),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      minimumSize: Size(330, 50),
+                                    ),
                                   ),
                                 ),
                               ],
