@@ -51,105 +51,114 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appbar
-      appBar: AppBar(
-        title: TextButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => ProfilePage(user: _currentUser)));
-            },
-            child: const Text(
-              "Home Screen",
-              style: TextStyle(color: Colors.white),
-            )),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              //view profile button
-              if (value == MenuItem.item1) {
-                print("View Profile");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewProfileScreen(user: _currentUser),
-                  ),
-                ).then((updatedUser) {
-                  setState(() {
-                    _currentUser = updatedUser;
-                  });
-                });
-              }
-              //sign out button
-              if (value == MenuItem.item2) {
-                print("Sign Out");
-                setState(() {
-                  _isSigningOut = true;
-                });
-                FirebaseAuth.instance.signOut();
-                setState(() {
-                  _isSigningOut = false;
-                });
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                );
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: MenuItem.item1,
-                child: Text("View Profile"),
-              ),
-              PopupMenuItem(
-                value: MenuItem.item2,
-                child: Text("Sign Out"),
-              ),
-            ],
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 1,
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width,
+          maxHeight: MediaQuery.of(context).size.height * 1,
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF4434CD), Color(0xFFE6963F), Color(0xFFB73AB7)],
+            stops: [0, 0.9, 1],
+            begin: AlignmentDirectional(0.64, 1),
+            end: AlignmentDirectional(-0.64, -1),
           ),
-        ],
-      ),
-      body: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-        future: _getDataFuture,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
-                snapshot) {
-          if (snapshot.hasData) {
-            List<DocumentSnapshot<Map<String, dynamic>>> documentList =
-                snapshot.data!;
-            return ListView.builder(
-              itemCount: documentList.length > 0 ? documentList.length : 1,
-              itemBuilder: (BuildContext context, int index) {
-                //body if user has no quizzes
-                if (documentList.length == 0) {
-                  print("no entries");
-                  return Text("You dont have any quizzes");
-                  //body if user has one or more quizzes
-                } else {
-                  //Each "Quiz"
-                  return ListTile(
-                    title: Text(documentList[index].data()?['Title'] ?? ''),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(IconData(0xf00a0,
-                                fontFamily: 'MaterialIcons'))),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                      ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 6),
+                        child: Text(
+                          'SCRUM',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.white,
+                            fontSize: 80,
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {},
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 130,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Your Quizzes',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.white,
+                      fontSize: 80,
                     ),
-                  );
-                }
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.4,
+              decoration: BoxDecoration(),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'It looks very empty in here, go ahead and create a SCRUM Battle.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.white,
+                      fontSize: 60,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
