@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:scrum/screens/login-screen.dart';
 import 'firebase_options.dart';
 import 'routes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +15,8 @@ void main() async {
   runApp(
     MaterialApp(
       title: "SCRUM",
-      home: LoginScreen(),
+      home: GamePinScreen(),
     ),
   );
 }
+
