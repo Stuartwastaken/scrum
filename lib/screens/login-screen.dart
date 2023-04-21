@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        'Don\'t have an account? ',
+                                        'Forgot Password? ',
                                         style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontSize: 24,
@@ -148,7 +148,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                     MouseRegion(
                                       cursor: SystemMouseCursors.click,
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            PageRouteBuilder(
+                                              transitionDuration: Duration.zero,
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  ForgotPasswordWidget(),
+                                            ),
+                                          );
+                                        },
                                         child: Flexible(
                                           child: Text(
                                             'Reset your password',
@@ -257,9 +267,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                     MouseRegion(
                                       cursor: SystemMouseCursors.click,
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            PageRouteBuilder(
+                                              transitionDuration: Duration.zero,
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  RegisterScreen(),
+                                            ),
+                                          );
+                                        },
                                         child: Text(
-                                          'Log in',
+                                          'Sign Up',
                                           style: TextStyle(
                                             color: Color(0xFF004070),
                                             fontFamily: 'Poppins',
