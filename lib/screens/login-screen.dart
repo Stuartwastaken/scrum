@@ -188,8 +188,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: SizedBox(
                                         width: 300,
                                         height: 70,
-                                        child: GestureDetector(
-                                          onTap: () async {
+                                        child: TextButton(
+                                          onPressed: () async {
+                                            if (email.text.isEmpty |
+                                                password.text.isEmpty) {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                        "Please fill in all response fields."),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text("OK"),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
                                             User? user = await FireAuth
                                                 .signInUsingEmailPassword(
                                               email: email.text,
@@ -206,39 +228,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                               );
                                             }
                                           },
-                                          child: TextButton(
-                                            onPressed: null,
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.black),
-                                              padding: MaterialStateProperty
-                                                  .all<EdgeInsets>(
-                                                EdgeInsets.all(25.0),
-                                              ),
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50.0),
-                                                  side: BorderSide(
-                                                      color: Colors.black,
-                                                      width: 4.0),
-                                                ),
-                                              ),
-                                              foregroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.black),
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.black),
+                                            padding: MaterialStateProperty.all<
+                                                EdgeInsets>(
+                                              EdgeInsets.all(25.0),
                                             ),
-                                            child: Text(
-                                              "Log in ",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'Poppins',
-                                                color: Colors.white,
-                                                fontSize: 24,
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                side: BorderSide(
+                                                    color: Colors.black,
+                                                    width: 4.0),
                                               ),
+                                            ),
+                                            foregroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.black),
+                                          ),
+                                          child: Text(
+                                            "Log in ",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                              fontSize: 24,
                                             ),
                                           ),
                                         ),
