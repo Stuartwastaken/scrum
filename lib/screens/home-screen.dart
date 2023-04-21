@@ -111,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Icon(
                           Icons.person,
                           color: Colors.white,
-                          size: 130,
+                          size: 80,
                         ),
                       ),
                     ],
@@ -119,42 +119,82 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Your Quizzes',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                      fontSize: 80,
-                    ),
-                  ),
-                ],
+
+            Text(
+              'Your Quizzes',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 80,
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.4,
-              decoration: BoxDecoration(),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    'It looks very empty in here, go ahead and create a SCRUM Battle.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                      fontSize: 60,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
+            //futurebuildertime
+            Expanded(
+              child:
+                  FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
+                future: _getDataFuture,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    List<DocumentSnapshot<Map<String, dynamic>>> documentList =
+                        snapshot.data!;
+                    return ListView.builder(
+                      itemCount:
+                          documentList.length > 0 ? documentList.length : 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        //body if user has no quizzes
+                        if (documentList.length == 0) {
+                          print("no entries");
+                          return Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            decoration: BoxDecoration(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  'It looks very empty in here, go ahead and create a SCRUM Battle.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          //body if user has one or more quizzes
+                        } else {
+                          //Each "Quiz"
+                          return ListTile(
+                            title: Text(
+                                documentList[index].data()?['Title'] ?? ''),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(IconData(0xf00a0,
+                                        fontFamily: 'MaterialIcons'))),
+                                IconButton(
+                                    onPressed: () {}, icon: Icon(Icons.edit)),
+                                IconButton(
+                                    onPressed: () {}, icon: Icon(Icons.delete)),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
               ),
             ),
           ],
