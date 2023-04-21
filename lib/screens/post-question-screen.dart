@@ -19,15 +19,8 @@ class PostQuestionScreenWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PostQuestionScreenWidgetState createState() =>
-      _PostQuestionScreenWidgetState();
-}
-
-Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
-  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
-  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
-  usersAndScores = Map.fromEntries(usersList);
-  return usersAndScores;
+  PostQuestionScreenWidgetState createState() =>
+      PostQuestionScreenWidgetState();
 }
 
 String getPlayerStatus(
@@ -57,7 +50,7 @@ String getPlayerStatus(
   }
 }
 
-class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
+class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   late final QuizTimeStream quizTimeStream;
@@ -77,7 +70,7 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
           Navigator.pushReplacement(
             context,
             PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 100),
+              transitionDuration: const Duration(milliseconds: 100),
               reverseTransitionDuration: Duration.zero,
               pageBuilder: (context, animation, secondaryAnimation) {
                 return LeaderboardScreen(
@@ -103,9 +96,11 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void dispose() {
     _unfocusNode.dispose();
+    quizTimeStream.dispose();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
@@ -114,9 +109,9 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Map<String, dynamic> usersAndScores = snapshot.data!;
-              Map<String, dynamic> usersAndScores_sorted = sort(usersAndScores);
+              Map<String, dynamic> usersandscoresSorted = ScrumRTdatabase.sort(usersAndScores);
               List<MapEntry<String, dynamic>> sortedEntries =
-                  usersAndScores_sorted.entries.toList();
+                  usersandscoresSorted.entries.toList();
               String playerStatus = getPlayerStatus(sortedEntries, widget.uid);
               return buildPostQuestionScreen(playerStatus);
             } else if (snapshot.hasError) {
@@ -128,7 +123,6 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     );
   }
 
-  @override
   Widget buildPostQuestionScreen(String playerStatus) {
     final points = widget.pointsGained.toString();
     final scaffoldKey = GlobalKey<ScaffoldState>();

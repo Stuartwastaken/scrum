@@ -7,9 +7,13 @@ class QuizTimeStream {
   final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
   final StreamController<int> _timeStreamController = BehaviorSubject<int>();
   Timer? _timer;
+  StreamSubscription<DatabaseEvent>? _subscription;
 
   void startTimer(String quizID) {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+    }
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       ScrumRTdatabase.decrementTimer(quizID);
     });
   }
@@ -18,32 +22,29 @@ class QuizTimeStream {
     _timer?.cancel();
   }
 
-  Future<int?> listenToQuizTime(String quizId) {
-    final completer = Completer<int?>();
-
-    _databaseReference.child('$quizId/time').onValue.listen((event) {
-      final value = event.snapshot.value;
-      if (value is int) {
-        final int time = value;
-        _timeStreamController.add(time);
-        completer.complete(time);
-      } else {
-        completer.completeError('Unexpected data type');
+  void listenToQuizTime(String quizId) {
+    _subscription = _databaseReference.child('$quizId/time').onValue.listen((event) {
+      try {
+        final value = event.snapshot.value;
+        if (value is int) {
+          final int time = value;
+          _timeStreamController.add(time);
+        } else {
+          throw StateError('Unexpected data type');
+        }
+      } catch (e) {
+        _timeStreamController.addError(e);
       }
-    }, onError: (error) {
-      completer.completeError(error);
     });
-
-    return completer.future;
   }
 
   Stream<int> get timeStream => _timeStreamController.stream;
 
   Stream<bool> get isTimeZeroStream => timeStream.map((time) => time == 0);
 
-
-
   void dispose() {
     _timeStreamController.close();
+    _subscription?.cancel();
+    cancelTimer();
   }
 }

@@ -13,13 +13,6 @@ class LeaderboardScreen extends StatefulWidget {
   LeaderboardScreenState createState() => LeaderboardScreenState();
 }
 
-Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
-  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
-  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
-  usersAndScores = Map.fromEntries(usersList);
-  return usersAndScores;
-}
-
 class LeaderboardScreenState extends State<LeaderboardScreen> {
   late final QuizTimeStream quizTimeStream;
   late Stream<int> timeStream;
@@ -36,7 +29,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 100),
+            transitionDuration: const Duration(milliseconds: 100),
             reverseTransitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) {
               return MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid);
@@ -48,6 +41,12 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   @override
+  void dispose() {
+    quizTimeStream.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
@@ -56,10 +55,10 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic> usersAndScores = snapshot.data!;
-                Map<String, dynamic> usersAndScores_sorted =
-                    sort(usersAndScores);
+                Map<String, dynamic> usersandscoresSorted =
+                    ScrumRTdatabase.sort(usersAndScores);
                 List<MapEntry<String, dynamic>> sortedEntries =
-                    usersAndScores_sorted.entries.toList();
+                    usersandscoresSorted.entries.toList();
                 if (sortedEntries.length < 5) {
                   return StandingsScreenBuilder(sortedEntries.sublist(0));
                 } else {
@@ -74,7 +73,6 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Widget StandingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
-    final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       body: SafeArea(
         child: Column(

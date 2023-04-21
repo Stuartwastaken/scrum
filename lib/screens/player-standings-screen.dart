@@ -7,20 +7,13 @@ import 'package:scrum/controllers/quiz-document.dart';
 class PlayerStandingsScreen extends StatefulWidget {
   final String quizID;
 
-  PlayerStandingsScreen({required this.quizID});
+  PlayerStandingsScreen({Key? key, required this.quizID}) : super(key: key);
 
   @override
-  _PlayerStandingsScreenState createState() => _PlayerStandingsScreenState();
+  PlayerStandingsScreenState createState() => PlayerStandingsScreenState();
 }
 
-Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
-  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
-  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
-  usersAndScores = Map.fromEntries(usersList);
-  return usersAndScores;
-}
-
-class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
+class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   late final QuizTimeStream quizTimeStream;
   late final Stream<int> timeStream;
 
@@ -40,7 +33,7 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 100),
+            transitionDuration: const Duration(milliseconds: 100),
             reverseTransitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) {
               return HostMultipleChoiceWidget(quizID: widget.quizID);
@@ -49,6 +42,12 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
         );
       } 
     });
+  }
+
+  @override
+  void dispose(){
+    quizTimeStream.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,7 +60,7 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
               if (snapshot.hasData) {
                 Map<String, dynamic> usersAndScores = snapshot.data!;
                 Map<String, dynamic> usersandscoresSorted =
-                    sort(usersAndScores);
+                    ScrumRTdatabase.sort(usersAndScores);
                 List<MapEntry<String, dynamic>> sortedEntries =
                     usersandscoresSorted.entries.toList();
                 if (sortedEntries.length < 5) {

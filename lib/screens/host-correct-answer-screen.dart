@@ -16,11 +16,11 @@ class HostCorrectAnswerScreen extends StatefulWidget {
   final int correctOption;
 
   @override
-  _HostCorrectAnswerScreenState createState() =>
-      _HostCorrectAnswerScreenState();
+  HostCorrectAnswerScreenState createState() =>
+      HostCorrectAnswerScreenState();
 }
 
-class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
+class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTimeStream;
@@ -42,7 +42,7 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
           Navigator.pushReplacement(
             context, 
             PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 100),
+              transitionDuration: const Duration(milliseconds: 100),
               reverseTransitionDuration: Duration.zero,
               pageBuilder: (context, animation, secondaryAnimation) {
                 return PlayerStandingsScreen(quizID: widget.quizID);
@@ -67,6 +67,7 @@ class _HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     super.dispose();
   }
 

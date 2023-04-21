@@ -20,10 +20,10 @@ class _PodiumScreenState extends State<PodiumScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Map<String, dynamic> usersAndScores = snapshot.data!;
-            Map<String, dynamic> usersAndScores_sorted =
+            Map<String, dynamic> usersandscoresSorted =
                 ScrumRTdatabase.sort(usersAndScores);
             List<MapEntry<String, dynamic>> sortedEntries =
-                usersAndScores_sorted.entries.toList();
+                usersandscoresSorted.entries.toList();
             return buildPodiumScreen(sortedEntries);
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
@@ -125,7 +125,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        (sortedEntries.length >= 1)
+                        (sortedEntries.isNotEmpty)
                             ? sortedEntries[0].value['nickname'].toString()
                             : ' ',
                         style: TextStyle(
@@ -168,7 +168,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                                   fit: BoxFit.fitHeight,
                                 ))),
                             Text(
-                              (sortedEntries.length >= 1)
+                              (sortedEntries.isNotEmpty)
                                   ? sortedEntries[0].value['score'].toString()
                                   : ' ',
                               textAlign: TextAlign.center,
@@ -266,7 +266,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
                 Navigator.pushReplacement(
                   context,
                   PageRouteBuilder(
-                    transitionDuration: Duration.zero,
+                    transitionDuration: const Duration(milliseconds: 100),
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         GamePinScreen(),
                   ),

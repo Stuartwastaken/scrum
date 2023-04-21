@@ -13,11 +13,11 @@ class HostMultipleChoiceWidget extends StatefulWidget {
   final String quizID;
 
   @override
-  _HostMultipleChoiceWidgetState createState() =>
-      _HostMultipleChoiceWidgetState();
+  HostMultipleChoiceWidgetState createState() =>
+      HostMultipleChoiceWidgetState();
 }
 
-class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
+class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTimeStream;
@@ -39,7 +39,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
         Navigator.pushReplacement(
             context,
             PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 100),
+            transitionDuration: const Duration(milliseconds: 100),
               reverseTransitionDuration: Duration.zero,
               pageBuilder: (context, animation, secondaryAnimation) {
                 return HostCorrectAnswerScreen(
@@ -52,6 +52,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     super.dispose();
   }
 

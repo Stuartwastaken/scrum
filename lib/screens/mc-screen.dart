@@ -12,14 +12,14 @@ class MultipleChoiceWidget extends StatefulWidget {
 
   final String quizID;
   final String uid;
-  bool isCorrect = false;
-  late Future<int> pointsGained;
+  final bool isCorrect = false;
+  late final Future<int> pointsGained;
 
   @override
-  _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
+  MultipleChoiceWidgetState createState() => MultipleChoiceWidgetState();
 }
 
-class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
+class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTimeStream;
@@ -52,7 +52,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 100),
+            transitionDuration: const Duration(milliseconds: 100),
             reverseTransitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) {
               return PostQuestionScreenWidget(quizID: widget.quizID, uid: widget.uid, isCorrect: widget.isCorrect, pointsGained: widget.pointsGained as int);
@@ -65,6 +65,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     super.dispose();
   }
 
