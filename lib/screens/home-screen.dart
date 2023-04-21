@@ -26,15 +26,19 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isSigningOut = false;
 
   late User _currentUser;
+  //late List<dynamic> d;
   late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _getDataFuture;
   late Future<List<dynamic>> _quizRefs;
+  late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _quizDocs;
+  //late List<dynamic> d;
+  List<dynamic> d = [];
 
   @override
   void initState() {
     _currentUser = widget.user;
     _quizRefs = getQuizRefs();
-    //_quizDocs = getQuizDocsFromRefs();
-    _getDataFuture = getData();
+    _quizDocs = getQuizDocsFromRefs(_quizRefs);
+    //_getDataFuture = getData();
     super.initState();
   }
 
@@ -47,11 +51,33 @@ class _ProfilePageState extends State<ProfilePage> {
     for (var ref in userQuizRefs) {
       ref = ref.path;
       userQuizStringRefs.add(ref);
+      d.add(ref);
     }
-    print(userQuizStringRefs);
+    //print(userQuizStringRefs.runtimeType);
     return userQuizStringRefs;
   }
 
+  Future<void> deleteQuizFromUser(String documentID, int indexToRemove) async {
+    final documentReference =
+        FirebaseFirestore.instance.collection('User').doc(documentID);
+    final documentSnapshot = await documentReference.get();
+    final data = documentSnapshot.data()!;
+    final quizzes = List.from(data['Quizzes']);
+    quizzes.removeAt(indexToRemove);
+    await documentReference.update({'Quizzes': quizzes});
+  }
+
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getQuizDocsFromRefs(
+      Future<List<dynamic>> refs) async {
+    List<DocumentSnapshot<Map<String, dynamic>>> userQuizDocs = [];
+    for (var ref in await refs) {
+      final quizDoc = await db.doc(ref).get();
+      userQuizDocs.add(quizDoc);
+    }
+    //print(userQuizDocs.runtimeType);
+    return userQuizDocs;
+  }
+  /*
   Future<List<DocumentSnapshot<Map<String, dynamic>>>> getData() async {
     final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
     final userQuizRefs = userDocRef.data()?['Quizzes'] as List<dynamic>;
@@ -59,13 +85,16 @@ class _ProfilePageState extends State<ProfilePage> {
     for (var ref in userQuizRefs) {
       ref = ref.path;
       //quizRefs.add(ref);
-      print(ref);
+      //print(ref);
       final quizDoc = await db.doc(ref).get();
       documentList.add(quizDoc);
     }
-    //print(quizRefs);
+    //print(quizRefs);'
+    print(documentList.runtimeType);
+    print(documentList);
     return documentList;
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Expanded(
             child: FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-              future: _getDataFuture,
+              future: _quizDocs,
               builder: (BuildContext context,
                   AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
                       snapshot) {
@@ -167,12 +196,18 @@ class _ProfilePageState extends State<ProfilePage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    print(d[index]);
+                                    print("pressed play");
+                                  },
                                   icon: Icon(IconData(0xf00a0,
                                       fontFamily: 'MaterialIcons'))),
                               IconButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     //delete from "User" Collection
+                                    deleteQuizFromUser(_currentUser.uid, index);
+                                    //delete from "Quiz" collection
+                                    await db.doc(d[index]).delete();
                                   },
                                   icon: Icon(Icons.delete)),
                             ],
