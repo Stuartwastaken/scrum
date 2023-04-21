@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/screens/register-screen.dart';
 import 'forgot-password-screen.dart';
@@ -303,14 +304,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: [
+                                0.0,
+                                0.35,
+                                1.0
+                              ], // set stops for the gradient
                               colors: [
-                                Color(0xFF4434CD),
-                                Color(0xFFE6963F),
-                                Color(0xFFB73AB7)
+                                Color.fromARGB(255, 161, 15, 223),
+                                Color.fromARGB(255, 251, 153, 42),
+                                Color.fromARGB(255, 63, 3, 192),
                               ],
-                              stops: [0, 0.9, 1],
-                              begin: AlignmentDirectional(0.64, 1),
-                              end: AlignmentDirectional(-0.64, -1),
                             ),
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(90),
@@ -360,7 +365,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                               'SCRUM',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                fontFamily: 'Poppins',
                                                 color: Colors.white,
                                                 fontSize: 80,
                                                 fontWeight: FontWeight.w600,
@@ -378,7 +382,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Text(
                                             'Welcome Back',
                                             style: TextStyle(
-                                              fontFamily: 'Poppins',
                                               color: Colors.white,
                                               fontSize: 40,
                                               fontWeight: FontWeight.w600,
@@ -402,7 +405,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 'Let\'s pick up where we left off.',
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
-                                                  fontFamily: 'Poppins',
                                                   color: Colors.white,
                                                   fontSize: 30,
                                                   letterSpacing: 1.5,
@@ -424,28 +426,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 0),
-                                              child: Container(
-                                                width: 60,
-                                                height: 60,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                    color: Colors.white,
-                                                    width: 1,
+                                            MouseRegion(
+                                              cursor: SystemMouseCursors.click,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                      transitionDuration:
+                                                          Duration.zero,
+                                                      pageBuilder: (context,
+                                                              animation,
+                                                              secondaryAnimation) =>
+                                                          GamePinScreen(),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Flexible(
+                                                  child: Text(
+                                                    'Back To Game Pin',
+                                                    style: TextStyle(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      color: Colors.white,
+                                                      fontSize: 30,
+                                                      letterSpacing: 1.5,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
                                                   ),
-                                                  //borderRadius: BorderRadius.circular(30),
-                                                ),
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.arrow_forward,
-                                                    color: Colors.black,
-                                                    size: 30,
-                                                  ),
-                                                  onPressed: () {},
                                                 ),
                                               ),
                                             ),
