@@ -208,6 +208,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                     deleteQuizFromUser(_currentUser.uid, index);
                                     //delete from "Quiz" collection
                                     await db.doc(d[index]).delete();
+                                    //reload page
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfilePage(user: _currentUser),
+                                      ),
+                                    );
                                   },
                                   icon: Icon(Icons.delete)),
                             ],
