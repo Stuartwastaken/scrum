@@ -24,6 +24,9 @@ class QuizTimeStream {
 
   Stream<int> get timeStream => _timeStreamController.stream;
 
+  // Function to check if the time is zero
+  Stream<bool> get isTimeZeroStream => timeStream.map((time) => time == 0);
+
   void dispose() {
     _timeStreamController.close();
   }
