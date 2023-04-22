@@ -38,7 +38,8 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
         quizTimeStream.dispose();
-        if (quiz.isQuizEmpty() == false) {
+        if (true) {
+          //^^^^^^^if (quiz.isQuizEmpty() == false) {
           ScrumRTdatabase.setTimer(widget.quizID, 7);
           ScreenNavigator.navigate(
               context, PlayerStandingsScreen(quizID: widget.quizID));
