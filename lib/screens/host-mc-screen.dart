@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/host-correct-answer-screen.dart';
 import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -36,16 +37,8 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 7);
-        Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 100),
-              reverseTransitionDuration: Duration.zero,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return HostCorrectAnswerScreen(
-                    quizID: widget.quizID, correctOption: 3);
-              },
-            ));
+        ScreenNavigator.navigate(context,
+            HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 3));
       }
     });
   }
