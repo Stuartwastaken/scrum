@@ -28,7 +28,6 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
-        quizTimeStream.dispose();
         ScrumRTdatabase.setTimer(widget.quizID, 30);
         ScreenNavigator.navigate(
             context, HostMultipleChoiceWidget(quizID: widget.quizID));
@@ -38,6 +37,7 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
 
   @override
   void dispose() {
+    quizTimeStream.cancelTimer();
     quizTimeStream.dispose();
     super.dispose();
   }
