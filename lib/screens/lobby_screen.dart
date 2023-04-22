@@ -90,18 +90,9 @@ class LobbyScreenState extends State<LobbyScreen>
                   child: OutlinedButton(
                     onPressed: () {
                       ScrumRTdatabase.removeUserFromTree(
-                          widget.hash!, widget.gameID);
+                          widget.hash, widget.gameID);
                       ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
-
-                      Navigator.pushReplacement(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const GamePinScreen(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                      );
+                      ScreenNavigator.navigate(context, GamePinScreen());
                     },
                     child: Text(
                       "Leave",
