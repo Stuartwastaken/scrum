@@ -17,8 +17,7 @@ class ScrumRTdatabase {
   }
 
   //add user to RT database under correct lobbyID
-  static Future<String?> writeUserToTree(
-      String nickname, String gamePin) async {
+  static Future<String> writeUserToTree(String nickname, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     final gamePinRef = databaseRef.child(gamePin);
     String? hash = gamePinRef.push().key;
@@ -101,7 +100,9 @@ class ScrumRTdatabase {
       final int? numberOfPlayers = event.snapshot.value as int?;
       if (numberOfPlayers != null) {
         _peopleInLobbyStreamController.add(numberOfPlayers);
-        completer.complete(numberOfPlayers);
+        if (!completer.isCompleted) {
+          completer.complete(numberOfPlayers);
+        }
       }
     }, onError: (error) {
       completer.completeError(error);
@@ -236,5 +237,9 @@ class ScrumRTdatabase {
 
   static void deleteLobby(String quizID) {
     FirebaseDatabase.instance.ref().child(quizID).remove();
+  }
+
+  void dispose() {
+    _peopleInLobbyStreamController.close();
   }
 }

@@ -64,6 +64,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     super.dispose();
   }
 

@@ -35,6 +35,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     super.dispose();
   }
 

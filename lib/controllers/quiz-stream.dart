@@ -66,6 +66,7 @@ class QuizStream {
 
   void dispose() {
     _timeStreamController.close();
+    _startStreamController.close();
     _subscription?.cancel();
     cancelTimer();
   }

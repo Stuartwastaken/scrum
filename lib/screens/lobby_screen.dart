@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/screens/mc-screen.dart';
 
 class LobbyScreen extends StatefulWidget {
   final String gameID;
-  final String? hash;
+  final String hash;
   const LobbyScreen({
     Key? key,
     required this.gameID,
@@ -21,12 +23,17 @@ class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
+  late Stream<bool> startStream;
   late ScrumRTdatabase _scrumRTdatabase;
   late Stream<int> playerStreamController;
+  late final QuizStream quizStartStream;
 
   @override
   void dispose() {
+    _controller.dispose();
+    _scrumRTdatabase.dispose();
+    playerStreamController.drain();
+    quizStartStream.dispose();
     super.dispose();
   }
 
@@ -42,9 +49,20 @@ class LobbyScreenState extends State<LobbyScreen>
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
     _scrumRTdatabase = ScrumRTdatabase();
-    ScrumRTdatabase.listenForKick(widget.gameID, widget.hash!, context);
+    ScrumRTdatabase.listenForKick(widget.gameID, widget.hash, context);
     _scrumRTdatabase.listenToPeopleInLobby(widget.gameID);
     playerStreamController = _scrumRTdatabase.playerCountStream;
+
+    quizStartStream = QuizStream();
+    quizStartStream.listenForStart(widget.gameID);
+    startStream = quizStartStream.startStream;
+    quizStartStream.isStartTrueStream.listen((isStartZero) {
+      if (isStartZero) {
+        quizStartStream.dispose();
+        ScreenNavigator.navigate(context,
+            MultipleChoiceWidget(quizID: widget.gameID, uid: widget.hash));
+      }
+    });
   }
 
   @override

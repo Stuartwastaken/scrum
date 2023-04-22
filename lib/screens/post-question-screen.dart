@@ -80,6 +80,7 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     _unfocusNode.dispose();
     super.dispose();
   }
