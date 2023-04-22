@@ -195,6 +195,7 @@ class ScrumRTdatabase {
   static void listenForKick(String quizID, String hash, BuildContext context) {
     DatabaseReference playersRef =
         FirebaseDatabase.instance.ref().child(quizID);
+
     playersRef.onChildRemoved.listen((event) {
       if (event.snapshot.key == hash) {
         Navigator.pushReplacement(

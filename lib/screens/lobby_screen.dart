@@ -32,9 +32,7 @@ class LobbyScreenState extends State<LobbyScreen>
   void dispose() {
     _controller.dispose();
     _scrumRTdatabase.dispose();
-    playerStreamController.drain();
     quizStartStream.dispose();
-    startStream.drain();
     super.dispose();
   }
 
@@ -59,7 +57,6 @@ class LobbyScreenState extends State<LobbyScreen>
     startStream = quizStartStream.startStream;
     quizStartStream.isStartTrueStream.listen((isStartZero) {
       if (isStartZero) {
-        quizStartStream.dispose();
         ScreenNavigator.navigate(context,
             MultipleChoiceWidget(quizID: widget.gameID, uid: widget.hash));
       }

@@ -27,7 +27,6 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        quizTimeStream.dispose();
         ScreenNavigator.navigate(context,
             MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
       }

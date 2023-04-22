@@ -37,7 +37,6 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
 
   @override
   void dispose() {
-    quizTimeStream.cancelTimer();
     quizTimeStream.dispose();
     super.dispose();
   }

@@ -51,7 +51,6 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        quizTimeStream.dispose();
         ScreenNavigator.navigate(
             context,
             PostQuestionScreenWidget(

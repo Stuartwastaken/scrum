@@ -66,7 +66,6 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        quizTimeStream.dispose();
         if (quiz.isQuizEmpty() == false) {
           ScreenNavigator.navigate(context,
               LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
