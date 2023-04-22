@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/player-standings-screen.dart';
 import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/screens/podium-screen.dart';
@@ -39,26 +40,11 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
         quizTimeStream.dispose();
         if (quiz.isQuizEmpty() == false) {
           ScrumRTdatabase.setTimer(widget.quizID, 7);
-          Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                transitionDuration: const Duration(milliseconds: 100),
-                reverseTransitionDuration: Duration.zero,
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return PlayerStandingsScreen(quizID: widget.quizID);
-                },
-              ));
-        } else {
-          Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return PodiumScreen(gameID: widget.quizID);
-                },
-              ));
+          ScreenNavigator.navigate(
+              context, PlayerStandingsScreen(quizID: widget.quizID));
         }
+      } else {
+        ScreenNavigator.navigate(context, PodiumScreen(gameID: widget.quizID));
       }
     });
   }

@@ -34,6 +34,7 @@ class LobbyScreenState extends State<LobbyScreen>
     _scrumRTdatabase.dispose();
     playerStreamController.drain();
     quizStartStream.dispose();
+    startStream.drain();
     super.dispose();
   }
 

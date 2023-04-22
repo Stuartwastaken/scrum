@@ -52,7 +52,6 @@ String getPlayerStatus(
 }
 
 class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   late final QuizStream quizTimeStream;
   late final Stream<int> timeStream;
@@ -60,6 +59,7 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void initState() {
     super.initState();
+    print("postQuestionScreen");
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
@@ -111,9 +111,7 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
 
   Widget buildPostQuestionScreen(String playerStatus) {
     final points = widget.pointsGained.toString();
-    final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
       body: SafeArea(

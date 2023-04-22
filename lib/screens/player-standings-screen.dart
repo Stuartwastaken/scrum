@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/host-mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-document.dart';
@@ -31,15 +32,8 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
         quizTimeStream.cancelTimer();
         quizTimeStream.dispose();
         ScrumRTdatabase.setTimer(widget.quizID, 30);
-        Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 100),
-              reverseTransitionDuration: Duration.zero,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return HostMultipleChoiceWidget(quizID: widget.quizID);
-              },
-            ));
+        ScreenNavigator.navigate(
+            context, HostMultipleChoiceWidget(quizID: widget.quizID));
       }
     });
   }
