@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/screens/host-mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-document.dart';
@@ -14,7 +14,7 @@ class PlayerStandingsScreen extends StatefulWidget {
 }
 
 class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
-  late final QuizTimeStream quizTimeStream;
+  late final QuizStream quizTimeStream;
   late final Stream<int> timeStream;
 
   @override
@@ -22,7 +22,7 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
     super.initState();
 
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
-    quizTimeStream = QuizTimeStream();
+    quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.startTimer(widget.quizID);

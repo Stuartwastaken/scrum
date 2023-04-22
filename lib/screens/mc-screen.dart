@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/post-question-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -24,7 +24,7 @@ class MultipleChoiceWidget extends StatefulWidget {
 class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTimeStream;
+  late final QuizStream quizTimeStream;
   late Stream<int> timeStream;
   bool buttonsEnabled = true;
   int selectedIndex = -1;
@@ -45,7 +45,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-    quizTimeStream = QuizTimeStream();
+    quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
@@ -134,7 +134,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                           onButtonPressed(0);
                                           int remainingTime =
                                               await ScrumRTdatabase.getTime(
-                                                  widget.quizID);
+                                                  widget.quizID) as int;
                                           widget.pointsGained =
                                               CalculateScore.calculateAddValue(
                                                   remainingTime);
@@ -181,7 +181,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                           onButtonPressed(1);
                                           int remainingTime =
                                               await ScrumRTdatabase.getTime(
-                                                  widget.quizID);
+                                                  widget.quizID) as int;
                                           widget.pointsGained =
                                               CalculateScore.calculateAddValue(
                                                   remainingTime);
@@ -236,7 +236,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                           onButtonPressed(2);
                                           int remainingTime =
                                               await ScrumRTdatabase.getTime(
-                                                  widget.quizID);
+                                                  widget.quizID) as int;
                                           widget.pointsGained =
                                               CalculateScore.calculateAddValue(
                                                   remainingTime);
@@ -283,7 +283,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                           onButtonPressed(3);
                                           int remainingTime =
                                               await ScrumRTdatabase.getTime(
-                                                  widget.quizID);
+                                                  widget.quizID) as int;
                                           widget.pointsGained =
                                               CalculateScore.calculateAddValue(
                                                   remainingTime);

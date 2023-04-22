@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/screens/host-correct-answer-screen.dart';
 import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -20,7 +20,7 @@ class HostMultipleChoiceWidget extends StatefulWidget {
 class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTimeStream;
+  late final QuizStream quizTimeStream;
   late Stream<int> timeStream;
 
   @override
@@ -28,7 +28,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
     super.initState();
 
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
-    quizTimeStream = QuizTimeStream();
+    quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.startTimer(widget.quizID);

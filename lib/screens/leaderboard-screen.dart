@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final String quizID;
@@ -15,13 +15,13 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class LeaderboardScreenState extends State<LeaderboardScreen> {
-  late final QuizTimeStream quizTimeStream;
+  late final QuizStream quizTimeStream;
   late Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
-    quizTimeStream = QuizTimeStream();
+    quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {

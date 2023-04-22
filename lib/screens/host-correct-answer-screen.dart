@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/screens/player-standings-screen.dart';
 import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/screens/podium-screen.dart';
@@ -22,14 +22,14 @@ class HostCorrectAnswerScreen extends StatefulWidget {
 class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTimeStream;
+  late final QuizStream quizTimeStream;
   late Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
-    quizTimeStream = QuizTimeStream();
+    quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.startTimer(widget.quizID);

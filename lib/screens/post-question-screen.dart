@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/leaderboard-screen.dart';
 import 'package:scrum/screens/player-end-game-screen.dart';
@@ -54,14 +54,14 @@ String getPlayerStatus(
 class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
-  late final QuizTimeStream quizTimeStream;
+  late final QuizStream quizTimeStream;
   late final Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
-    quizTimeStream = QuizTimeStream();
+    quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
