@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
@@ -20,29 +21,20 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   void initState() {
     super.initState();
-
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid);
-            },
-          )
-        );
-      } 
+        quizTimeStream.dispose();
+        ScreenNavigator.navigate(context,
+            MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
+      }
     });
   }
 
   @override
   void dispose() {
-    quizTimeStream.dispose();
     super.dispose();
   }
 

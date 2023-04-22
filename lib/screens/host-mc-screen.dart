@@ -39,7 +39,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
         Navigator.pushReplacement(
             context,
             PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
+              transitionDuration: const Duration(milliseconds: 100),
               reverseTransitionDuration: Duration.zero,
               pageBuilder: (context, animation, secondaryAnimation) {
                 return HostCorrectAnswerScreen(

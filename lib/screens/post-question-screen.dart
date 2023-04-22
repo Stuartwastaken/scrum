@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/leaderboard-screen.dart';
 import 'package:scrum/screens/player-end-game-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
@@ -59,36 +60,20 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void initState() {
     super.initState();
-
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
+        quizTimeStream.dispose();
         if (quiz.isQuizEmpty() == false) {
-          Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 100),
-              reverseTransitionDuration: Duration.zero,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return LeaderboardScreen(
-                    quizID: widget.quizID, uid: widget.uid);
-              },
-            ));
+          ScreenNavigator.navigate(context,
+              LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
         } else {
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return PlayerEndScreen(quizID: widget.quizID, uid: widget.uid);
-                },
-              )
-            );
-          }
+          ScreenNavigator.navigate(
+              context, PlayerEndScreen(quizID: widget.quizID, uid: widget.uid));
+        }
       }
     });
   }
@@ -96,7 +81,6 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void dispose() {
     _unfocusNode.dispose();
-    quizTimeStream.dispose();
     super.dispose();
   }
 
@@ -109,7 +93,8 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Map<String, dynamic> usersAndScores = snapshot.data!;
-              Map<String, dynamic> usersandscoresSorted = ScrumRTdatabase.sort(usersAndScores);
+              Map<String, dynamic> usersandscoresSorted =
+                  ScrumRTdatabase.sort(usersAndScores);
               List<MapEntry<String, dynamic>> sortedEntries =
                   usersandscoresSorted.entries.toList();
               String playerStatus = getPlayerStatus(sortedEntries, widget.uid);
@@ -161,47 +146,31 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        decoration: BoxDecoration(
-                          color: widget.isCorrect
-                              ? Color(0xFF26890C)
-                              : Color(0xFFE21B3C),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Color(0x33000000),
-                              offset: Offset(0, 2),
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          shape: BoxShape.rectangle,
-                        ),
-                        alignment: AlignmentDirectional(0, 0),
-                        child: FutureBuilder<int>(
-                          future: widget.pointsGained as Future<int>,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<int> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                return Text(
-                                  '+ ${snapshot.data} pts',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                  ),
-                                );
-                              }
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          },
-                        ),
-                      ),
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          decoration: BoxDecoration(
+                            color: widget.isCorrect
+                                ? Color(0xFF26890C)
+                                : Color(0xFFE21B3C),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Color(0x33000000),
+                                offset: Offset(0, 2),
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                            shape: BoxShape.rectangle,
+                          ),
+                          alignment: AlignmentDirectional(0, 0),
+                          child: Text(
+                            '+ $points pts',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                              fontSize: 40,
+                            ),
+                          )),
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
@@ -263,14 +264,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
               ),
               onPressed: () {
                 ScrumRTdatabase.deleteLobby(widget.gameID);
-                Navigator.pushReplacement(
-                  context,
-                  PageRouteBuilder(
-                    transitionDuration: const Duration(milliseconds: 100),
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        GamePinScreen(),
-                  ),
-                );
+                ScreenNavigator.navigate(context, GamePinScreen());
               },
             ),
           ),

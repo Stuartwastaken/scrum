@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/post-question-screen.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class MultipleChoiceWidget extends StatefulWidget {
   MultipleChoiceWidget({
@@ -13,7 +15,7 @@ class MultipleChoiceWidget extends StatefulWidget {
   final String quizID;
   final String uid;
   final bool isCorrect = false;
-  late final Future<int> pointsGained;
+  int pointsGained = 0;
 
   @override
   MultipleChoiceWidgetState createState() => MultipleChoiceWidgetState();
@@ -25,7 +27,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   late final QuizTimeStream quizTimeStream;
   late Stream<int> timeStream;
   bool buttonsEnabled = true;
-  int selectedIndex = 0;
+  int selectedIndex = -1;
 
   void onButtonPressed(int index) {
     setState(() {
@@ -43,29 +45,25 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-
     quizTimeStream = QuizTimeStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return PostQuestionScreenWidget(quizID: widget.quizID, uid: widget.uid, isCorrect: widget.isCorrect, pointsGained: widget.pointsGained as int);
-            },
-          )
-        );
-      } 
+        quizTimeStream.dispose();
+        ScreenNavigator.navigate(
+            context,
+            PostQuestionScreenWidget(
+                quizID: widget.quizID,
+                uid: widget.uid,
+                isCorrect: widget.isCorrect,
+                pointsGained: 0));
+      }
     });
   }
 
   @override
   void dispose() {
-    quizTimeStream.dispose();
     super.dispose();
   }
 
@@ -132,14 +130,22 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(1)
+                                      ? () async {
+                                          onButtonPressed(0);
+                                          int remainingTime =
+                                              await ScrumRTdatabase.getTime(
+                                                  widget.quizID);
+                                          widget.pointsGained =
+                                              CalculateScore.calculateAddValue(
+                                                  remainingTime);
+                                        }
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 1) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 0) {
                                           return Color(
                                               0xFFB21B3C); // Disabled button color
                                         }
@@ -171,14 +177,22 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(2)
+                                      ? () async {
+                                          onButtonPressed(1);
+                                          int remainingTime =
+                                              await ScrumRTdatabase.getTime(
+                                                  widget.quizID);
+                                          widget.pointsGained =
+                                              CalculateScore.calculateAddValue(
+                                                  remainingTime);
+                                        }
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 2) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 1) {
                                           return Color(
                                               0xFF45A3E5); // Disabled button color
                                         }
@@ -218,14 +232,22 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(3)
+                                      ? () async {
+                                          onButtonPressed(2);
+                                          int remainingTime =
+                                              await ScrumRTdatabase.getTime(
+                                                  widget.quizID);
+                                          widget.pointsGained =
+                                              CalculateScore.calculateAddValue(
+                                                  remainingTime);
+                                        }
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 3) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 2) {
                                           return Color(
                                               0xFFFFA602); // Disabled button color
                                         }
@@ -257,14 +279,22 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(4)
+                                      ? () async {
+                                          onButtonPressed(3);
+                                          int remainingTime =
+                                              await ScrumRTdatabase.getTime(
+                                                  widget.quizID);
+                                          widget.pointsGained =
+                                              CalculateScore.calculateAddValue(
+                                                  remainingTime);
+                                        }
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 4) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 3) {
                                           return Color(
                                               0xFF26890C); // Disabled button color
                                         }

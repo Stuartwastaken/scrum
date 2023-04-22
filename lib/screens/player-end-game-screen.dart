@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 
@@ -141,14 +142,7 @@ class _PlayerEndScreenState extends State<PlayerEndScreen> {
                     size: 75,
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      PageRouteBuilder(
-                        transitionDuration: Duration.zero,
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            GamePinScreen(),
-                      ),
-                    );
+                    ScreenNavigator.navigate(context, GamePinScreen());
                   },
                 ),
               ),

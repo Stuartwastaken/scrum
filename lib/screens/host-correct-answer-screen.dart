@@ -16,8 +16,7 @@ class HostCorrectAnswerScreen extends StatefulWidget {
   final int correctOption;
 
   @override
-  HostCorrectAnswerScreenState createState() =>
-      HostCorrectAnswerScreenState();
+  HostCorrectAnswerScreenState createState() => HostCorrectAnswerScreenState();
 }
 
 class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
@@ -40,28 +39,26 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
         if (quiz.isQuizEmpty() == false) {
           ScrumRTdatabase.setTimer(widget.quizID, 7);
           Navigator.pushReplacement(
-            context, 
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 100),
-              reverseTransitionDuration: Duration.zero,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return PlayerStandingsScreen(quizID: widget.quizID);
-              },
-            )
-          );
-        }else {
-        Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return PodiumScreen(gameID: widget.quizID);
-            },
-          )
-        );
+              context,
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 100),
+                reverseTransitionDuration: Duration.zero,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return PlayerStandingsScreen(quizID: widget.quizID);
+                },
+              ));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return PodiumScreen(gameID: widget.quizID);
+                },
+              ));
+        }
       }
-      } 
     });
   }
 

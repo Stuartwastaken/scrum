@@ -31,21 +31,20 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
         quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 30);
         Navigator.pushReplacement(
-          context, 
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 100),
-            reverseTransitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return HostMultipleChoiceWidget(quizID: widget.quizID);
-            },
-          )
-        );
-      } 
+            context,
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 100),
+              reverseTransitionDuration: Duration.zero,
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return HostMultipleChoiceWidget(quizID: widget.quizID);
+              },
+            ));
+      }
     });
   }
 
   @override
-  void dispose(){
+  void dispose() {
     quizTimeStream.dispose();
     super.dispose();
   }
