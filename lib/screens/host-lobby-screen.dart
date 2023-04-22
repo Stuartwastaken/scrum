@@ -24,7 +24,6 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
 
   @override
   void dispose() {
-    playerStreamController.drain();
     _scrumRTdatabase.dispose();
     super.dispose();
   }

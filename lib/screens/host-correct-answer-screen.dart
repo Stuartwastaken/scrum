@@ -54,7 +54,6 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
   @override
   void dispose() {
     quizTimeStream.dispose();
-    timeStream.drain();
     super.dispose();
   }
 
