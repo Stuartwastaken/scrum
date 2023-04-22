@@ -20,7 +20,6 @@ class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
   late ScrumRTdatabase _scrumRTdatabase;
   late Stream<int> playerStreamController;
 
@@ -42,7 +41,24 @@ class LobbyScreenState extends State<LobbyScreen>
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
     _scrumRTdatabase = ScrumRTdatabase();
-    ScrumRTdatabase.listenForKick(widget.gameID, widget.hash!, context);
+
+    _scrumRTdatabase
+        .getDatabaseRef()
+        .child(widget.gameID)
+        .onChildRemoved
+        .listen((event) {
+      if (event.snapshot.key == widget.hash) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => GamePinScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        );
+      }
+    });
+
     _scrumRTdatabase.listenToPeopleInLobby(widget.gameID);
     playerStreamController = _scrumRTdatabase.playerCountStream;
   }

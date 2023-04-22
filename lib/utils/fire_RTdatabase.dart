@@ -177,26 +177,11 @@ class ScrumRTdatabase {
     return userRef;
   }
 
-  static void listenForKick(String quizID, String hash, BuildContext context) {
-    DatabaseReference playersRef =
-        FirebaseDatabase.instance.ref().child(quizID);
-    print('Listening for Kick with hash: $hash and quizID: $quizID');
-
-    playersRef.onChildRemoved.listen((event) {
-      if (event.snapshot.key == hash) {
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => GamePinScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
-      }
-    });
-  }
-
   static void deleteLobby(String quizID) {
     FirebaseDatabase.instance.ref().child(quizID).remove();
+  }
+
+  DatabaseReference getDatabaseRef() {
+    return _databaseReference;
   }
 }
