@@ -29,6 +29,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
   @override
   void initState() {
     super.initState();
+    print('hpst-correct-answer-screen');
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
@@ -38,14 +39,14 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
         quizTimeStream.dispose();
-        if (true) {
-          //^^^^^^^if (quiz.isQuizEmpty() == false) {
-          ScrumRTdatabase.setTimer(widget.quizID, 7);
+        ScrumRTdatabase.setTimer(widget.quizID, 7);
+        if (quiz.isQuizEmpty() == false) {
           ScreenNavigator.navigate(
               context, PlayerStandingsScreen(quizID: widget.quizID));
+        } else {
+          ScreenNavigator.navigate(
+              context, PodiumScreen(gameID: widget.quizID));
         }
-      } else {
-        ScreenNavigator.navigate(context, PodiumScreen(gameID: widget.quizID));
       }
     });
   }
@@ -53,6 +54,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
   @override
   void dispose() {
     quizTimeStream.dispose();
+    timeStream.drain();
     super.dispose();
   }
 

@@ -16,16 +16,14 @@ class PlayerStandingsScreen extends StatefulWidget {
 
 class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   late final QuizStream quizTimeStream;
-  late final Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
-
+    print("player-standings-screen");
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
-    timeStream = quizTimeStream.timeStream;
     quizTimeStream.startTimer(widget.quizID);
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {

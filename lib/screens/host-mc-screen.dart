@@ -27,7 +27,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-
+    print('host-mc-screen');
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
