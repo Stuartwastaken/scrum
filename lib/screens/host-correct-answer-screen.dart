@@ -29,7 +29,6 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
   @override
   void initState() {
     super.initState();
-    print('hpst-correct-answer-screen');
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);

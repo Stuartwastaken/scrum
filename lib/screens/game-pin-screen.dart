@@ -348,9 +348,6 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                     .writeUserToTree(
                                                         getNickname(),
                                                         getPin());
-                                            print(
-                                                "The user should be written!");
-
                                             String gameID = pinController.text;
                                             ScrumRTdatabase
                                                 .incrementPeopleInLobby(

@@ -59,20 +59,16 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void initState() {
     super.initState();
-    print("postQuestionScreen");
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        print("PQS-T0");
         if (quiz.isQuizEmpty() == false) {
-          print("PQS-> Leaderboard");
           ScreenNavigator.navigate(context,
               LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
         } else {
-          print("PQS -> PES");
           ScreenNavigator.navigate(
               context, PlayerEndScreen(quizID: widget.quizID, uid: widget.uid));
         }
@@ -82,7 +78,6 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
 
   @override
   void dispose() {
-    print("PQS-DIS");
     quizTimeStream.dispose();
     _unfocusNode.dispose();
     super.dispose();

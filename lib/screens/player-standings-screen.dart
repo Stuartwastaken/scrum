@@ -20,7 +20,6 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   @override
   void initState() {
     super.initState();
-    print("player-standings-screen");
     Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
