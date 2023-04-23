@@ -27,6 +27,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
+        print("LDB-T0");
         ScreenNavigator.navigate(context,
             MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
       }
@@ -35,6 +36,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
 
   @override
   void dispose() {
+    print("LDB-DIS");
     quizTimeStream.dispose();
     super.dispose();
   }

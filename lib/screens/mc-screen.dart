@@ -45,12 +45,13 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-    print("mc-Screen");
+    print("mc-screen");
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
+        print("MC-T0");
         ScreenNavigator.navigate(
             context,
             PostQuestionScreenWidget(
@@ -64,6 +65,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   void dispose() {
+    print("MC-DIS");
     quizTimeStream.dispose();
     super.dispose();
   }
