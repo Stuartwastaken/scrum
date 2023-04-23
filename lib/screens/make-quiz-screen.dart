@@ -51,7 +51,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
       currentAnswer2 = answers[index * 4 + 1];
       currentAnswer3 = answers[index * 4 + 2];
       currentAnswer4 = answers[index * 4 + 3];
-      correctAnswer = correctAnswers[index] - (4 * index);
+      correctAnswer = correctAnswers[index];
     }
 
     bool _validateFields() {
@@ -189,8 +189,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                       answers[index * 4 + 1] = _answer2Controller.text;
                       answers[index * 4 + 2] = _answer3Controller.text;
                       answers[index * 4 + 3] = _answer4Controller.text;
-                      correctAnswers[index] =
-                          correctAnswer + questions.length * 4 - 4;
+                      correctAnswers[index] = correctAnswer;
                     } else {
                       // Add the new question and its answers
                       questions.add(_questionController.text);
@@ -198,8 +197,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                       answers.add(_answer2Controller.text);
                       answers.add(_answer3Controller.text);
                       answers.add(_answer4Controller.text);
-                      correctAnswers
-                          .add(correctAnswer + questions.length * 4 - 4);
+                      correctAnswers.add(correctAnswer);
                     }
                     _questionController.clear();
                     _answer1Controller.clear();
@@ -283,7 +281,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                               autofocus: true,
                               obscureText: false,
                               decoration: InputDecoration(
-                                  hintText: '[A wacky and creative title...]',
+                                  hintText: '[Quiz title...]',
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
                                       color: Colors.white,
@@ -406,7 +404,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                                       Text('Answer #4: ${questionAnswers[3]}'),
                                       SizedBox(height: 8.0),
                                       Text(
-                                          'Correct Answer: Answer #${(correctAnswers[index] - (4 * index)) + 1}'),
+                                          'Correct Answer: Answer #${(correctAnswers[index]) + 1}'),
                                     ],
                                   ),
                                   Row(
