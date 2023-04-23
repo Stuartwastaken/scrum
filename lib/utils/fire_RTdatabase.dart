@@ -17,7 +17,8 @@ class ScrumRTdatabase {
   }
 
   //add user to RT database under correct lobbyID
-  static Future<String> writeUserToTree(String nickname, String gamePin) async {
+  static Future<String?> writeUserToTree(
+      String nickname, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     final gamePinRef = databaseRef.child(gamePin);
     String? hash = gamePinRef.push().key;
@@ -143,7 +144,7 @@ class ScrumRTdatabase {
     return remainingTime;
   }
 
-  static Future<String> createQuiz() async {
+  static Future<String> createQuiz(String document) async {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
     String? quizID = createQuizID();
     bool matchFound = await checkPinExists(quizID);
@@ -151,7 +152,9 @@ class ScrumRTdatabase {
       quizID = createQuizID();
       matchFound = await checkPinExists(quizID);
     }
+
     await databaseRef.child(quizID!).set({
+      'document': document,
       'time': 0,
       'peopleInLobby': 0,
       'start': false,
@@ -247,5 +250,8 @@ class ScrumRTdatabase {
 
   void dispose() {
     _peopleInLobbyStreamController.close();
+    DatabaseReference getDatabaseRef() {
+      return _databaseReference;
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/screen-navigator.dart';
@@ -19,7 +21,7 @@ class HostLobbyScreen extends StatefulWidget {
 class HostLobbyScreenState extends State<HostLobbyScreen> {
   late ScrumRTdatabase _scrumRTdatabase;
   late Stream<int> playerStreamController;
-  late Future<String> quizID = ScrumRTdatabase.createQuiz();
+  late Future<String> quizID = ScrumRTdatabase.createQuiz(widget.document);
   String quizIDString = '';
 
   @override

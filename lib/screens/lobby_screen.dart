@@ -58,8 +58,10 @@ class LobbyScreenState extends State<LobbyScreen>
     startStream = quizStartStream.startStream;
     quizStartStream.isStartTrueStream.listen((isStartZero) {
       if (isStartZero) {
-        ScreenNavigator.navigate(context,
-            MultipleChoiceWidget(quizID: widget.gameID, uid: widget.hash));
+        ScreenNavigator.navigate(
+            context,
+            MultipleChoiceWidget(
+                quizID: widget.gameID, uid: widget.hash.toString()));
       }
     });
   }
@@ -88,7 +90,7 @@ class LobbyScreenState extends State<LobbyScreen>
                   child: OutlinedButton(
                     onPressed: () {
                       ScrumRTdatabase.removeUserFromTree(
-                          widget.hash, widget.gameID);
+                          widget.hash.toString(), widget.gameID);
                       ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
                       ScreenNavigator.navigate(context, GamePinScreen());
                     },
