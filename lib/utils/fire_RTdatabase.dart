@@ -210,6 +210,13 @@ class ScrumRTdatabase {
     });
   }
 
+  static void cancelListenForKick(String quizID) {
+    DatabaseReference playersRef =
+        FirebaseDatabase.instance.ref().child(quizID);
+
+    playersRef.onChildRemoved.drain<void>();
+  }
+
   static int getPlayerPosition(
       List<MapEntry<String, dynamic>> users, String uid) {
     int index = 0;

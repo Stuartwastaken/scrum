@@ -33,6 +33,7 @@ class LobbyScreenState extends State<LobbyScreen>
     _controller.dispose();
     _scrumRTdatabase.dispose();
     quizStartStream.dispose();
+    ScrumRTdatabase.cancelListenForKick(widget.gameID);
     super.dispose();
   }
 
