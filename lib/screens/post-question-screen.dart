@@ -69,16 +69,12 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
         print("PQS-T0");
         if (quiz.isQuizEmpty() == false) {
           print("PQS-> Leaderboard");
-          Future.delayed(Duration(milliseconds: 100), () {
-            ScreenNavigator.navigate(context,
-                LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
-          });
+          ScreenNavigator.navigate(context,
+              LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
         } else {
           print("PQS -> PES");
-          Future.delayed(Duration(milliseconds: 100), () {
-            ScreenNavigator.navigate(context,
-                PlayerEndScreen(quizID: widget.quizID, uid: widget.uid));
-          });
+          ScreenNavigator.navigate(
+              context, PlayerEndScreen(quizID: widget.quizID, uid: widget.uid));
         }
       }
     });

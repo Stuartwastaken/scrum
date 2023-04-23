@@ -28,10 +28,8 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
         print("LDB-T0");
-        Future.delayed(Duration(milliseconds: 100), () {
-          ScreenNavigator.navigate(context,
-              MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
-        });
+        ScreenNavigator.navigate(context,
+            MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
       }
     });
   }
