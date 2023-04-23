@@ -77,8 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Navigator.pushReplacement(
                               context,
                               PageRouteBuilder(
-                                transitionDuration: Duration
-                                    .zero, // Set transition duration to zero to remove animation
+                                transitionDuration: Duration.zero,
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
                                         GamePinScreen(),
@@ -113,8 +112,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Container(
                               width: 400,
                               child: Text(
-                                "Register here!",
-                                textAlign: TextAlign.start,
+                                "Register",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: "Poppins",
                                   color: Colors.white,
@@ -142,6 +141,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       children: <Widget>[
                                         //username field
                                         TextFormField(
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                           controller: _nameTextController,
                                           focusNode: _focusName,
                                           validator: (value) =>
@@ -185,6 +190,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                         //email field
                                         TextFormField(
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                           controller: _emailTextController,
                                           focusNode: _focusEmail,
                                           validator: (value) =>
@@ -228,6 +239,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                         //password field
                                         TextFormField(
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                           controller: _passwordTextController,
                                           focusNode: _focusPassword,
                                           obscureText: true,

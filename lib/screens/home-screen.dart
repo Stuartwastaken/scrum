@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
+import 'package:scrum/screens/make-quiz-screen.dart';
 import 'package:scrum/screens/view-profile-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -145,7 +146,47 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             );
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Center(
+                child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Nothing to see yet.',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: Duration
+                                  .zero, // Set transition duration to zero to remove animation
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      MakeQuizScreen(user: widget.user),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Click here to make some quizzes!",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.deepPurple,
+                          ),
+                        ))
+                  ],
+                )
+              ],
+            ));
           } else {
             return CircularProgressIndicator();
           }
