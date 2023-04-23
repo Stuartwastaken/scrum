@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'game-pin-screen.dart';
@@ -22,25 +23,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
+  final User? user = FirebaseAuth.instance.currentUser;
 
   bool _isProcessing = false;
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            user: user,
-          ),
-        ),
-      );
-    }
-
-    return firebaseApp;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -430,18 +415,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                );
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
