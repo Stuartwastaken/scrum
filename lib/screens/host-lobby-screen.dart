@@ -1,12 +1,16 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class HostLobbyScreen extends StatefulWidget {
   final String document;
+  final User user;
   const HostLobbyScreen({
     Key? key,
     required this.document,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -18,6 +22,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
   late Stream<int> playerStreamController;
   late Future<String> quizID = ScrumRTdatabase.createQuiz(widget.document);
   String quizIDString = '';
+  late User _currentUser;
 
   @override
   void dispose() {
@@ -26,6 +31,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
 
   @override
   void initState() {
+    _currentUser = widget.user;
     super.initState();
 
     _scrumRTdatabase = ScrumRTdatabase();
@@ -59,17 +65,11 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                   right: 16,
                   child: OutlinedButton(
                     onPressed: () {
-                      /*
-                      Navigator.pushReplacement(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const GamePinScreen(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(user: _currentUser),
                         ),
                       );
-                      */
 
                       ScrumRTdatabase.deleteLobby(quizIDString);
                     },

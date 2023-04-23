@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/host-lobby-screen.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'package:scrum/screens/make-quiz-screen.dart';
 import 'package:scrum/screens/view-profile-screen.dart';
@@ -197,8 +198,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    print(d[index]);
-                                    print("pressed play");
+                                    String doc = d[index].substring(5);
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => HostLobbyScreen(
+                                          document: doc,
+                                          user: _currentUser,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   icon: Icon(IconData(0xf00a0,
                                       fontFamily: 'MaterialIcons'))),
