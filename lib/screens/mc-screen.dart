@@ -52,13 +52,15 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
         print("MC-T0");
-        ScreenNavigator.navigate(
-            context,
-            PostQuestionScreenWidget(
-                quizID: widget.quizID,
-                uid: widget.uid,
-                isCorrect: widget.isCorrect,
-                pointsGained: 0));
+        Future.delayed(Duration(milliseconds: 100), () {
+          ScreenNavigator.navigate(
+              context,
+              PostQuestionScreenWidget(
+                  quizID: widget.quizID,
+                  uid: widget.uid,
+                  isCorrect: widget.isCorrect,
+                  pointsGained: 0));
+        });
       }
     });
   }
