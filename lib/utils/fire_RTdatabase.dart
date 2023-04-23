@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:scrum/screens/game-pin-screen.dart';
 
 class ScrumRTdatabase {
-  static final StreamController<int> playerStreamController =
-      StreamController<int>();
+  final StreamController<int> _peopleInLobbyStreamController =
+      BehaviorSubject<int>();
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
 
   static Future<bool> checkPinExists(String pinID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
@@ -12,7 +17,8 @@ class ScrumRTdatabase {
   }
 
   //add user to RT database under correct lobbyID
-  static Future<void> writeUserToTree(String nickname, String gamePin) async {
+  static Future<String?> writeUserToTree(
+      String nickname, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     final gamePinRef = databaseRef.child(gamePin);
     String? hash = gamePinRef.push().key;
@@ -22,11 +28,12 @@ class ScrumRTdatabase {
       'nickname': nickname,
       'score': 0,
     });
+
+    return uniqueId;
   }
 
   //remove user from RT database under correct lobbyID
-  static Future<void> removeUserFromTree(
-      String nickname, String gamePin) async {
+  static Future<void> removeUserFromTree(String hash, String gamePin) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     final gamePinRef = databaseRef.child(gamePin);
     DatabaseEvent dataEvent = await gamePinRef.once();
@@ -34,7 +41,7 @@ class ScrumRTdatabase {
     if (users != null) {
       users.forEach((key, value) {
         if (key.toString().substring(0, 3) == 'uid') {
-          if (value['nickname'] == nickname) {
+          if (key == hash) {
             gamePinRef.child(key).remove();
             return; //break out of forEach loop
           }
@@ -80,19 +87,23 @@ class ScrumRTdatabase {
     });
   }
 
-  static Future<int?> getPeopleInLobby(String gameID) async {
-    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+  Future<int?> listenToPeopleInLobby(String gameId) {
+    final completer = Completer<int?>();
 
-    databaseRef.child(gameID).child('peopleInLobby').onValue.listen((event) {
+    _databaseReference.child('$gameId/peopleInLobby').onValue.listen((event) {
       final int? numberOfPlayers = event.snapshot.value as int?;
       if (numberOfPlayers != null) {
-        playerStreamController.add(numberOfPlayers);
+        _peopleInLobbyStreamController.add(numberOfPlayers);
+        completer.complete(numberOfPlayers);
       }
     }, onError: (error) {
-      playerStreamController.addError(error);
+      completer.completeError(error);
     });
-    return null; // Return null since we don't need to return anything
+
+    return completer.future;
   }
+
+  Stream<int> get playerCountStream => _peopleInLobbyStreamController.stream;
 
   // Grabs the time that is remaining in a specified quiz
   static Future<int?> getTime(String quizID) async {
@@ -110,5 +121,67 @@ class ScrumRTdatabase {
       }
     });
     return remainingTime;
+  }
+
+  static Future<String> createQuiz(String document) async {
+    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+
+    String? quizID = createQuizID();
+    bool matchFound = await checkPinExists(quizID);
+
+    while (matchFound) {
+      quizID = createQuizID();
+      matchFound = await checkPinExists(quizID);
+    }
+
+    await databaseRef.child(quizID!).set({
+      'document': document,
+      'time': 0,
+      'peopleInLobby': 0,
+      'start': false,
+    });
+
+    return quizID;
+  }
+
+  static String createQuizID() {
+    Random quizID = new Random();
+    String result = '';
+    for (int i = 0; i < 6; i++) {
+      result += quizID.nextInt(10).toString();
+    }
+    return result;
+  }
+
+  static Future<List<String>> getUserNicknames(String lobbyID) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    List<String> nicknames = [];
+    await databaseRef.child(lobbyID).once().then((DatabaseEvent event) {
+      Map<dynamic, dynamic> lobbyData = event.snapshot.value as Map;
+      if (lobbyData != null) {
+        lobbyData.forEach((uid, userData) {
+          if (uid.toString().substring(0, 3) == 'uid') {
+            String nickname = userData['nickname'];
+            nicknames.add(nickname);
+          }
+        });
+      }
+    });
+    return nicknames;
+  }
+
+  static DatabaseReference getUserRef(String quizID, String? hash) {
+    final DatabaseReference userRef =
+        FirebaseDatabase.instance.ref().child(quizID).child(hash!);
+
+    return userRef;
+  }
+
+  static void deleteLobby(String quizID) {
+    FirebaseDatabase.instance.ref().child(quizID).remove();
+  }
+
+  DatabaseReference getDatabaseRef() {
+    return _databaseReference;
   }
 }
