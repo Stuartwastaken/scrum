@@ -5,6 +5,8 @@ import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/screens/post-question-screen.dart';
 
+import '../utils/fire_RTdatabase.dart';
+
 class MultipleChoiceWidget extends StatefulWidget {
   const MultipleChoiceWidget({
     Key? key,
@@ -43,7 +45,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-    quiz = Quiz.getInstance(document: widget.quizID);
+    quiz = Quiz.getInstance(document: ScrumRTdatabase.getQuizDoc(widget.quizID).toString()) as Quiz;
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
