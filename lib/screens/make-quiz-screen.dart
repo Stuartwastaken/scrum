@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scrum/screens/home-screen.dart';
 
 class MakeQuizScreen extends StatefulWidget {
   final User user;
@@ -485,7 +486,13 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                             });
 
                             // Navigate back to the previous screen
-                            Navigator.of(context).pop();
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProfilePage(user: widget.user),
+                              ),
+                            );
+                            ;
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF3355),
