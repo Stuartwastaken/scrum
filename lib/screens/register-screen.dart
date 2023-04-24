@@ -23,6 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
+  final User? user = FirebaseAuth.instance.currentUser;
 
   bool _isProcessing = false;
 
@@ -93,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: 400,
                       child: Text(
                         "Register here!",
-                        textAlign: TextAlign.start,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: "Poppins",
                           color: Colors.white,
@@ -103,17 +104,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     Container(
-                      width: 400,
-                      height: 325,
+                      width: 325,
+                      height: 335,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 4.0,
-                                bottom: 12.0,
-                                left: 40.0,
-                                right: 40.0),
+                                top: 0.0, bottom: 8.0, left: 40.0, right: 40.0),
                           ),
                           Form(
                             key: _registerFormKey,
@@ -126,6 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   validator: (value) => Validator.validateName(
                                     name: value,
                                   ),
+                                  style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: "Name",
                                     labelStyle: TextStyle(
@@ -162,6 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   validator: (value) => Validator.validateEmail(
                                     email: value,
                                   ),
+                                  style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: "Email",
                                     labelStyle: TextStyle(
@@ -200,6 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Validator.validatePassword(
                                     password: value,
                                   ),
+                                  style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: "Password",
                                     labelStyle: TextStyle(
