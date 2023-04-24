@@ -28,6 +28,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isProcessing = false;
 
   @override
+  void dispose() {
+    _focusName.dispose();
+    _focusEmail.dispose();
+    _focusPassword.dispose();
+    _nameTextController.dispose();
+    _emailTextController.dispose();
+    _passwordTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
