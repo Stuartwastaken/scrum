@@ -492,6 +492,7 @@ class _MakeQuizScreenState extends State<MakeQuizScreen> {
                                     ProfilePage(user: widget.user),
                               ),
                             );
+                            ;
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF3355),
