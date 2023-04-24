@@ -197,21 +197,34 @@ class _ProfilePageState extends State<ProfilePage> {
                           //body if user has one or more quizzes
                         } else {
                           //Each "Quiz"
-                          return ListTile(
-                            title: Text(
-                                documentList[index].data()?['Title'] ?? ''),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(IconData(0xf00a0,
-                                        fontFamily: 'MaterialIcons'))),
-                                IconButton(
-                                    onPressed: () {}, icon: Icon(Icons.edit)),
-                                IconButton(
-                                    onPressed: () {}, icon: Icon(Icons.delete)),
-                              ],
+                          return Center(
+                            child: Card(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  const ListTile(
+                                    leading: Icon(Icons.album),
+                                    title: Text('The Enchanted Nightingale'),
+                                    subtitle: Text(
+                                        'Music by Julie Gable. Lyrics by Sidney Stein.'),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      TextButton(
+                                        child: const Text('BUY TICKETS'),
+                                        onPressed: () {/* ... */},
+                                      ),
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        child: const Text('LISTEN'),
+                                        onPressed: () {/* ... */},
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         }
