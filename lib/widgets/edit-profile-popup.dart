@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'change-password-screen.dart';
 
-class EditProfileScreen extends StatefulWidget {
+class EditProfilePopup extends StatefulWidget {
   final User user;
-  const EditProfileScreen({required this.user});
+  const EditProfilePopup({required this.user});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditProfilePopupState createState() => _EditProfilePopupState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfilePopupState extends State<EditProfilePopup> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   bool _isEmailTaken = false;
@@ -60,55 +59,51 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final User? updatedUser = await FirebaseAuth.instance.currentUser;
     Navigator.pop(context, updatedUser);
-  }
-
-  void _goToChangePasswordScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChangePasswordScreen(user: widget.user),
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Successfully edited profile'),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Profile'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return AlertDialog(
+      title: Text('Edit Profile'),
+      content: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: 'Display Name',
+                labelText: "New Username",
               ),
             ),
-            SizedBox(height: 16),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                labelText: 'Email',
+                labelText: "New Email",
                 errorText:
                     _isEmailTaken ? 'This email is already taken.' : null,
               ),
             ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _updateProfile,
-              child: Text('Save'),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _goToChangePasswordScreen,
-              child: Text('Change Password'),
-            ),
           ],
         ),
       ),
+      actions: [
+        TextButton(
+          child: Text("Cancel"),
+          onPressed: () {
+            final User? updatedUser = FirebaseAuth.instance.currentUser;
+            Navigator.pop(context, updatedUser);
+          },
+        ),
+        TextButton(
+          onPressed: _updateProfile,
+          child: Text("Save"),
+        ),
+      ],
     );
   }
 }
