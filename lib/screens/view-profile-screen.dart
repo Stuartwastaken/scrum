@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'edit-profile-screen.dart';
+import 'package:scrum/widgets/edit-profile-popup.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   final User user;
@@ -37,7 +38,10 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               color: Colors.deepOrange,
             ),
           ),
-          onPressed: () {},
+          onPressed: () async {
+            final User updatedUser = await FirebaseAuth.instance.currentUser!;
+            Navigator.pop(context, updatedUser);
+          },
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.deepOrange,
@@ -113,41 +117,94 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    OutlinedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EditProfileScreen(user: _currentUser),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EditProfilePopup(user: _currentUser);
+                                }).then((updatedUser) {
+                              setState(() {
+                                _currentUser = updatedUser;
+                                _username = _currentUser.displayName;
+                                _email = _currentUser.email;
+                              });
+                            });
+
+/*
+                            Navigator.of(context)
+                                .push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditProfileScreen(user: _currentUser),
+                              ),
+                            )
+                                .then((updatedUser) {
+                              setState(() {
+                                _currentUser = updatedUser;
+                                _username = _currentUser.displayName;
+                                _email = _currentUser.email;
+                              });
+                            });
+*/
+                          },
+                          child: Text(
+                            "Edit Profile",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        )
-                            .then((updatedUser) {
-                          setState(() {
-                            _currentUser = updatedUser;
-                            _username = _currentUser.displayName;
-                            _email = _currentUser.email;
-                          });
-                        });
-                      },
-                      child: Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Color.fromARGB(255, 255, 255, 255),
+                            side: BorderSide(
+                                width: 2.0,
+                                color: Color.fromARGB(
+                                    255, 255, 255, 255)), // foreground color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  7), // set the desired border radius here
+                            ),
+                            minimumSize: Size(100, 40),
+                          ),
                         ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Color.fromARGB(255, 255, 255, 255),
-                        side: BorderSide(
-                            width: 2.0,
-                            color: Color.fromARGB(
-                                255, 255, 255, 255)), // foreground color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              7), // set the desired border radius here
+                        SizedBox(width: 10),
+                        OutlinedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EditProfilePopup(user: _currentUser);
+                                }).then((updatedUser) {
+                              setState(() {
+                                _currentUser = updatedUser;
+                                _username = _currentUser.displayName;
+                                _email = _currentUser.email;
+                              });
+                            });
+                          },
+                          child: Text(
+                            "Change Password",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Color.fromARGB(255, 255, 255, 255),
+                            side: BorderSide(
+                                width: 2.0,
+                                color: Color.fromARGB(
+                                    255, 255, 255, 255)), // foreground color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  7), // set the desired border radius here
+                            ),
+                            minimumSize: Size(100, 40),
+                          ),
                         ),
-                        minimumSize: Size(100, 40),
-                      ),
+                      ],
                     ),
                   ],
                 ),
