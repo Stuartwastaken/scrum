@@ -278,6 +278,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                               //reload page
                                                               Navigator.of(
                                                                       context)
+                                                                  .pop();
+                                                              Navigator.of(
+                                                                      context)
                                                                   .pushReplacement(
                                                                 MaterialPageRoute(
                                                                   builder: (context) =>
@@ -286,9 +289,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                               _currentUser),
                                                                 ),
                                                               );
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
                                                             },
                                                           ),
                                                         ],
