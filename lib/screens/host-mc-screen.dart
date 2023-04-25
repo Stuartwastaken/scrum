@@ -15,8 +15,8 @@ class HostMultipleChoiceWidget extends StatefulWidget {
   final String quizID;
 
   @override
-  HostMultipleChoiceWidgetState createState() =>
-      HostMultipleChoiceWidgetState();
+  _HostMultipleChoiceWidgetState createState() =>
+      _HostMultipleChoiceWidgetState();
 }
 
 class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
