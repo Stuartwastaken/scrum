@@ -20,32 +20,13 @@ class HostMultipleChoiceWidget extends StatefulWidget {
       _HostMultipleChoiceWidgetState();
 }
 
-class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
-    with TickerProviderStateMixin {
+class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
-  late Quiz quiz;
-
-  Future<void> _loadQuizData() async {
-    final quizDoc = await ScrumRTdatabase.getQuizDoc(widget.quizID);
-    quiz = Quiz.getInstance(document: quizDoc);
-    setState(() {});
-  }
 
   @override
   void initState() {
     super.initState();
-    _loadQuizData();
-    /*quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime,
-        context,
-        PostQuestionScreenWidget(
-            quizID: widget.quizID,
-            uid: "",
-            isCorrect: false,
-            pointsGained: CalculateScore.calculateAddValue(widget.quizID)));*/
   }
 
   @override
@@ -61,22 +42,18 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
         future: ScrumRTdatabase.getQuizDoc(widget.quizID),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            Quiz quiz = Quiz.getInstance(document: snapshot.data!);
-            return buildMCScreen(quiz);
+            return buildMCScreen();
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else {
             return Center(child: CircularProgressIndicator());
-          }        
+          }
         }
       )
     );
   }
 
-  Widget buildMCScreen(Quiz quiz) {
-    print(quiz.questions);
-    print(quiz.answers);
-    print(quiz.correctAnswers);
+  Widget buildMCScreen() {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFF1E2429),
@@ -102,7 +79,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                 child: Text(
-                  'Question',
+                  Quiz.getInstance().getQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
@@ -144,7 +121,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        'option0',
+                                        Quiz.getInstance().getAnswers()[0],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -177,7 +154,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        'option1',
+                                        Quiz.getInstance().getAnswers()[1],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -218,7 +195,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        'option2',
+                                        Quiz.getInstance().getAnswers()[2],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -251,7 +228,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        'option3',
+                                        Quiz.getInstance().getAnswers()[3],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -270,33 +247,6 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                   ],
                 ),
               ),
-              /*StreamBuilder<int>(
-                stream: quizTime.timeStream,
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Text('Not connected to the stream');
-                      case ConnectionState.waiting:
-                        return Text('Loading...');
-                      case ConnectionState.active:
-                        return Text(
-                          '${snapshot.data}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 64,
-                            fontStyle: FontStyle.normal,
-                            color: Colors.white,
-                          ),
-                        );
-                      case ConnectionState.done:
-                        return Text('Stream has ended');
-                    }
-                  }
-                },
-              ),*/
             ],
           )),
     );

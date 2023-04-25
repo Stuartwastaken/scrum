@@ -15,10 +15,12 @@ class Quiz {
   static Quiz? _instance;
 
   // Public method to access the singleton instance
-  static Quiz getInstance({required String document}) {
+  static Quiz getInstance({String? document}) {
     if (_instance == null) {
-      _instance = Quiz._(document: document);
-      _instance!._init();
+      if (document != null) {
+        _instance = Quiz._(document: document);
+        _instance!._init();
+      }
     }
     return _instance!;
   }
@@ -47,6 +49,10 @@ Future<void> loadQuiz(String document) async {
 
   String getQuestion() {
     return questions[currentIndex];
+  }
+
+  List<String> getAnswers() {
+    return answers[currentIndex];
   }
 
   void nextQuestion() {
