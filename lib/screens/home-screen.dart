@@ -77,6 +77,73 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: TextButton(
+          child: Text(
+            'SCRUM',
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w700,
+              color: Colors.deepOrange,
+            ),
+          ),
+          onPressed: () async {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(user: _currentUser),
+              ),
+            );
+          },
+        ),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.deepOrange,
+        actions: [
+          PopupMenuButton(
+            onSelected: (value) {
+              //view profile button
+              if (value == MenuItem.item1) {
+                print("View Profile");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfileScreen(user: _currentUser),
+                  ),
+                ).then((updatedUser) {
+                  setState(() {
+                    _currentUser = updatedUser;
+                  });
+                });
+              }
+              //sign out button
+              if (value == MenuItem.item2) {
+                print("Sign Out");
+                setState(() {
+                  _isSigningOut = true;
+                });
+                FirebaseAuth.instance.signOut();
+                setState(() {
+                  _isSigningOut = false;
+                });
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: MenuItem.item1,
+                child: Text("View Profile"),
+              ),
+              PopupMenuItem(
+                value: MenuItem.item2,
+                child: Text("Sign Out"),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * 1,
