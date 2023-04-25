@@ -197,35 +197,87 @@ class _ProfilePageState extends State<ProfilePage> {
                           //body if user has one or more quizzes
                         } else {
                           //Each "Quiz"
-                          return Center(
-                            child: Card(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const ListTile(
-                                    leading: Icon(Icons.album),
-                                    title: Text('The Enchanted Nightingale'),
-                                    subtitle: Text(
-                                        'Music by Julie Gable. Lyrics by Sidney Stein.'),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      TextButton(
-                                        child: const Text('BUY TICKETS'),
-                                        onPressed: () {/* ... */},
+                          return Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    print("Quiz Selected");
+                                  },
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      shape: BoxShape.rectangle,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 4,
                                       ),
-                                      const SizedBox(width: 8),
-                                      TextButton(
-                                        child: const Text('LISTEN'),
-                                        onPressed: () {/* ... */},
-                                      ),
-                                      const SizedBox(width: 8),
-                                    ],
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(10, 0, 0, 0),
+                                                  child: Text(
+                                                    'Quiz Title',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      color: Colors.white,
+                                                      fontSize: 40,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  print(
+                                                      'IconButton pressed ...');
+                                                },
+                                                child: Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    border: Border.all(
+                                                      color: Colors.transparent,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    color: Color(0xFFFF0000),
+                                                    size: 40,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           );
                         }
                       },
