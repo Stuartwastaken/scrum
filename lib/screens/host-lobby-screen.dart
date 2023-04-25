@@ -258,7 +258,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                     ),
                     OutlinedButton(
                       onPressed: () {
-                        ScrumRTdatabase.setTimer(quizIDString, 30);
+                        ScrumRTdatabase.setTimer(quizIDString, 20);
                         ScrumRTdatabase.setStart(quizIDString);
                         ScreenNavigator.navigate(context,
                             HostMultipleChoiceWidget(quizID: quizIDString));

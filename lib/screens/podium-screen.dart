@@ -264,7 +264,7 @@ class _PodiumScreenState extends State<PodiumScreen> {
               ),
               onPressed: () {
                 ScrumRTdatabase.deleteLobby(widget.gameID);
-                ScreenNavigator.navigate(context, GamePinScreen());
+                ScreenNavigator.navigate(context, GamePinScreen()); //will automatically direct to HomeScreen if user is logged in, else GamePinScreen
               },
             ),
           ),
