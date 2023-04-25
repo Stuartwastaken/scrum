@@ -75,55 +75,6 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 6),
-                        child: Text(
-                          'SCRUM',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
-                            fontSize: 80,
-                            letterSpacing: 1.5,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {},
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 80,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
             Text(
               'Your Quizzes',
               style: TextStyle(
@@ -247,8 +198,38 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  print(
-                                                      'IconButton pressed ...');
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                            "Are you sure you would like to delete quiz?"),
+                                                        actions: [
+                                                          TextButton(
+                                                            child: Text("No"),
+                                                            onPressed: () {
+                                                              print(
+                                                                  "pressed no");
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            child: Text("Yes"),
+                                                            onPressed: () {
+                                                              print(
+                                                                  "pressed yes");
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
                                                 },
                                                 child: Container(
                                                   width: 60,
