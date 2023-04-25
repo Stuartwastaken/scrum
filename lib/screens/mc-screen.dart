@@ -5,6 +5,8 @@ import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/post-question-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
+import '../controllers/quiz-document.dart';
+
 class MultipleChoiceWidget extends StatefulWidget {
   MultipleChoiceWidget({
     Key? key,
@@ -14,8 +16,9 @@ class MultipleChoiceWidget extends StatefulWidget {
 
   final String quizID;
   final String uid;
-  final bool isCorrect = false;
+  bool isCorrect = false;
   int pointsGained = 0;
+  int? timeRemaining = 0;
 
   @override
   MultipleChoiceWidgetState createState() => MultipleChoiceWidgetState();
@@ -27,12 +30,15 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   late final QuizStream quizTimeStream;
   late Stream<int> timeStream;
   bool buttonsEnabled = true;
+  int correctIndex = Quiz.getInstance().getCorrectAnswer();
   int selectedIndex = -1;
 
-  void onButtonPressed(int index) {
+  void onButtonPressed(int index) async {
+    widget.timeRemaining = await ScrumRTdatabase.getTime(widget.quizID);
     setState(() {
       selectedIndex = index;
       buttonsEnabled = false;
+      widget.isCorrect = selectedIndex == correctIndex;
     });
   }
 
@@ -56,7 +62,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                 quizID: widget.quizID,
                 uid: widget.uid,
                 isCorrect: widget.isCorrect,
-                pointsGained: 0));
+                pointsGained: (widget.isCorrect as int)*CalculateScore.calculateAddValue(widget.timeRemaining!)));
       }
     });
   }
@@ -93,15 +99,6 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: Text(
-                  'When did Lebron meet Mia Khalifa?',
-                  style: TextStyle(
-                    fontFamily: 'Lexend Deca',
-                    color: Colors.white,
-                    fontSize: 55,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
               Container(
                 width: 919.8,

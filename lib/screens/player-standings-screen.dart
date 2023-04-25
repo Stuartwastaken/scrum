@@ -20,7 +20,6 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
   @override
   void initState() {
     super.initState();
-    Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     quizTimeStream.startTimer(widget.quizID);
@@ -28,6 +27,7 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 30);
+        Quiz.getInstance().nextQuestion();
         ScreenNavigator.navigate(
             context, HostMultipleChoiceWidget(quizID: widget.quizID));
       }

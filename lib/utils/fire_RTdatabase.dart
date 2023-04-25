@@ -16,6 +16,15 @@ class ScrumRTdatabase {
     return snapshot.snapshot.exists;
   }
 
+  static Future<String> getQuizDoc(String quizID) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    String doc = '';
+    await databaseRef.child(quizID).child('document').once().then((DatabaseEvent event) {
+      doc = event.snapshot.value as String;
+    });
+    return doc;
+  }
+
   //add user to RT database under correct lobbyID
   static Future<String?> writeUserToTree(
       String nickname, String gamePin) async {
@@ -24,7 +33,7 @@ class ScrumRTdatabase {
     String? hash = gamePinRef.push().key;
     String? uniqueId = "uid" + hash!;
 
-    await gamePinRef.child(uniqueId!).set({
+    await gamePinRef.child(uniqueId).set({
       'nickname': nickname,
       'score': 0,
     });

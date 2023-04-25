@@ -59,13 +59,12 @@ class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   @override
   void initState() {
     super.initState();
-    Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
-        if (quiz.isQuizEmpty() == false) {
+        if (Quiz.getInstance().isQuizEmpty() == false) {
           ScreenNavigator.navigate(context,
               LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
         } else {

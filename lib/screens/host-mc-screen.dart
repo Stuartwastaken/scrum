@@ -27,7 +27,6 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-    Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
@@ -37,7 +36,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
         quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 7);
         ScreenNavigator.navigate(context,
-            HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: 3));
+            HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: Quiz.getInstance().getCorrectAnswer()));
       }
     });
   }
@@ -50,6 +49,24 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: FutureBuilder<String>(
+        future: ScrumRTdatabase.getQuizDoc(widget.quizID),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return buildMCScreen();
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      )
+    );
+  }
+
+  Widget buildMCScreen() {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFF1E2429),
@@ -75,7 +92,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                 child: Text(
-                  'When did Lebron meet Mia Khalifa?',
+                  Quiz.getInstance().getQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
@@ -117,7 +134,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[0],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -150,7 +167,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[1],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -191,7 +208,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[2],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -224,7 +241,7 @@ class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[3],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,

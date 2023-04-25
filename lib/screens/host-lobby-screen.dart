@@ -1,16 +1,12 @@
-import 'dart:html';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-<<<<<<< lib/screens/host-lobby-screen.dart
 import 'package:scrum/controllers/screen-navigator.dart';
-import 'package:scrum/screens/game-pin-screen.dart';
-=======
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrum/screens/home-screen.dart';
->>>>>>> lib/screens/host-lobby-screen.dart
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/screens/host-mc-screen.dart';
+
+import '../controllers/quiz-document.dart';
 
 class HostLobbyScreen extends StatefulWidget {
   final String document;
@@ -38,15 +34,22 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
     super.dispose();
   }
 
+  void loadQuiz() async {
+    String doc = await ScrumRTdatabase.getQuizDoc(quizIDString);
+    Quiz.getInstance(document: doc);
+  }
+
   @override
   void initState() {
     _currentUser = widget.user;
     super.initState();
+
     _scrumRTdatabase = ScrumRTdatabase();
     playerStreamController = _scrumRTdatabase.playerCountStream;
     quizID.then((value) {
       quizIDString = value;
       _scrumRTdatabase.listenToPeopleInLobby(quizIDString);
+      loadQuiz();
     });
   }
 

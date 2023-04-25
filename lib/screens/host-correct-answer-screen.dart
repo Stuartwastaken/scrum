@@ -29,7 +29,6 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
   @override
   void initState() {
     super.initState();
-    Quiz quiz = Quiz.getInstance(document: widget.quizID);
     quizTimeStream = QuizStream();
     quizTimeStream.listenToQuizTime(widget.quizID);
     timeStream = quizTimeStream.timeStream;
@@ -38,7 +37,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 7);
-        if (quiz.isQuizEmpty() == false) {
+        if (Quiz.getInstance().isQuizEmpty() == false) {
           ScreenNavigator.navigate(
               context, PlayerStandingsScreen(quizID: widget.quizID));
         } else {
@@ -82,7 +81,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                 child: Text(
-                  'When did Lebron meet Mia Khalifa?',
+                  Quiz.getInstance().getQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
@@ -126,7 +125,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[0],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -161,7 +160,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[1],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -204,7 +203,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[2],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -239,7 +238,7 @@ class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[3],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
