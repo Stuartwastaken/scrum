@@ -59,6 +59,11 @@ class _EditProfilePopupState extends State<EditProfilePopup> {
 
     final User? updatedUser = await FirebaseAuth.instance.currentUser;
     Navigator.pop(context, updatedUser);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Successfully edited profile'),
+      ),
+    );
   }
 
   @override
@@ -88,15 +93,14 @@ class _EditProfilePopupState extends State<EditProfilePopup> {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
           child: Text("Cancel"),
+          onPressed: () {
+            final User? updatedUser = FirebaseAuth.instance.currentUser;
+            Navigator.pop(context, updatedUser);
+          },
         ),
         TextButton(
-          onPressed: () {
-            _updateProfile();
-          },
+          onPressed: _updateProfile,
           child: Text("Save"),
         ),
       ],

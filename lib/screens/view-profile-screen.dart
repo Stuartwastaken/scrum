@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'edit-profile-screen.dart';
+import 'package:scrum/widgets/edit-password-popup.dart';
 import 'package:scrum/widgets/edit-profile-popup.dart';
 
 class ViewProfileScreen extends StatefulWidget {
@@ -133,23 +133,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                 _email = _currentUser.email;
                               });
                             });
-
-/*
-                            Navigator.of(context)
-                                .push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditProfileScreen(user: _currentUser),
-                              ),
-                            )
-                                .then((updatedUser) {
-                              setState(() {
-                                _currentUser = updatedUser;
-                                _username = _currentUser.displayName;
-                                _email = _currentUser.email;
-                              });
-                            });
-*/
                           },
                           child: Text(
                             "Edit Profile",
@@ -176,14 +159,9 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return EditProfilePopup(user: _currentUser);
-                                }).then((updatedUser) {
-                              setState(() {
-                                _currentUser = updatedUser;
-                                _username = _currentUser.displayName;
-                                _email = _currentUser.email;
-                              });
-                            });
+                                  return ChangePasswordPopup(
+                                      user: _currentUser);
+                                });
                           },
                           child: Text(
                             "Change Password",

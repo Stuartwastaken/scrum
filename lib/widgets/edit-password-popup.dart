@@ -143,89 +143,16 @@ class _ChangePasswordPopupState extends State<ChangePasswordPopup> {
       ),
       actions: [
         TextButton(
+          child: Text("Cancel"),
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Cancel"),
         ),
         TextButton(
-          onPressed: () {
-            _changePassword;
-          },
+          onPressed: _changePassword,
           child: Text("Save"),
         ),
       ],
     );
-
-    /*Scaffold(
-      appBar: AppBar(
-        title: const Text('Change Password'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _oldPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Current Password',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your current password';
-                  } else if (value.length < 6) {
-                    return 'Your password must be at least 6 characters long';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _newPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'New Password',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a new password';
-                  } else if (value.length < 6) {
-                    return 'Your password must be at least 6 characters long';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm New Password',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please confirm your new password';
-                  } else if (value != _newPasswordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _changePassword,
-                child: const Text('Change Password'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  */
   }
 }
