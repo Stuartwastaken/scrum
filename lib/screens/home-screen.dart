@@ -177,231 +177,281 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             //futurebuildertime
-            Expanded(
-              child:
-                  FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-                future: _quizDocs,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
-                        snapshot) {
-                  if (snapshot.hasData) {
-                    List<DocumentSnapshot<Map<String, dynamic>>> documentList =
-                        snapshot.data!;
-                    return ListView.builder(
-                      itemCount:
-                          documentList.length > 0 ? documentList.length : 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        //body if user has no quizzes
-                        if (documentList.length == 0) {
-                          print("no entries");
-                          return Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.4,
-                            decoration: BoxDecoration(),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  'It looks very empty in here, go ahead and create a SCRUM Battle.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 60,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 4.0, bottom: 12.0),
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder: (context) => MakeQuizScreen(
-                                              user: _currentUser),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      "Create Battle",
-                                      style: TextStyle(
-                                        letterSpacing: 1.1,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      side: BorderSide(
-                                          width: 2.0,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255)),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      minimumSize: Size(330, 50),
-                                    ),
-                                  ),
-                                ),
-                              ],
+            FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
+              future: _quizDocs,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
+                      snapshot) {
+                if (snapshot.hasData) {
+                  List<DocumentSnapshot<Map<String, dynamic>>> documentList =
+                      snapshot.data!;
+                  if (documentList.length == 0) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            'It looks very empty in here, go ahead and create a SCRUM Battle.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 60,
+                              fontWeight: FontWeight.normal,
                             ),
-                          );
-                          //body if user has one or more quizzes
-                        } else {
-                          //Each "Quiz"
-                          return Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    print("Quiz Selected");
-                                    String doc =
-                                        _stringQuizRefs[index].substring(5);
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => HostLobbyScreen(
-                                          document: doc,
-                                          user: _currentUser,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.3,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.1,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      shape: BoxShape.rectangle,
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 4,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(10, 0, 0, 0),
-                                                  child: Text(
-                                                    "${documentList[index].data()?['Title'] ?? ''}",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      color: Colors.white,
-                                                      fontSize: 40,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: Text(
-                                                            "Are you sure you would like to delete quiz?"),
-                                                        actions: [
-                                                          TextButton(
-                                                            child: Text("No"),
-                                                            onPressed: () {
-                                                              print(
-                                                                  "pressed no");
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                          TextButton(
-                                                            child: Text("Yes"),
-                                                            onPressed:
-                                                                () async {
-                                                              print(
-                                                                  "pressed yes");
-                                                              //delete from "User" Collection
-                                                              deleteQuizFromUser(
-                                                                  _currentUser
-                                                                      .uid,
-                                                                  index);
-                                                              //delete from "Quiz" collection
-                                                              await db
-                                                                  .doc(_stringQuizRefs[
-                                                                      index])
-                                                                  .delete();
-                                                              //reload page
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pushReplacement(
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      ProfilePage(
-                                                                          user:
-                                                                              _currentUser),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: 60,
-                                                  height: 60,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    border: Border.all(
-                                                      color: Colors.transparent,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    color: Color(0xFFFF0000),
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 4.0, bottom: 12.0),
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        MakeQuizScreen(user: _currentUser),
                                   ),
+                                );
+                              },
+                              child: Text(
+                                "Create Battle",
+                                style: TextStyle(
+                                  letterSpacing: 1.1,
+                                  fontSize: 20,
                                 ),
                               ),
-                            ],
-                          );
-                        }
-                      },
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                side: BorderSide(
+                                    width: 2.0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                minimumSize: Size(330, 50),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
                   } else {
-                    return CircularProgressIndicator();
+                    return Column(
+                      children: [
+                        Container(
+                          width: 500,
+                          height: 400,
+                          child: ListView.builder(
+                              itemCount: documentList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            print("Quiz Selected");
+                                            String doc = _stringQuizRefs[index]
+                                                .substring(5);
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HostLobbyScreen(
+                                                  document: doc,
+                                                  user: _currentUser,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.1,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              shape: BoxShape.rectangle,
+                                              border: Border.all(
+                                                color: Colors.white,
+                                                width: 4,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(10,
+                                                                      0, 0, 0),
+                                                          child: Text(
+                                                            "${documentList[index].data()?['Title'] ?? ''}",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 40,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                    "Are you sure you would like to delete quiz?"),
+                                                                actions: [
+                                                                  TextButton(
+                                                                    child: Text(
+                                                                        "No"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      print(
+                                                                          "pressed no");
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  ),
+                                                                  TextButton(
+                                                                    child: Text(
+                                                                        "Yes"),
+                                                                    onPressed:
+                                                                        () async {
+                                                                      print(
+                                                                          "pressed yes");
+                                                                      //delete from "User" Collection
+                                                                      deleteQuizFromUser(
+                                                                          _currentUser
+                                                                              .uid,
+                                                                          index);
+                                                                      //delete from "Quiz" collection
+                                                                      await db
+                                                                          .doc(_stringQuizRefs[
+                                                                              index])
+                                                                          .delete();
+                                                                      //reload page
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pushReplacement(
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              ProfilePage(user: _currentUser),
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          width: 60,
+                                                          height: 60,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        30),
+                                                            border: Border.all(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 1,
+                                                            ),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: Color(
+                                                                0xFFFF0000),
+                                                            size: 40,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 4.0, bottom: 12.0),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MakeQuizScreen(user: _currentUser),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Create Battle",
+                              style: TextStyle(
+                                letterSpacing: 1.1,
+                                fontSize: 20,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              side: BorderSide(
+                                  width: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              minimumSize: Size(330, 50),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
                   }
-                },
-              ),
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
             ),
           ],
         ),
