@@ -153,7 +153,7 @@ class ScrumRTdatabase {
       'start': false,
     });
 
-    return '998765';
+    return quizID;
   }
 
   static String createQuizID() {

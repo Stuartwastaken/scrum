@@ -3,17 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
-
 import '../controllers/quiz-document.dart';
 import 'host-mc-screen.dart';
 
 class HostLobbyScreen extends StatefulWidget {
   final String document;
-  //final User user;
+  final User user;
   const HostLobbyScreen({
     Key? key,
     required this.document,
-    //required this.user,
+    required this.user,
+
+class HostLobbyScreen extends StatefulWidget {
+  final String document;
+  final User user;
+  const HostLobbyScreen({
+    Key? key,
+    required this.document,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -39,7 +46,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
 
   @override
   void initState() {
-    //_currentUser = widget.user;
+    _currentUser = widget.user;
     super.initState();
 
     _scrumRTdatabase = ScrumRTdatabase();
@@ -74,13 +81,12 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                   right: 16,
                   child: OutlinedButton(
                     onPressed: () {
-                      /*Navigator.of(context).pushReplacement(
+                      Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => ProfilePage(user: _currentUser),
                         ),
                       );
-
-                      ScrumRTdatabase.deleteLobby(quizIDString);*/
+                      ScrumRTdatabase.deleteLobby(quizIDString);
                     },
                     child: Text(
                       "Leave",
@@ -260,15 +266,15 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                     ),
                     OutlinedButton(
                       onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const HostMultipleChoiceWidget(quizID: '998765'),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                      );
+                        Navigator.pushReplacement(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                              const HostMultipleChoiceWidget(quizID: quizIDString),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
                       },
                       child: Text(
                         "Begin!",
