@@ -78,7 +78,7 @@ class _ChangePasswordPopupState extends State<ChangePasswordPopup> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Change Passowrd"),
+      title: Text("Change Password"),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
