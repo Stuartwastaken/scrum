@@ -26,7 +26,7 @@ class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
-        ScrumRTdatabase.setTimer(widget.quizID, 30);
+        ScrumRTdatabase.setTimer(widget.quizID, 20);
         Quiz.getInstance().nextQuestion();
         ScreenNavigator.navigate(
             context, HostMultipleChoiceWidget(quizID: widget.quizID));

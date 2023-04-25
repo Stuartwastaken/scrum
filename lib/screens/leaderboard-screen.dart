@@ -4,6 +4,8 @@ import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
 
+import '../controllers/quiz-document.dart';
+
 class LeaderboardScreen extends StatefulWidget {
   final String quizID;
   final String uid;
@@ -26,6 +28,7 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
     timeStream = quizTimeStream.timeStream;
     quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
       if (isTimeZero) {
+        Quiz.getInstance().nextQuestion();
         ScreenNavigator.navigate(context,
             MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
       }
