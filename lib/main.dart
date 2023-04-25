@@ -13,7 +13,7 @@ void main() async {
   runApp(
     MaterialApp(
       title: "SCRUM",
-      home: LoginScreen(),
+      home: GamePinScreen(),
     ),
   );
 }

@@ -19,7 +19,11 @@ class ScrumRTdatabase {
   static Future<String> getQuizDoc(String quizID) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     String doc = '';
-    await databaseRef.child(quizID).child('document').once().then((DatabaseEvent event) {
+    await databaseRef
+        .child(quizID)
+        .child('document')
+        .once()
+        .then((DatabaseEvent event) {
       doc = event.snapshot.value as String;
     });
     return doc;
@@ -251,6 +255,24 @@ class ScrumRTdatabase {
       }
     }
     return 0;
+  }
+
+  static void addPointsToPlayer(String quizID, String uid, int points) async {
+    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+    int remainingTime = 0;
+    await databaseRef
+        .child(quizID)
+        .child(uid)
+        .child('score')
+        .once()
+        .then((DatabaseEvent event) {
+      int currentScore = event.snapshot.value as int;
+      FirebaseDatabase.instance
+          .ref()
+          .child(quizID)
+          .child(uid)
+          .update({'score': currentScore + points});
+    });
   }
 
   static void deleteLobby(String quizID) {

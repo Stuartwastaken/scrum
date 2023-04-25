@@ -348,10 +348,10 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                     .writeUserToTree(
                                                         getNickname(),
                                                         getPin());
-                                            String gameID = pinController.text;
+                                            String quizID = pinController.text;
                                             ScrumRTdatabase
                                                 .incrementPeopleInLobby(
-                                                    gameID, 1);
+                                                    quizID, 1);
                                             Navigator.pushReplacement(
                                               context,
                                               PageRouteBuilder(
@@ -359,7 +359,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                         animation1,
                                                         animation2) =>
                                                     LobbyScreen(
-                                                        gameID: gameID,
+                                                        quizID: quizID,
                                                         hash:
                                                             uniqueId as String),
                                                 transitionDuration:

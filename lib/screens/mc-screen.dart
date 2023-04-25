@@ -18,7 +18,6 @@ class MultipleChoiceWidget extends StatefulWidget {
   final String uid;
   bool isCorrect = false;
   int pointsGained = 0;
-  int? timeRemaining = 0;
 
   @override
   MultipleChoiceWidgetState createState() => MultipleChoiceWidgetState();
@@ -34,12 +33,19 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   int selectedIndex = -1;
 
   void onButtonPressed(int index) async {
-    widget.timeRemaining = await ScrumRTdatabase.getTime(widget.quizID);
     setState(() {
       selectedIndex = index;
       buttonsEnabled = false;
       widget.isCorrect = selectedIndex == correctIndex;
     });
+    if (widget.isCorrect) {
+      int remainingTime = await ScrumRTdatabase.getTime(widget.quizID) as int;
+      widget.pointsGained = CalculateScore.calculateAddValue(remainingTime);
+      ScrumRTdatabase.addPointsToPlayer(
+          widget.quizID, widget.uid, widget.pointsGained);
+    } else {
+      widget.pointsGained = 0;
+    }
   }
 
   void disableButtons() {
@@ -62,7 +68,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                 quizID: widget.quizID,
                 uid: widget.uid,
                 isCorrect: widget.isCorrect,
-                pointsGained: (widget.isCorrect as int)*CalculateScore.calculateAddValue(widget.timeRemaining!)));
+                pointsGained: widget.pointsGained));
       }
     });
   }
@@ -128,15 +134,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () async {
-                                          onButtonPressed(0);
-                                          int remainingTime =
-                                              await ScrumRTdatabase.getTime(
-                                                  widget.quizID) as int;
-                                          widget.pointsGained =
-                                              CalculateScore.calculateAddValue(
-                                                  remainingTime);
-                                        }
+                                      ? () => onButtonPressed(0)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
@@ -175,15 +173,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () async {
-                                          onButtonPressed(1);
-                                          int remainingTime =
-                                              await ScrumRTdatabase.getTime(
-                                                  widget.quizID) as int;
-                                          widget.pointsGained =
-                                              CalculateScore.calculateAddValue(
-                                                  remainingTime);
-                                        }
+                                      ? () => onButtonPressed(1)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
@@ -230,15 +220,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () async {
-                                          onButtonPressed(2);
-                                          int remainingTime =
-                                              await ScrumRTdatabase.getTime(
-                                                  widget.quizID) as int;
-                                          widget.pointsGained =
-                                              CalculateScore.calculateAddValue(
-                                                  remainingTime);
-                                        }
+                                      ? () => onButtonPressed(2)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
@@ -277,15 +259,7 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () async {
-                                          onButtonPressed(3);
-                                          int remainingTime =
-                                              await ScrumRTdatabase.getTime(
-                                                  widget.quizID) as int;
-                                          widget.pointsGained =
-                                              CalculateScore.calculateAddValue(
-                                                  remainingTime);
-                                        }
+                                      ? () => onButtonPressed(3)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
