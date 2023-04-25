@@ -66,8 +66,6 @@ class LobbyScreenState extends State<LobbyScreen>
     startStream = quizStartStream.startStream;
     quizStartStream.isStartTrueStream.listen((isStartZero) {
       if (isStartZero) {
-        print("quizID: ${widget.quizID}");
-        print("uid: ${widget.hash}");
         ScreenNavigator.navigate(context,
             MultipleChoiceWidget(quizID: widget.quizID, uid: widget.hash));
       }

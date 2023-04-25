@@ -6,7 +6,6 @@ import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/screens/register-screen.dart';
 import 'forgot-password-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
-import 'package:scrum/utils/validator.dart';
 import 'package:scrum/widgets/underlined-text-form-field.dart';
 
 class LoginScreen extends StatefulWidget {

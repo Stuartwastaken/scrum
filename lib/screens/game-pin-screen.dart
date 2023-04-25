@@ -16,7 +16,6 @@ class GamePinScreen extends StatefulWidget {
 }
 
 class GamePinScreenState extends State<GamePinScreen> {
-  bool _isProcessing = false;
 
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();

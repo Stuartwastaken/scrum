@@ -81,7 +81,6 @@ class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
 
   @override
   Widget build(BuildContext context) {
-    print(8);
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFF1E2429),
