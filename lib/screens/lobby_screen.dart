@@ -30,10 +30,19 @@ class LobbyScreenState extends State<LobbyScreen>
 
   @override
   void dispose() {
+    print(1);
     _controller.dispose();
+    print(2);
     _scrumRTdatabase.dispose();
+    print(3);
+    startStream.drain();
+    print(4);
     quizStartStream.dispose();
+    print(5);
+    playerStreamController.drain();
+    print(6);
     ScrumRTdatabase.cancelListenForKick(widget.gameID);
+    print(7);
     super.dispose();
   }
 
@@ -61,7 +70,7 @@ class LobbyScreenState extends State<LobbyScreen>
         ScreenNavigator.navigate(
             context,
             MultipleChoiceWidget(
-                quizID: widget.gameID, uid: widget.hash.toString()));
+                quizID: widget.gameID, uid: widget.hash));
       }
     });
   }
