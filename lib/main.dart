@@ -12,7 +12,7 @@ void main() async {
   runApp(
     MaterialApp(
       title: "SCRUM",
-      home: GamePinScreen(),
+      home: MultipleChoiceWidget(quizID: "998765"),
     ),
   );
 }

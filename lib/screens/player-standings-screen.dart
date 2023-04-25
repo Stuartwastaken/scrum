@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/controllers/screen-navigator.dart';

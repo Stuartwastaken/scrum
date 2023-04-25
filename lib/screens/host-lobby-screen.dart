@@ -15,8 +15,8 @@ class HostLobbyScreen extends StatefulWidget {
     Key? key,
     required this.document,
     required this.user,
-  }) : super(key: key);
-
+  }) :super(key: key);
+    
   @override
   State<HostLobbyScreen> createState() => HostLobbyScreenState();
 }

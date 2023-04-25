@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/controllers/screen-navigator.dart';
@@ -18,8 +19,7 @@ class HostMultipleChoiceWidget extends StatefulWidget {
       HostMultipleChoiceWidgetState();
 }
 
-class HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
-    with TickerProviderStateMixin {
+class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizStream quizTimeStream;
   late Stream<int> timeStream;

@@ -7,6 +7,8 @@ import 'package:scrum/utils/fire_RTdatabase.dart';
 
 import '../controllers/quiz-document.dart';
 
+import '../utils/fire_RTdatabase.dart';
+
 class MultipleChoiceWidget extends StatefulWidget {
   MultipleChoiceWidget({
     Key? key,
