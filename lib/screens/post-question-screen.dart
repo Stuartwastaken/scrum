@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/leaderboard-screen.dart';
+import 'package:scrum/screens/player-end-game-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/controllers/quiz-document.dart';
 
 class PostQuestionScreenWidget extends StatefulWidget {
-  final bool isCorrect;
-  final String uid;
-  final Future<int> pointsGained;
   final String quizID;
+  final String uid;
+  final bool isCorrect;
+  final int pointsGained;
   const PostQuestionScreenWidget(
       {Key? key,
       required this.quizID,
@@ -18,15 +20,8 @@ class PostQuestionScreenWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PostQuestionScreenWidgetState createState() =>
-      _PostQuestionScreenWidgetState();
-}
-
-Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
-  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
-  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
-  usersAndScores = Map.fromEntries(usersList);
-  return usersAndScores;
+  PostQuestionScreenWidgetState createState() =>
+      PostQuestionScreenWidgetState();
 }
 
 String getPlayerStatus(
@@ -56,27 +51,38 @@ String getPlayerStatus(
   }
 }
 
-class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+class PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
   final _unfocusNode = FocusNode();
-  late final QuizTimeStream quizTime;
+  late final QuizStream quizTimeStream;
+  late final Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
-
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, LeaderboardScreen(quizID: widget.quizID));
+    quizTimeStream = QuizStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        if (Quiz.getInstance().isQuizEmpty() == false) {
+          ScreenNavigator.navigate(context,
+              LeaderboardScreen(quizID: widget.quizID, uid: widget.uid));
+        } else {
+          ScreenNavigator.navigate(
+              context, PlayerEndScreen(quizID: widget.quizID, uid: widget.uid));
+        }
+      }
+    });
   }
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     _unfocusNode.dispose();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
@@ -85,9 +91,10 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Map<String, dynamic> usersAndScores = snapshot.data!;
-              Map<String, dynamic> usersAndScores_sorted = sort(usersAndScores);
+              Map<String, dynamic> usersandscoresSorted =
+                  ScrumRTdatabase.sort(usersAndScores);
               List<MapEntry<String, dynamic>> sortedEntries =
-                  usersAndScores_sorted.entries.toList();
+                  usersandscoresSorted.entries.toList();
               String playerStatus = getPlayerStatus(sortedEntries, widget.uid);
               return buildPostQuestionScreen(playerStatus);
             } else if (snapshot.hasError) {
@@ -99,12 +106,9 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
     );
   }
 
-  @override
   Widget buildPostQuestionScreen(String playerStatus) {
     final points = widget.pointsGained.toString();
-    final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: widget.isCorrect ? Color(0xFF66BF39) : Color(0xFFFF3355),
       body: SafeArea(
@@ -138,47 +142,31 @@ class _PostQuestionScreenWidgetState extends State<PostQuestionScreenWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        decoration: BoxDecoration(
-                          color: widget.isCorrect
-                              ? Color(0xFF26890C)
-                              : Color(0xFFE21B3C),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Color(0x33000000),
-                              offset: Offset(0, 2),
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          shape: BoxShape.rectangle,
-                        ),
-                        alignment: AlignmentDirectional(0, 0),
-                        child: FutureBuilder<int>(
-                          future: widget.pointsGained,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<int> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                return Text(
-                                  '+ ${snapshot.data} pts',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                  ),
-                                );
-                              }
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          },
-                        ),
-                      ),
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          decoration: BoxDecoration(
+                            color: widget.isCorrect
+                                ? Color(0xFF26890C)
+                                : Color(0xFFE21B3C),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Color(0x33000000),
+                                offset: Offset(0, 2),
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                            shape: BoxShape.rectangle,
+                          ),
+                          alignment: AlignmentDirectional(0, 0),
+                          child: Text(
+                            '+ $points pts',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                              fontSize: 40,
+                            ),
+                          )),
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),

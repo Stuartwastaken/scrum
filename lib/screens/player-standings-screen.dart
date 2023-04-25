@@ -1,40 +1,45 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
-import 'package:scrum/screens/mc-screen.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
+import 'package:scrum/screens/host-mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 import 'package:scrum/controllers/quiz-document.dart';
 
 class PlayerStandingsScreen extends StatefulWidget {
   final String quizID;
 
-  PlayerStandingsScreen({required this.quizID});
+  PlayerStandingsScreen({Key? key, required this.quizID}) : super(key: key);
 
   @override
-  _PlayerStandingsScreenState createState() => _PlayerStandingsScreenState();
+  PlayerStandingsScreenState createState() => PlayerStandingsScreenState();
 }
 
-Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
-  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
-  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
-  usersAndScores = Map.fromEntries(usersList);
-  return usersAndScores;
-}
-
-class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
-  late final QuizTimeStream quizTime;
+class PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
+  late final QuizStream quizTimeStream;
 
   @override
   void initState() {
     super.initState();
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, MultipleChoiceWidget(quizID: widget.quizID));
-    var quiz = Quiz.getInstance(document: widget.quizID);
-    quiz.nextQuestion();
+    quizTimeStream = QuizStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    quizTimeStream.startTimer(widget.quizID);
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        quizTimeStream.cancelTimer();
+        ScrumRTdatabase.setTimer(widget.quizID, 20);
+        Quiz.getInstance().nextQuestion();
+        ScreenNavigator.navigate(
+            context, HostMultipleChoiceWidget(quizID: widget.quizID));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    quizTimeStream.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,14 +51,14 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic> usersAndScores = snapshot.data!;
-                Map<String, dynamic> usersAndScores_sorted =
-                    sort(usersAndScores);
+                Map<String, dynamic> usersandscoresSorted =
+                    ScrumRTdatabase.sort(usersAndScores);
                 List<MapEntry<String, dynamic>> sortedEntries =
-                    usersAndScores_sorted.entries.toList();
+                    usersandscoresSorted.entries.toList();
                 if (sortedEntries.length < 5) {
-                  return StandingsScreenBuilder(sortedEntries.sublist(0));
+                  return standingsScreenBuilder(sortedEntries.sublist(0));
                 } else {
-                  return StandingsScreenBuilder(sortedEntries.sublist(0, 5));
+                  return standingsScreenBuilder(sortedEntries.sublist(0, 5));
                 }
               } else if (snapshot.hasError) {
                 return Center(child: Text("Error: ${snapshot.error}"));
@@ -63,7 +68,7 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
             }));
   }
 
-  Widget StandingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
+  Widget standingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       body: SafeArea(
@@ -94,17 +99,6 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
                       );
                     }),
                     SizedBox(height: 32.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        /* Add appropriate navigation later
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NextQuestionScreen()),
-                      );
-                      */
-                      },
-                      child: Text('Next Question'),
-                    ),
                   ],
                 ),
               ),

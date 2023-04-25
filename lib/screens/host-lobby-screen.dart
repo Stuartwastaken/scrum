@@ -1,10 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrum/screens/home-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/screens/host-mc-screen.dart';
+
 import '../controllers/quiz-document.dart';
-import 'host-mc-screen.dart';
 
 class HostLobbyScreen extends StatefulWidget {
   final String document;
@@ -28,6 +30,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
 
   @override
   void dispose() {
+    _scrumRTdatabase.dispose();
     super.dispose();
   }
 
@@ -73,12 +76,9 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                   right: 16,
                   child: OutlinedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(user: _currentUser),
-                        ),
-                      );
+                      playerStreamController.drain();
                       ScrumRTdatabase.deleteLobby(quizIDString);
+                      ScreenNavigator.navigate(context, ProfilePage(user: _currentUser));
                     },
                     child: Text(
                       "Leave",
@@ -258,15 +258,10 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                     ),
                     OutlinedButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                              HostMultipleChoiceWidget(quizID: quizIDString),
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ),
-                        );
+                        ScrumRTdatabase.setTimer(quizIDString, 20);
+                        ScrumRTdatabase.setStart(quizIDString);
+                        ScreenNavigator.navigate(context,
+                            HostMultipleChoiceWidget(quizID: quizIDString));
                       },
                       child: Text(
                         "Begin!",

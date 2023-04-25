@@ -1,39 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
-import 'package:scrum/controllers/quiz-document.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/post-question-screen.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
+
+import '../controllers/quiz-document.dart';
 
 import '../utils/fire_RTdatabase.dart';
 
 class MultipleChoiceWidget extends StatefulWidget {
-  const MultipleChoiceWidget({
+  MultipleChoiceWidget({
     Key? key,
     required this.quizID,
-
+    required this.uid,
   }) : super(key: key);
 
   final String quizID;
+  final String uid;
+  bool isCorrect = false;
+  int pointsGained = 0;
 
   @override
-  _MultipleChoiceWidgetState createState() => _MultipleChoiceWidgetState();
+  MultipleChoiceWidgetState createState() => MultipleChoiceWidgetState();
 }
 
-class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
+class MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final QuizTimeStream quizTime;
-  late Quiz quiz;
-  //late final TextEditingController question;
+  late final QuizStream quizTimeStream;
+  late Stream<int> timeStream;
   bool buttonsEnabled = true;
-  int selectedIndex = 0;
+  int correctIndex = Quiz.getInstance().getCorrectAnswer();
+  int selectedIndex = -1;
 
-  void onButtonPressed(int index) {
+  void onButtonPressed(int index) async {
     setState(() {
       selectedIndex = index;
       buttonsEnabled = false;
+      widget.isCorrect = selectedIndex == correctIndex;
     });
+    if (widget.isCorrect) {
+      int remainingTime = await ScrumRTdatabase.getTime(widget.quizID) as int;
+      widget.pointsGained = CalculateScore.calculateAddValue(remainingTime);
+      ScrumRTdatabase.addPointsToPlayer(
+          widget.quizID, widget.uid, widget.pointsGained);
+    } else {
+      widget.pointsGained = 0;
+    }
   }
 
   void disableButtons() {
@@ -45,21 +59,25 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-    quiz = Quiz.getInstance(document: ScrumRTdatabase.getQuizDoc(widget.quizID).toString()) as Quiz;
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime,
-        context,
-        PostQuestionScreenWidget(
-            quizID: widget.quizID,
-            uid: "",
-            isCorrect: false,
-            pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
+    quizTimeStream = QuizStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        ScreenNavigator.navigate(
+            context,
+            PostQuestionScreenWidget(
+                quizID: widget.quizID,
+                uid: widget.uid,
+                isCorrect: widget.isCorrect,
+                pointsGained: widget.pointsGained));
+      }
+    });
   }
 
   @override
   void dispose() {
+    quizTimeStream.dispose();
     super.dispose();
   }
 
@@ -117,14 +135,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(1)
+                                      ? () => onButtonPressed(0)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 1) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 0) {
                                           return Color(
                                               0xFFB21B3C); // Disabled button color
                                         }
@@ -156,14 +174,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(2)
+                                      ? () => onButtonPressed(1)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 2) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 1) {
                                           return Color(
                                               0xFF45A3E5); // Disabled button color
                                         }
@@ -203,14 +221,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(3)
+                                      ? () => onButtonPressed(2)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 3) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 2) {
                                           return Color(
                                               0xFFFFA602); // Disabled button color
                                         }
@@ -242,14 +260,14 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                                 ),
                                 child: ElevatedButton(
                                   onPressed: buttonsEnabled
-                                      ? () => onButtonPressed(4)
+                                      ? () => onButtonPressed(3)
                                       : null,
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
                                         .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
-                                        if (selectedIndex == 0 ||
-                                            selectedIndex == 4) {
+                                        if (selectedIndex == -1 ||
+                                            selectedIndex == 3) {
                                           return Color(
                                               0xFF26890C); // Disabled button color
                                         }
@@ -274,7 +292,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
                 ),
               ),
               StreamBuilder<int>(
-                stream: quizTime.timeStream,
+                stream: timeStream,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

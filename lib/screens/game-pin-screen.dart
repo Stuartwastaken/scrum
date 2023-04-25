@@ -16,7 +16,6 @@ class GamePinScreen extends StatefulWidget {
 }
 
 class GamePinScreenState extends State<GamePinScreen> {
-  bool _isProcessing = false;
 
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
@@ -348,13 +347,10 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                     .writeUserToTree(
                                                         getNickname(),
                                                         getPin());
-                                            print(
-                                                "The user should be written!");
-
-                                            String gameID = pinController.text;
+                                            String quizID = pinController.text;
                                             ScrumRTdatabase
                                                 .incrementPeopleInLobby(
-                                                    gameID, 1);
+                                                    quizID, 1);
                                             Navigator.pushReplacement(
                                               context,
                                               PageRouteBuilder(
@@ -362,8 +358,9 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                         animation1,
                                                         animation2) =>
                                                     LobbyScreen(
-                                                        gameID: gameID,
-                                                        hash: uniqueId),
+                                                        quizID: quizID,
+                                                        hash:
+                                                            uniqueId as String),
                                                 transitionDuration:
                                                     Duration.zero,
                                                 reverseTransitionDuration:

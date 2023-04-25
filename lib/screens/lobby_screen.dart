@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/game-pin-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/screens/mc-screen.dart';
+
+import '../controllers/quiz-document.dart';
 
 class LobbyScreen extends StatefulWidget {
-  final String gameID;
-  final String? hash;
+  final String quizID;
+  final String hash;
   const LobbyScreen({
     Key? key,
-    required this.gameID,
+    required this.quizID,
     required this.hash,
   }) : super(key: key);
 
@@ -20,13 +25,23 @@ class LobbyScreenState extends State<LobbyScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late Stream<bool> startStream;
   late ScrumRTdatabase _scrumRTdatabase;
   late Stream<int> playerStreamController;
+  late final QuizStream quizStartStream;
 
   @override
   void dispose() {
     _controller.dispose();
+    _scrumRTdatabase.dispose();
+    quizStartStream.dispose();
+    ScrumRTdatabase.cancelListenForKick(widget.quizID);
     super.dispose();
+  }
+
+  void loadQuiz() async {
+    String doc = await ScrumRTdatabase.getQuizDoc(widget.quizID);
+    Quiz.getInstance(document: doc);
   }
 
   @override
@@ -41,26 +56,20 @@ class LobbyScreenState extends State<LobbyScreen>
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
     _scrumRTdatabase = ScrumRTdatabase();
+    ScrumRTdatabase.listenForKick(widget.quizID, widget.hash, context);
+    _scrumRTdatabase.listenToPeopleInLobby(widget.quizID);
+    playerStreamController = _scrumRTdatabase.playerCountStream;
+    loadQuiz();
 
-    _scrumRTdatabase
-        .getDatabaseRef()
-        .child(widget.gameID)
-        .onChildRemoved
-        .listen((event) {
-      if (event.snapshot.key == widget.hash) {
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => GamePinScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
+    quizStartStream = QuizStream();
+    quizStartStream.listenForStart(widget.quizID);
+    startStream = quizStartStream.startStream;
+    quizStartStream.isStartTrueStream.listen((isStartZero) {
+      if (isStartZero) {
+        ScreenNavigator.navigate(context,
+            MultipleChoiceWidget(quizID: widget.quizID, uid: widget.hash));
       }
     });
-
-    _scrumRTdatabase.listenToPeopleInLobby(widget.gameID);
-    playerStreamController = _scrumRTdatabase.playerCountStream;
   }
 
   @override
@@ -87,18 +96,9 @@ class LobbyScreenState extends State<LobbyScreen>
                   child: OutlinedButton(
                     onPressed: () {
                       ScrumRTdatabase.removeUserFromTree(
-                          widget.hash!, widget.gameID);
-                      ScrumRTdatabase.incrementPeopleInLobby(widget.gameID, -1);
-
-                      Navigator.pushReplacement(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const GamePinScreen(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                      );
+                          widget.hash.toString(), widget.quizID);
+                      ScrumRTdatabase.incrementPeopleInLobby(widget.quizID, -1);
+                      ScreenNavigator.navigate(context, GamePinScreen());
                     },
                     child: Text(
                       "Leave",

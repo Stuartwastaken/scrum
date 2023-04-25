@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:scrum/controllers/quiz-listener.dart';
+import 'package:scrum/controllers/screen-navigator.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
-import 'package:scrum/controllers/quiz-time-stream.dart';
-import 'package:scrum/controllers/quiz-document.dart';
+import 'package:scrum/controllers/quiz-stream.dart';
+
+import '../controllers/quiz-document.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final String quizID;
+  final String uid;
 
-  LeaderboardScreen({required this.quizID});
+  LeaderboardScreen({required this.quizID, required this.uid});
 
   @override
   LeaderboardScreenState createState() => LeaderboardScreenState();
 }
 
-Map<String, dynamic> sort(Map<String, dynamic> usersAndScores) {
-  List<MapEntry<String, dynamic>> usersList = usersAndScores.entries.toList();
-  usersList.sort((a, b) => b.value['score'].compareTo(a.value['score']));
-  usersAndScores = Map.fromEntries(usersList);
-  return usersAndScores;
-}
-
 class LeaderboardScreenState extends State<LeaderboardScreen> {
-  late final QuizTimeStream quizTime;
+  late final QuizStream quizTimeStream;
+  late Stream<int> timeStream;
 
   @override
   void initState() {
     super.initState();
+    quizTimeStream = QuizStream();
+    quizTimeStream.listenToQuizTime(widget.quizID);
+    timeStream = quizTimeStream.timeStream;
+    quizTimeStream.isTimeZeroStream.listen((isTimeZero) {
+      if (isTimeZero) {
+        Quiz.getInstance().nextQuestion();
+        ScreenNavigator.navigate(context,
+            MultipleChoiceWidget(quizID: widget.quizID, uid: widget.uid));
+      }
+    });
+  }
 
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime, context, MultipleChoiceWidget(quizID: widget.quizID));
-    var quiz = Quiz.getInstance(document: widget.quizID);
-    quiz.nextQuestion();
+  @override
+  void dispose() {
+    quizTimeStream.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,10 +50,10 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic> usersAndScores = snapshot.data!;
-                Map<String, dynamic> usersAndScores_sorted =
-                    sort(usersAndScores);
+                Map<String, dynamic> usersandscoresSorted =
+                    ScrumRTdatabase.sort(usersAndScores);
                 List<MapEntry<String, dynamic>> sortedEntries =
-                    usersAndScores_sorted.entries.toList();
+                    usersandscoresSorted.entries.toList();
                 if (sortedEntries.length < 5) {
                   return StandingsScreenBuilder(sortedEntries.sublist(0));
                 } else {
@@ -63,7 +68,6 @@ class LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Widget StandingsScreenBuilder(List<MapEntry<String, dynamic>> sortedEntries) {
-    final scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -4,7 +4,6 @@ import 'package:scrum/screens/host-lobby-screen.dart';
 import 'package:scrum/screens/login-screen.dart';
 import 'package:scrum/screens/make-quiz-screen.dart';
 import 'package:scrum/screens/view-profile-screen.dart';
-import 'package:scrum/utils/fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Tracker for appbar drop-down elements
@@ -102,7 +101,6 @@ class _ProfilePageState extends State<ProfilePage> {
             onSelected: (value) {
               //view profile button
               if (value == MenuItem.item1) {
-                print("View Profile");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -116,7 +114,6 @@ class _ProfilePageState extends State<ProfilePage> {
               }
               //sign out button
               if (value == MenuItem.item2) {
-                print("Sign Out");
                 setState(() {
                   _isSigningOut = true;
                 });

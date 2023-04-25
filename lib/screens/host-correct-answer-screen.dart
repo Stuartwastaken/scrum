@@ -1,25 +1,27 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-stream.dart';
 import 'package:scrum/controllers/screen-navigator.dart';
-import 'package:scrum/screens/host-correct-answer-screen.dart';
+import 'package:scrum/screens/player-standings-screen.dart';
 import 'package:scrum/controllers/quiz-document.dart';
+import 'package:scrum/screens/podium-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
 
-class HostMultipleChoiceWidget extends StatefulWidget {
-  const HostMultipleChoiceWidget({
+class HostCorrectAnswerScreen extends StatefulWidget {
+  const HostCorrectAnswerScreen({
     Key? key,
     required this.quizID,
+    required this.correctOption,
   }) : super(key: key);
 
   final String quizID;
+  final int correctOption;
 
   @override
-  _HostMultipleChoiceWidgetState createState() =>
-      _HostMultipleChoiceWidgetState();
+  HostCorrectAnswerScreenState createState() => HostCorrectAnswerScreenState();
 }
 
-class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
+class HostCorrectAnswerScreenState extends State<HostCorrectAnswerScreen>
+    with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizStream quizTimeStream;
   late Stream<int> timeStream;
@@ -35,8 +37,13 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
       if (isTimeZero) {
         quizTimeStream.cancelTimer();
         ScrumRTdatabase.setTimer(widget.quizID, 7);
-        ScreenNavigator.navigate(context,
-            HostCorrectAnswerScreen(quizID: widget.quizID, correctOption: Quiz.getInstance().getCorrectAnswer()));
+        if (Quiz.getInstance().isQuizEmpty() == false) {
+          ScreenNavigator.navigate(
+              context, PlayerStandingsScreen(quizID: widget.quizID));
+        } else {
+          ScreenNavigator.navigate(
+              context, PodiumScreen(gameID: widget.quizID));
+        }
       }
     });
   }
@@ -49,24 +56,6 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: FutureBuilder<String>(
-        future: ScrumRTdatabase.getQuizDoc(widget.quizID),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildMCScreen();
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }
-      )
-    );
-  }
-
-  Widget buildMCScreen() {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFF1E2429),
@@ -122,7 +111,9 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFB21B3C),
+                                  color: widget.correctOption == 0
+                                      ? Color(0xFFB21B3C)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: Row(
@@ -155,7 +146,9 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF45A3E5),
+                                  color: widget.correctOption == 1
+                                      ? Color(0xFF45A3E5)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: Row(
@@ -196,7 +189,9 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFFFA602),
+                                  color: widget.correctOption == 2
+                                      ? Color(0xFFFFA602)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: Row(
@@ -229,7 +224,9 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
                                 width: 400,
                                 height: 300,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF26890C),
+                                  color: widget.correctOption == 3
+                                      ? Color(0xFF26890C)
+                                      : Colors.grey,
                                   shape: BoxShape.rectangle,
                                 ),
                                 child: Row(
