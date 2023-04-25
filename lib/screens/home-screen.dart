@@ -194,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Text(
-                            'It looks very empty in here, go ahead and create a SCRUM Battle.',
+                            'Make your first quiz.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
