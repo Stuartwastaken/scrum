@@ -13,16 +13,8 @@ class HostLobbyScreen extends StatefulWidget {
     Key? key,
     required this.document,
     required this.user,
-
-class HostLobbyScreen extends StatefulWidget {
-  final String document;
-  final User user;
-  const HostLobbyScreen({
-    Key? key,
-    required this.document,
-    required this.user,
-  }) : super(key: key);
-
+  }) :super(key: key);
+    
   @override
   State<HostLobbyScreen> createState() => HostLobbyScreenState();
 }
@@ -270,7 +262,7 @@ class HostLobbyScreenState extends State<HostLobbyScreen> {
                           context,
                           PageRouteBuilder(
                             pageBuilder: (context, animation1, animation2) =>
-                              const HostMultipleChoiceWidget(quizID: quizIDString),
+                              HostMultipleChoiceWidget(quizID: quizIDString),
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ),
