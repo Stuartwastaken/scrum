@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:scrum/screens/host-lobby-screen.dart';
 import 'package:scrum/screens/login-screen.dart';
+import 'package:scrum/screens/make-quiz-screen.dart';
 import 'package:scrum/screens/view-profile-screen.dart';
 import 'package:scrum/utils/fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Implementation to track which drop-down menu item is selected
+// Tracker for appbar drop-down elements
 enum MenuItem {
   item1,
   item2,
@@ -25,27 +27,51 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isSigningOut = false;
 
   late User _currentUser;
+  final db = FirebaseFirestore.instance;
   late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _getDataFuture;
+  late Future<List<DocumentSnapshot<Map<String, dynamic>>>> _quizDocs;
+  late Future<List<dynamic>> _quizRefs;
+  List<dynamic> _stringQuizRefs = [];
 
   @override
   void initState() {
     _currentUser = widget.user;
-    _getDataFuture = getData();
+    _quizRefs = getQuizRefs();
+    _quizDocs = getQuizDocsFromRefs(_quizRefs);
     super.initState();
   }
 
-  //fetches user's firestore data & stores the documents within a list
-  final db = FirebaseFirestore.instance;
-  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getData() async {
+  //fetches all quiz references from "User" collecton & stores the documents within _quizRefs & _stringQuizRefs
+  Future<List<dynamic>> getQuizRefs() async {
     final userDocRef = await db.collection("User").doc(_currentUser.uid).get();
     final userQuizRefs = userDocRef.data()?['Quizzes'] as List<dynamic>;
-    List<DocumentSnapshot<Map<String, dynamic>>> documentList = [];
+    List userQuizStringRefs = [];
     for (var ref in userQuizRefs) {
       ref = ref.path;
-      final quizDoc = await db.doc(ref).get();
-      documentList.add(quizDoc);
+      userQuizStringRefs.add(ref);
+      _stringQuizRefs.add(ref);
     }
-    return documentList;
+    return userQuizStringRefs;
+  }
+
+  Future<void> deleteQuizFromUser(String documentID, int indexToRemove) async {
+    final documentReference = db.collection('User').doc(documentID);
+    final documentSnapshot = await documentReference.get();
+    final data = documentSnapshot.data()!;
+    final quizzes = List.from(data['Quizzes']);
+    quizzes.removeAt(indexToRemove);
+    await documentReference.update({'Quizzes': quizzes});
+  }
+
+  //Takes a List of String references & returns the DocumentSnapshot for each reference.
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getQuizDocsFromRefs(
+      Future<List<dynamic>> refs) async {
+    List<DocumentSnapshot<Map<String, dynamic>>> userQuizDocs = [];
+    for (var ref in await refs) {
+      final quizDoc = await db.doc(ref).get();
+      userQuizDocs.add(quizDoc);
+    }
+    return userQuizDocs;
   }
 
   @override
@@ -87,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(
               child:
                   FutureBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-                future: _getDataFuture,
+                future: _quizDocs,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<DocumentSnapshot<Map<String, dynamic>>>>
                         snapshot) {
@@ -121,7 +147,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   padding: const EdgeInsets.only(
                                       top: 4.0, bottom: 12.0),
                                   child: OutlinedButton(
-                                    onPressed: () async {},
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => MakeQuizScreen(
+                                              user: _currentUser),
+                                        ),
+                                      );
+                                    },
                                     child: Text(
                                       "Create Battle",
                                       style: TextStyle(
@@ -157,6 +190,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: GestureDetector(
                                   onTap: () {
                                     print("Quiz Selected");
+                                    String doc =
+                                        _stringQuizRefs[index].substring(5);
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => HostLobbyScreen(
+                                          document: doc,
+                                          user: _currentUser,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     width:
@@ -185,7 +228,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(10, 0, 0, 0),
                                                   child: Text(
-                                                    'Quiz Title',
+                                                    "${documentList[index].data()?['Title'] ?? ''}",
                                                     style: TextStyle(
                                                       fontFamily: 'Poppins',
                                                       color: Colors.white,
@@ -218,9 +261,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           ),
                                                           TextButton(
                                                             child: Text("Yes"),
-                                                            onPressed: () {
+                                                            onPressed:
+                                                                () async {
                                                               print(
                                                                   "pressed yes");
+                                                              //delete from "User" Collection
+                                                              deleteQuizFromUser(
+                                                                  _currentUser
+                                                                      .uid,
+                                                                  index);
+                                                              //delete from "Quiz" collection
+                                                              await db
+                                                                  .doc(_stringQuizRefs[
+                                                                      index])
+                                                                  .delete();
+                                                              //reload page
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pushReplacement(
+                                                                MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      ProfilePage(
+                                                                          user:
+                                                                              _currentUser),
+                                                                ),
+                                                              );
                                                               Navigator.of(
                                                                       context)
                                                                   .pop();

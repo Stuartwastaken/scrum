@@ -343,8 +343,11 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                   .checkPinExists(getPin()) &
                                               !isNicknameEmpty(
                                                   nicknameController)) {
-                                            ScrumRTdatabase.writeUserToTree(
-                                                getNickname(), getPin());
+                                            String? uniqueId =
+                                                await ScrumRTdatabase
+                                                    .writeUserToTree(
+                                                        getNickname(),
+                                                        getPin());
                                             print(
                                                 "The user should be written!");
 
@@ -360,8 +363,7 @@ class GamePinScreenState extends State<GamePinScreen> {
                                                         animation2) =>
                                                     LobbyScreen(
                                                         gameID: gameID,
-                                                        nickname:
-                                                            getNickname()),
+                                                        hash: uniqueId),
                                                 transitionDuration:
                                                     Duration.zero,
                                                 reverseTransitionDuration:
