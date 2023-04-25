@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/screens/post-question-screen.dart';
+
+import '../utils/fire_RTdatabase.dart';
 
 class MultipleChoiceWidget extends StatefulWidget {
   const MultipleChoiceWidget({
     Key? key,
     required this.quizID,
+
   }) : super(key: key);
 
   final String quizID;
@@ -20,6 +24,8 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
+  late Quiz quiz;
+  //late final TextEditingController question;
   bool buttonsEnabled = true;
   int selectedIndex = 0;
 
@@ -39,7 +45,7 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
   @override
   void initState() {
     super.initState();
-
+    quiz = Quiz.getInstance(document: ScrumRTdatabase.getQuizDoc(widget.quizID).toString()) as Quiz;
     quizTime = QuizTimeStream();
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
@@ -83,15 +89,6 @@ class _MultipleChoiceWidgetState extends State<MultipleChoiceWidget>
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                child: Text(
-                  'When did Lebron meet Mia Khalifa?',
-                  style: TextStyle(
-                    fontFamily: 'Lexend Deca',
-                    color: Colors.white,
-                    fontSize: 55,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
               Container(
                 width: 919.8,

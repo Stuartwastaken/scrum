@@ -1,8 +1,11 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
 import 'package:scrum/screens/mc-screen.dart';
 import 'package:scrum/utils/fire_RTdatabase.dart';
+import 'package:scrum/controllers/quiz-document.dart';
 
 class PlayerStandingsScreen extends StatefulWidget {
   final String quizID;
@@ -30,6 +33,8 @@ class _PlayerStandingsScreenState extends State<PlayerStandingsScreen> {
     quizTime.listenToQuizTime(widget.quizID);
     QuizListener.listen(
         quizTime, context, MultipleChoiceWidget(quizID: widget.quizID));
+    var quiz = Quiz.getInstance(document: widget.quizID);
+    quiz.nextQuestion();
   }
 
   @override

@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scrum/controllers/calculate-score.dart';
 import 'package:scrum/controllers/quiz-listener.dart';
 import 'package:scrum/controllers/quiz-time-stream.dart';
+import 'package:scrum/controllers/quiz-document.dart';
 import 'package:scrum/screens/post-question-screen.dart';
+import 'package:scrum/utils/fire_RTdatabase.dart';
 
 class HostMultipleChoiceWidget extends StatefulWidget {
   const HostMultipleChoiceWidget({
@@ -17,25 +20,13 @@ class HostMultipleChoiceWidget extends StatefulWidget {
       _HostMultipleChoiceWidgetState();
 }
 
-class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
-    with TickerProviderStateMixin {
+class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late final QuizTimeStream quizTime;
 
   @override
   void initState() {
     super.initState();
-
-    quizTime = QuizTimeStream();
-    quizTime.listenToQuizTime(widget.quizID);
-    QuizListener.listen(
-        quizTime,
-        context,
-        PostQuestionScreenWidget(
-            quizID: widget.quizID,
-            uid: "",
-            isCorrect: false,
-            pointsGained: CalculateScore.calculateAddValue(widget.quizID)));
   }
 
   @override
@@ -45,6 +36,24 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: FutureBuilder<String>(
+        future: ScrumRTdatabase.getQuizDoc(widget.quizID),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return buildMCScreen();
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      )
+    );
+  }
+
+  Widget buildMCScreen() {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFF1E2429),
@@ -70,7 +79,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                 child: Text(
-                  'When did Lebron meet Mia Khalifa?',
+                  Quiz.getInstance().getQuestion(),
                   style: TextStyle(
                     fontFamily: 'Lexend Deca',
                     color: Colors.white,
@@ -112,7 +121,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[0],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -145,7 +154,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[1],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -186,7 +195,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[2],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -219,7 +228,7 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                                     ),
                                     Flexible(
                                       child: Text(
-                                        "January 1 on the new years day because it was raining outside",
+                                        Quiz.getInstance().getAnswers()[3],
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
@@ -237,33 +246,6 @@ class _HostMultipleChoiceWidgetState extends State<HostMultipleChoiceWidget>
                     ),
                   ],
                 ),
-              ),
-              StreamBuilder<int>(
-                stream: quizTime.timeStream,
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Text('Not connected to the stream');
-                      case ConnectionState.waiting:
-                        return Text('Loading...');
-                      case ConnectionState.active:
-                        return Text(
-                          '${snapshot.data}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 64,
-                            fontStyle: FontStyle.normal,
-                            color: Colors.white,
-                          ),
-                        );
-                      case ConnectionState.done:
-                        return Text('Stream has ended');
-                    }
-                  }
-                },
               ),
             ],
           )),
